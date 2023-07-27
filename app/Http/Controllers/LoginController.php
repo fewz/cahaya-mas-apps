@@ -9,10 +9,9 @@ use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
-    //
     public function doLogin(Request $request)
     {
-
+        // login user
         $username = $request->username;
         $password = $request->password;
         Auth::attempt(['username' => $username, 'password' => $password]);
@@ -26,6 +25,7 @@ class LoginController extends Controller
 
     public function logout()
     {
+        // logout user
         Auth::logout();
         CommonHelper::showAlert("Sukses", "Logout Berhasil", "success", "/");
     }

@@ -13,7 +13,7 @@
                     <div class="row mb-2">
                         <div class="col-sm-12">
                             <h1 class="m-0">
-                                <a href="{{URL('admin/master_user')}}">Master User</a>
+                                <a href="{{URL('admin/master_role')}}">Master Role</a>
                                 / Add
                             </h1>
                         </div><!-- /.col -->
@@ -29,32 +29,25 @@
                 <div class="container-fluid">
                     <div class="card card-info">
                         <div class="card-header">
-                            <h3 class="card-title">Add New User</h3>
+                            <h3 class="card-title">Add New Role</h3>
                         </div>
                         <!-- /.card-header -->
                         <!-- form start -->
-                        <form id="formadd" action="{{URL('admin/master_user/do_add')}}" method="POST">
+                        <form id="formadd" action="{{URL('admin/master_role/do_add')}}" method="POST">
                             @csrf
                             <div class="card-body">
                                 <div class="form-group">
-                                    <label>Username</label>
-                                    <input type="text" class="form-control required" name="username" placeholder="Username">
+                                    <label>Role Name</label>
+                                    <input type="text" class="form-control required" name="name" placeholder="Role Name">
                                 </div>
-                                <div class="form-group">
-                                    <label>Role</label>
-                                    <select class="form-control select2bs4" name="id_role" style="width: 100%;">
-                                        @foreach ($list_role as $dt )
-                                        <option value="{{$dt->id}}">{{$dt->name}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label>Password</label>
-                                    <input id="password" type="password" name="password" class="form-control required" placeholder="Password">
-                                </div>
-                                <div class="form-group">
-                                    <label>Confirm Password</label>
-                                    <input id="cpassword" type="password" class="form-control required" placeholder="Confirm password">
+                                <h5 class="mt-4 mb-2">Permission</h5>
+                                <div class="row p-2">
+                                    @foreach ($list_permission as $permission )
+                                    <div class="custom-control custom-checkbox col-4">
+                                        <input class="custom-control-input" type="checkbox" id="{{$permission->id}}" name="permission[]" value="{{$permission->id}}">
+                                        <label for="{{$permission->id}}" class="custom-control-label">{{$permission->description}}</label>
+                                    </div>
+                                    @endforeach
                                 </div>
                             </div>
                             <!-- /.card-body -->
@@ -73,14 +66,12 @@
 @include('script_footer')
 <script>
     function submit() {
+        // submit form
         if (!validateForm()) {
+            // validate form required
             return;
         }
-        if ($('#cpassword').val() !== $('#password').val()) {
-            swal("Failed", "Confirm password wrong", "error");
-        } else {
-            $('#formadd').submit();
-        }
+        $('#formadd').submit();
     }
 </script>
 

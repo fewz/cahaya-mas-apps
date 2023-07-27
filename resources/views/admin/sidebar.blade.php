@@ -54,13 +54,46 @@
                             </p>
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a href="{{ URL('admin/master_inventory') }}" class="nav-link {{$activePage === 'master_inventory' ? 'active' : ''}}">
+                    <li class="nav-item expandable {{$activePage === 'master_inventory' ? 'menu-is-opening menu-open' : ''}}">
+                        <a href="#" class="nav-link {{$activePage === 'master_inventory' ? 'active' : ''}}">
                             <i class="nav-icon fa fa-box"></i>
                             <p>
                                 Inventory
+                                <i class="right fas fa-angle-left"></i>
                             </p>
                         </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="{{ URL('admin/master_inventory') }}" class="nav-link {{$activePage === 'master_inventory' ? 'active' : ''}}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Master Inventory</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Master Category</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Stock</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Unit</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Tier Pricing</p>
+                                </a>
+                            </li>
+                        </ul>
                     </li>
                 </ul>
             </nav>
@@ -83,3 +116,25 @@
     </div>
     <!-- /.sidebar -->
 </aside>
+
+<script>
+    //event expand menu
+    function initializeExpandableMenu() {
+        const $field = $(".expandable");
+        $field.each((_, element) => {
+            element.addEventListener('click', (evt) => {
+                const $element = $(element);
+                console.log('asd ', $element.find('nav-treeview'));
+
+                if ($element.hasClass('menu-open')) {
+                    $element.removeClass('menu-is-opening menu-open');
+                } else {
+                    $element.addClass('menu-is-opening menu-open');
+                }
+            });
+        });
+    }
+    $(function() {
+        initializeExpandableMenu();
+    });
+</script>

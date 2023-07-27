@@ -15,6 +15,7 @@ class UserController extends Controller
 {
     public function index()
     {
+        // list view user
         $user = Auth::user();
         $list_user = DB::table('users')
             ->join('role', 'users.id_role', '=', 'role.id')
@@ -29,6 +30,7 @@ class UserController extends Controller
 
     public function add()
     {
+        // add view user
         $user = Auth::user();
         $list_role = Role::get();
         $data = [
@@ -40,14 +42,16 @@ class UserController extends Controller
 
     public function do_add(Request $request)
     {
+        // add user to database
         try {
             $data = new User();
             $data->username = $request->username;
-            $data->password = Hash::make($request->password);
+            $data->password = Hash::make($request->password); // hash password before saving to db
             $data->id_role = $request->id_role;
             $data->save();
             CommonHelper::showAlert("Success", "Insert data success", "success", "/admin/master_user");
         } catch (\Illuminate\Database\QueryException $ex) {
+            // catch error
             if (str_contains($ex->getMessage(), 'Duplicate entry')) {
                 CommonHelper::showAlert(
                     "Failed",
@@ -63,6 +67,7 @@ class UserController extends Controller
 
     public function edit($id)
     {
+        // edit view user
         $user = Auth::user();
         $data_user = User::find($id);
         $list_role = Role::get();
@@ -76,11 +81,12 @@ class UserController extends Controller
 
     public function do_edit($id, Request $request)
     {
+        // edit user to database
         try {
             $data = User::where("id", $id)->first();
             $data->username = $request->username;
             $data->id_role = $request->id_role;
-            $data->password = $request->password;
+            $data->password = Hash::make($request->password); // hash password before saving to db
             $data->save();
             CommonHelper::showAlert("Success", "Edit data success", "success", "/admin/master_user");
         } catch (\Illuminate\Database\QueryException $ex) {
@@ -99,6 +105,7 @@ class UserController extends Controller
 
     public function delete(Request $request)
     {
+        // delete user
         try {
             User::where("id", $request->id)->delete();
             CommonHelper::showAlert("Success", "Delete data success", "success", "/admin/master_user");

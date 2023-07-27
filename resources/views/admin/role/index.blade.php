@@ -30,7 +30,7 @@
                                 <div class="card-header d-flex">
                                     <h3 class="card-title">List Role</h3>
                                     <div class="ml-auto">
-                                        <button class="btn btn-sm btn-primary">ADD <i class="fa fa-plus"></i></button>
+                                        <a href="{{ URL('admin/master_role/add') }}" class="btn btn-sm btn-primary">ADD <i class="fa fa-plus"></i></a>
                                     </div>
                                 </div>
                                 <!-- /.card-header -->
@@ -49,8 +49,12 @@
                                                 <td>{{$dt->id}}</td>
                                                 <td>{{$dt->name}}</td>
                                                 <td>
-                                                    <button class="btn btn-sm btn-primary"><i class="fa fa-edit"></i></button>
-                                                    <button class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></button>
+                                                    @if($dt->id !== 1)
+                                                    <a href="{{ URL('admin/master_role/edit/'.$dt->id) }}" class="btn btn-sm btn-primary">
+                                                        <i class="fa fa-edit"></i>
+                                                    </a>
+                                                    <button class="btn btn-sm btn-danger" onclick="clickDelete('{{$dt->id}}')"><i class="fa fa-trash"></i></button>
+                                                    @endif
                                                 </td>
                                             </tr>
                                             @endforeach
@@ -65,29 +69,32 @@
         </div>
     </div>
 </body>
+<form id="formDelete" action="{{URL('admin/master_role/delete')}}" method="POST">
+    @csrf
+    <input type="hidden" name="id" id="id_delete">
+</form>
 
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.css">
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"></script>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
 <script>
-    $(function() {
-        $("#example1").DataTable({
-            "responsive": true,
-            "lengthChange": false,
-            "autoWidth": false,
-            "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-        }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-        $('#example2').DataTable({
-            "paging": true,
-            "lengthChange": false,
-            "searching": false,
-            "ordering": true,
-            "info": true,
-            "autoWidth": false,
-            "responsive": true,
-        });
-    });
+    function clickDelete(id) {
+        // confirmation delete
+        swal({
+                title: "Are you sure want to delete?",
+                text: "Once deleted, you will not be able to recover this data!",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+                    $('#id_delete').val(id);
+                    $('#formDelete').submit();
+                }
+            });
+    }
 </script>
 
 </html>

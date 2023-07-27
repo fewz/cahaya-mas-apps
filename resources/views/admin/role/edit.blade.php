@@ -13,8 +13,8 @@
                     <div class="row mb-2">
                         <div class="col-sm-12">
                             <h1 class="m-0">
-                                <a href="{{URL('admin/master_user')}}">Master User</a>
-                                / Add
+                                <a href="{{URL('admin/master_role')}}">Master Role</a>
+                                / Edit
                             </h1>
                         </div><!-- /.col -->
                     </div><!-- /.row -->
@@ -29,32 +29,25 @@
                 <div class="container-fluid">
                     <div class="card card-info">
                         <div class="card-header">
-                            <h3 class="card-title">Add New User</h3>
+                            <h3 class="card-title">Edit Role</h3>
                         </div>
                         <!-- /.card-header -->
                         <!-- form start -->
-                        <form id="formadd" action="{{URL('admin/master_user/do_add')}}" method="POST">
+                        <form id="formedit" action="{{URL('admin/master_role/do_edit').'/'.$data_role->id}}" method="POST">
                             @csrf
                             <div class="card-body">
                                 <div class="form-group">
-                                    <label>Username</label>
-                                    <input type="text" class="form-control required" name="username" placeholder="Username">
+                                    <label>Role Name</label>
+                                    <input required type="text" class="form-control" name="name" placeholder="Role Name" value="{{$data_role->name}}">
                                 </div>
-                                <div class="form-group">
-                                    <label>Role</label>
-                                    <select class="form-control select2bs4" name="id_role" style="width: 100%;">
-                                        @foreach ($list_role as $dt )
-                                        <option value="{{$dt->id}}">{{$dt->name}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label>Password</label>
-                                    <input id="password" type="password" name="password" class="form-control required" placeholder="Password">
-                                </div>
-                                <div class="form-group">
-                                    <label>Confirm Password</label>
-                                    <input id="cpassword" type="password" class="form-control required" placeholder="Confirm password">
+                                <h5 class="mt-4 mb-2">Permission</h5>
+                                <div class="row p-2">
+                                    @foreach ($list_permission as $permission )
+                                    <div class="custom-control custom-checkbox col-4">
+                                        <input class="custom-control-input" type="checkbox" id="{{$permission->id}}" name="permission[]" value="{{$permission->id}}">
+                                        <label for="{{$permission->id}}" class="custom-control-label">{{$permission->description}}</label>
+                                    </div>
+                                    @endforeach
                                 </div>
                             </div>
                             <!-- /.card-body -->
@@ -73,15 +66,33 @@
 @include('script_footer')
 <script>
     function submit() {
+        // submit form
         if (!validateForm()) {
+            // validate form required
             return;
         }
-        if ($('#cpassword').val() !== $('#password').val()) {
-            swal("Failed", "Confirm password wrong", "error");
-        } else {
-            $('#formadd').submit();
-        }
+        $('#formedit').submit();
     }
+
+    function initializeCheckBox() {
+        // initialize data to checkbox
+        const data_permission = <?php echo $data_permission ?>;
+        console.log(data_permission);
+        const $field = $("input:checkbox");
+        $field.each((_, element) => {
+            const $element = $(element);
+
+            const isExist = data_permission.includes(parseInt($element.attr('id')));
+            if (isExist) {
+            // check checkbox if exist
+                $element.attr("checked", true);
+            }
+        });
+    }
+
+    $(function() {
+        initializeCheckBox();
+    });
 </script>
 
 </html>

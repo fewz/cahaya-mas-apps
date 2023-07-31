@@ -40,8 +40,6 @@
                                             <tr>
                                                 <th>Code</th>
                                                 <th>Name</th>
-                                                <th>Price Buy</th>
-                                                <th>Price Sell</th>
                                                 <th>Category</th>
                                                 <th>Action</th>
                                             </tr>
@@ -51,8 +49,6 @@
                                             <tr>
                                                 <td>{{$dt->code}}</td>
                                                 <td>{{$dt->name}}</td>
-                                                <td>{{$dt->price_buy}}</td>
-                                                <td>{{$dt->price_sell}}</td>
                                                 <td>{{$dt->category}}</td>
                                                 <td>
                                                     <a href="{{ URL('admin/master_inventory/edit/'.$dt->id) }}" class="btn btn-sm btn-primary">
@@ -77,10 +73,7 @@
     @csrf
     <input type="hidden" name="id" id="id_delete">
 </form>
-
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.css">
-<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"></script>
-<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+@include('script_footer')
 
 <script>
     function clickDelete(id) {

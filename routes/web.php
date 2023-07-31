@@ -1,11 +1,15 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\InventoryController;
+use App\Http\Controllers\PricingController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\StockController;
 use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\UnitController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -62,6 +66,34 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::get('/master_inventory/edit/{id}', [InventoryController::class, 'edit'])->name('master_inventory/edit');
     Route::post('/master_inventory/do_edit/{id}', [InventoryController::class, 'do_edit'])->name('master_inventory/do_edit');
     Route::post('/master_inventory/delete', [InventoryController::class, 'delete'])->name('master_inventory/delete');
+
+    Route::get('/master_category', [CategoryController::class, 'index'])->name('master_category');
+    Route::get('/master_category/add', [CategoryController::class, 'add'])->name('master_category/add');
+    Route::post('/master_category/do_add', [CategoryController::class, 'do_add'])->name('master_category/do_add');
+    Route::get('/master_category/edit/{id}', [CategoryController::class, 'edit'])->name('master_category/edit');
+    Route::post('/master_category/do_edit/{id}', [CategoryController::class, 'do_edit'])->name('master_category/do_edit');
+    Route::post('/master_category/delete', [CategoryController::class, 'delete'])->name('master_category/delete');
+    
+    Route::get('/master_unit', [UnitController::class, 'index'])->name('master_unit');
+    Route::get('/master_unit/add', [UnitController::class, 'add'])->name('master_unit/add');
+    Route::post('/master_unit/do_add', [UnitController::class, 'do_add'])->name('master_unit/do_add');
+    Route::get('/master_unit/edit/{id}', [UnitController::class, 'edit'])->name('master_unit/edit');
+    Route::post('/master_unit/do_edit/{id}', [UnitController::class, 'do_edit'])->name('master_unit/do_edit');
+    Route::post('/master_unit/delete', [UnitController::class, 'delete'])->name('master_unit/delete');
+
+    Route::get('/master_stock', [StockController::class, 'index'])->name('master_stock');
+    Route::get('/master_stock/add', [StockController::class, 'add'])->name('master_stock/add');
+    Route::post('/master_stock/do_add', [StockController::class, 'do_add'])->name('master_stock/do_add');
+    Route::get('/master_stock/edit/{id}', [StockController::class, 'edit'])->name('master_stock/edit');
+    Route::post('/master_stock/do_edit/{id}', [StockController::class, 'do_edit'])->name('master_stock/do_edit');
+    Route::post('/master_stock/delete', [StockController::class, 'delete'])->name('master_stock/delete');
+    
+    Route::get('/master_pricing', [PricingController::class, 'index'])->name('master_pricing');
+    Route::get('/master_pricing/add', [PricingController::class, 'add'])->name('master_pricing/add');
+    Route::post('/master_pricing/do_add', [PricingController::class, 'do_add'])->name('master_pricing/do_add');
+    Route::get('/master_pricing/edit/{id}', [PricingController::class, 'edit'])->name('master_pricing/edit');
+    Route::post('/master_pricing/do_edit/{id}', [PricingController::class, 'do_edit'])->name('master_pricing/do_edit');
+    Route::post('/master_pricing/delete', [PricingController::class, 'delete'])->name('master_pricing/delete');
 });
 
 

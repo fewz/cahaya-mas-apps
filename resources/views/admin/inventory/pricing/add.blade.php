@@ -4,7 +4,7 @@
 
 <body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper">
-        @include('admin.sidebar', ['activePage' => 'master_inventory'])
+        @include('admin.sidebar', ['activePage' => 'master_pricing'])
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
             <!-- Content Header (Page header) -->
@@ -13,7 +13,7 @@
                     <div class="row mb-2">
                         <div class="col-sm-12">
                             <h1 class="m-0">
-                                <a href="{{URL('admin/master_inventory')}}">Master Inventory</a>
+                                <a href="{{URL('admin/master_pricing')}}">Master Pricing</a>
                                 / Add
                             </h1>
                         </div><!-- /.col -->
@@ -29,44 +29,40 @@
                 <div class="container-fluid">
                     <div class="card card-info">
                         <div class="card-header">
-                            <h3 class="card-title">Edit Inventory</h3>
+                            <h3 class="card-title">Add New Pricing</h3>
                         </div>
                         <!-- /.card-header -->
                         <!-- form start -->
-                        <form id="formadd" action="{{URL('admin/master_inventory/do_edit').'/'.$data_inventory->id}}" method="POST">
+                        <form id="formadd" action="{{URL('admin/master_pricing/do_add')}}" method="POST">
                             @csrf
                             <div class="card-body">
                                 <div class="form-group">
-                                    <label>Code Inventory</label>
-                                    <input type="text" class="form-control required" name="code" placeholder="Code" value="{{$data_inventory->code}}">
-                                </div>
-                                <div class="form-group">
-                                    <label>Name</label>
-                                    <input type="text" class="form-control required" name="name" placeholder="Name" value="{{$data_inventory->name}}">
-                                </div>
-                                <div class="form-group">
-                                    <label>Category</label>
-                                    <select class="form-control select2bs4" name="id_category" style="width: 100%;">
-                                        @foreach ($list_category as $dt )
-                                        @if ($dt->id === $data_inventory->id_category)
-                                        <option value="{{$dt->id}}" selected>{{$dt->name}}</option>
-                                        @else
+                                    <label>Inventory</label>
+                                    <select class="form-control select2bs4" name="id_inventory" style="width: 100%;">
+                                        @foreach ($list_inventory as $dt )
                                         <option value="{{$dt->id}}">{{$dt->name}}</option>
-                                        @endif
                                         @endforeach
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label>Allowed Units</label>
-                                    <select class="duallistbox" multiple="multiple" name="units[]">
+                                    <label>Unit</label>
+                                    <select class="form-control select2bs4" name="id_unit" style="width: 100%;">
                                         @foreach ($list_unit as $dt )
-                                        @if (in_array($dt->id, $inventory_unit))
-                                        <option value="{{$dt->id}}" selected>{{$dt->name}}</option>
-                                        @else
                                         <option value="{{$dt->id}}">{{$dt->name}}</option>
-                                        @endif
                                         @endforeach
                                     </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Tier Customer</label>
+                                    <select class="form-control select2bs4" name="id_tier_customer" style="width: 100%;">
+                                        @foreach ($list_tier_customer as $dt )
+                                        <option value="{{$dt->id}}">{{$dt->name}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Sell Price</label>
+                                    <input type="number" class="form-control required" name="sell_price" placeholder="Name">
                                 </div>
                             </div>
                             <!-- /.card-body -->

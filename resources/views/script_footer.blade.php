@@ -1,5 +1,5 @@
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.css">
-<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"></script>
+<link href="{{URL::asset('assets/dist/css/datatables.min.css')}}" rel="stylesheet">
+<script src="{{URL::asset('assets/dist/js/datatables.min.js')}}"></script>
 
 <!-- Select2 -->
 <link rel="stylesheet" href="{{URL::asset('assets/plugins/select2/css/select2.min.css')}}">
@@ -7,6 +7,8 @@
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
 <script src="{{URL::asset('assets/plugins/select2/js/select2.full.min.js')}}"></script>
+<link rel="stylesheet" href="{{URL::asset('assets/plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css')}}">
+<script src="{{URL::asset('assets/plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js')}}"></script>
 <script>
     $(function() {
 
@@ -19,6 +21,8 @@
         $('.select2bs4').select2({
             theme: 'bootstrap4'
         })
+        //Bootstrap Duallistbox
+        $('.duallistbox').bootstrapDualListbox()
         initializeOnchangeForm();
     });
 

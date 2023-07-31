@@ -54,8 +54,11 @@
                             </p>
                         </a>
                     </li>
-                    <li class="nav-item expandable {{$activePage === 'master_inventory' ? 'menu-is-opening menu-open' : ''}}">
-                        <a href="#" class="nav-link {{$activePage === 'master_inventory' ? 'active' : ''}}">
+                    <?php
+                    $inventory_menu = ['master_inventory', 'master_category', 'master_unit', 'master_stock', 'master_pricing'];
+                    ?>
+                    <li class="nav-item expandable {{in_array($activePage, $inventory_menu)  ? 'menu-is-opening menu-open' : ''}}">
+                        <a href="#" class="nav-link {{in_array($activePage, $inventory_menu) ? 'active' : ''}}">
                             <i class="nav-icon fa fa-box"></i>
                             <p>
                                 Inventory
@@ -70,27 +73,27 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="#" class="nav-link">
+                                <a href="{{ URL('admin/master_category') }}" class="nav-link {{$activePage === 'master_category' ? 'active' : ''}}">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>Master Category</p>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="#" class="nav-link">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Stock</p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="#" class="nav-link">
+                                <a  href="{{ URL('admin/master_unit') }}" class="nav-link {{$activePage === 'master_unit' ? 'active' : ''}}">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>Unit</p>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="#" class="nav-link">
+                                <a  href="{{ URL('admin/master_stock') }}" class="nav-link {{$activePage === 'master_stock' ? 'active' : ''}}">
                                     <i class="far fa-circle nav-icon"></i>
-                                    <p>Tier Pricing</p>
+                                    <p>Stock</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a  href="{{ URL('admin/master_pricing') }}" class="nav-link {{$activePage === 'master_pricing' ? 'active' : ''}}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Pricing</p>
                                 </a>
                             </li>
                         </ul>

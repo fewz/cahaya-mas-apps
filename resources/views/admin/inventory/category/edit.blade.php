@@ -4,7 +4,7 @@
 
 <body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper">
-        @include('admin.sidebar', ['activePage' => 'master_inventory'])
+        @include('admin.sidebar', ['activePage' => 'master_category'])
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
             <!-- Content Header (Page header) -->
@@ -13,7 +13,7 @@
                     <div class="row mb-2">
                         <div class="col-sm-12">
                             <h1 class="m-0">
-                                <a href="{{URL('admin/master_inventory')}}">Master Inventory</a>
+                                <a href="{{URL('admin/master_category')}}">Master Category Inventory</a>
                                 / Add
                             </h1>
                         </div><!-- /.col -->
@@ -29,36 +29,16 @@
                 <div class="container-fluid">
                     <div class="card card-info">
                         <div class="card-header">
-                            <h3 class="card-title">Add New Inventory</h3>
+                            <h3 class="card-title">Edit Category Inventory</h3>
                         </div>
                         <!-- /.card-header -->
                         <!-- form start -->
-                        <form id="formadd" action="{{URL('admin/master_inventory/do_add')}}" method="POST">
+                        <form id="formadd" action="{{URL('admin/master_category/do_edit').'/'.$data_category->id}}" method="POST">
                             @csrf
                             <div class="card-body">
                                 <div class="form-group">
-                                    <label>Code Inventory</label>
-                                    <input type="text" class="form-control required" name="code" placeholder="Code">
-                                </div>
-                                <div class="form-group">
                                     <label>Name</label>
-                                    <input type="text" class="form-control required" name="name" placeholder="Name">
-                                </div>
-                                <div class="form-group">
-                                    <label>Category</label>
-                                    <select class="form-control select2bs4" name="id_category" style="width: 100%;">
-                                        @foreach ($list_category as $dt )
-                                        <option value="{{$dt->id}}">{{$dt->name}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label>Allowed Units</label>
-                                    <select class="duallistbox" multiple="multiple" name="units[]">
-                                        @foreach ($list_units as $dt )
-                                        <option value="{{$dt->id}}">{{$dt->name}}</option>
-                                        @endforeach
-                                    </select>
+                                    <input type="text" class="form-control required" name="name" placeholder="Name" value="{{$data_category->name}}">
                                 </div>
                             </div>
                             <!-- /.card-body -->

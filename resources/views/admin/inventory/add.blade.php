@@ -54,12 +54,29 @@
                                 </div>
                                 <div class="form-group">
                                     <label>Allowed Units</label>
-                                    <select class="duallistbox" multiple="multiple" name="units[]">
+                                    <select class="duallistbox" multiple="multiple" name="units[]" id="unit">
                                         @foreach ($list_units as $dt )
                                         <option value="{{$dt->id}}">{{$dt->name}}</option>
                                         @endforeach
                                     </select>
                                 </div>
+
+                                <label>Pricing by Tier</label>
+                                <table id="example1" class="table table-bordered table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Id Unit</th>
+                                            <th>Unit</th>
+                                            <th>General</th>
+                                            <th>Bronze</th>
+                                            <th>Silver</th>
+                                            <th>Gold</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tableBody">
+                                    </tbody>
+                                </table>
+                                <input id="pricing" type="hidden" name="pricing" />
                             </div>
                             <!-- /.card-body -->
 
@@ -82,8 +99,79 @@
             // validate form required
             return;
         }
+        const jsonData = generateJSON();
+        console.log(jsonData);
+        $("#pricing").val(JSON.stringify(jsonData));
+
         $('#formadd').submit();
     }
+
+    // Function to generate JSON object from the input values
+    function generateJSON() {
+        const json = [];
+        $('input[type="number"]').each(function() {
+            const key = $(this).attr('name');
+            const value = $(this).val();
+            const [field, id] = key.split(/\[|\]\[|\]/).filter(Boolean);
+            json.push({
+                id: id,
+                name: field,
+                value: value
+            });
+        });
+        return json;
+    }
+    const dataUnit = <?php echo json_encode($list_units) ?>;
+    $(document).ready(function() {
+        console.log('dataUnit', dataUnit);
+
+        // Event listener for changes in the multi-select
+        $('#unit').on('change', updateDataTable);
+        // Store input values separately
+        const inputValues = {};
+
+        // Function to update the data table based on multi-select changes
+        function updateDataTable() {
+            const selectedItems = $('#unit').val(); // Get an array of selected values
+
+            // Store the current input values before updating
+            saveInputValues();
+
+            // Clear the table body
+            $('#tableBody').empty();
+
+            // Populate the table with selected items and their stored values
+            selectedItems.forEach(item => {
+                const unit = dataUnit.find(unit => unit.id === parseInt(item)); // Find the corresponding unit object
+                if (unit) {
+                    const row = `<tr>
+                            <td>${item}</td>
+                            <td>${unit.name}</td>
+                            <td><input type="number" class="form-control" name="general[${item}]" min="0" value="${getInputValue(item, 'general')}"></td>
+                            <td><input type="number" class="form-control" name="bronze[${item}]" min="0" value="${getInputValue(item, 'bronze')}"></td>
+                            <td><input type="number" class="form-control" name="silver[${item}]" min="0" value="${getInputValue(item, 'silver')}"></td>
+                            <td><input type="number" class="form-control" name="gold[${item}]" min="0" value="${getInputValue(item, 'gold')}"></td>
+                        </tr>`;
+                    $('#tableBody').append(row);
+                }
+            });
+        }
+
+        // Save input values into the inputValues object
+        function saveInputValues() {
+            $('input[type="number"]').each(function() {
+                const key = $(this).attr('name');
+                const value = $(this).val();
+                inputValues[key] = value;
+            });
+        }
+
+        // Get saved input value for a specific unit and field
+        function getInputValue(unitId, field) {
+            const key = `${field}[${unitId}]`;
+            return inputValues[key] || '';
+        }
+    });
 </script>
 
 </html>

@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\CategoryInventory;
 use App\Models\Inventory;
 use App\Models\InventoryUnit;
+use App\Models\Pricing;
 use App\Models\Unit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -47,7 +48,13 @@ class InventoryController extends Controller
     {
         // add inventory to database
         try {
-            print_r($request->units);
+            $pricing = json_decode($request->pricing);
+            $tier = [
+                "general" => "1",
+                "bronze" => "2",
+                "silver" => "3",
+                "gold" => "4",
+            ];
             $data = new Inventory();
             $data->code = $request->code;
             $data->name = $request->name;
@@ -58,6 +65,12 @@ class InventoryController extends Controller
                 // add inventory unit to database
                 foreach ($request->units as $unit_id) {
                     InventoryUnit::add_inventory_unit($data->id, $unit_id);
+                }
+            }
+            if (count($pricing) > 0) {
+                // add pricing to database
+                foreach ($pricing as $p) {
+                    Pricing::add_pricing($data->id, $p->id, $tier[$p->name], $p->value);
                 }
             }
             CommonHelper::showAlert("Success", "Insert data success", "success", "/admin/master_inventory");

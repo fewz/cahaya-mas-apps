@@ -79,21 +79,9 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a  href="{{ URL('admin/master_unit') }}" class="nav-link {{$activePage === 'master_unit' ? 'active' : ''}}">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Unit</p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
                                 <a  href="{{ URL('admin/master_stock') }}" class="nav-link {{$activePage === 'master_stock' ? 'active' : ''}}">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>Stock</p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a  href="{{ URL('admin/master_pricing') }}" class="nav-link {{$activePage === 'master_pricing' ? 'active' : ''}}">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Pricing</p>
                                 </a>
                             </li>
                         </ul>

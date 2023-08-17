@@ -52,38 +52,49 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="form-group">
-                                    <label>Allowed Units</label>
-                                    <select class="duallistbox" multiple="multiple" name="units[]" id="unit">
-                                        @foreach ($list_units as $dt )
-                                        <option value="{{$dt->id}}">{{$dt->name}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-
-                                <label>Pricing by Tier</label>
-                                <table id="example1" class="table table-bordered table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th>Id Unit</th>
-                                            <th>Unit</th>
-                                            <th>General</th>
-                                            <th>Bronze</th>
-                                            <th>Silver</th>
-                                            <th>Gold</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="tableBody">
-                                    </tbody>
-                                </table>
-                                <input id="pricing" type="hidden" name="pricing" />
                             </div>
                             <!-- /.card-body -->
-
-                            <div class="card-footer">
-                                <div class="btn btn-primary" onclick="submit()">Submit</div>
-                            </div>
+                            <input id="pricing" type="hidden" name="pricing" />
+                            <input id="units" type="hidden" name="units" />
+                            <input id="satuan_terkecil" type="hidden" name="satuan_terkecil" />
                         </form>
+                    </div>
+
+                    <div class="card card-info">
+                        <div class="card-header">
+                            <h3 class="card-title">Unit & Pricing</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label>Satuan Terkecil</label>
+                                <input type="text" id="satuanterkecil" class="form-control required" placeholder="Satuan Terkecil">
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Tambah Satuan Baru</label>
+                                <input id="satuanBaru" type="text" class="form-control" placeholder="Satuan Baru">
+                                <button class="btn btn-primary mt-3" onclick="tambahSatuan()">Tambah</button>
+                            </div>
+                            <label>Pricing by Tier</label>
+                            <table id="example1" class="table table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Unit</th>
+                                        <th>Per satuan terkecil</th>
+                                        <th>General</th>
+                                        <th>Bronze</th>
+                                        <th>Silver</th>
+                                        <th>Gold</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tableBody">
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="card-footer">
+                            <div class="btn btn-primary" onclick="submit()">Submit</div>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -93,6 +104,10 @@
 
 @include('script_footer')
 <script>
+    const $satuanBaru = $("#satuanBaru");
+
+    let listSatuan = [];
+
     function submit() {
         // submit form
         if (!validateForm()) {
@@ -101,9 +116,97 @@
         }
         const jsonData = generateJSON();
         console.log(jsonData);
-        $("#pricing").val(JSON.stringify(jsonData));
+
+        const groupedData = groupJSON(jsonData);
+        console.log(groupedData);
+        $("#pricing").val(JSON.stringify(groupedData));
+        $("#satuan_terkecil").val($("#satuanterkecil").val());
 
         $('#formadd').submit();
+    }
+
+    function groupJSON(data) {
+
+        const groupedData = {};
+
+        for (const item of data) {
+            const {
+                unit,
+                name,
+                value
+            } = item;
+
+            if (!groupedData[unit]) {
+                groupedData[unit] = {};
+            }
+
+            if (!groupedData[unit][name]) {
+                groupedData[unit][name] = [];
+            }
+
+            groupedData[unit][name].push(value);
+        }
+        return groupedData;
+    }
+
+    const inputValues = {};
+
+    // Save input values into the inputValues object
+    function saveInputValues() {
+        $('input[type="number"]').each(function() {
+            const key = $(this).attr('name');
+            const value = $(this).val();
+            inputValues[key] = value;
+        });
+    }
+
+    // Get saved input value for a specific unit and field
+    function getInputValue(unitId, field) {
+        const key = `${field}[${unitId}]`;
+        return inputValues[key] || '';
+    }
+
+    function updateTable() {
+        // Store the current input values before updating
+        saveInputValues();
+
+        // Clear the table body
+        $('#tableBody').empty();
+
+        // Populate the table with selected items and their stored values
+        listSatuan.forEach((item, i) => {
+            const row = `<tr>
+                            <td>${item}</td>
+                            <td><input type="number" class="form-control" name="refunit[${item}]" min="0" value="${getInputValue(item, 'refunit')}"></td>
+                            <td><input type="number" class="form-control" name="general[${item}]" min="0" value="${getInputValue(item, 'general')}"></td>
+                            <td><input type="number" class="form-control" name="bronze[${item}]" min="0" value="${getInputValue(item, 'bronze')}"></td>
+                            <td><input type="number" class="form-control" name="silver[${item}]" min="0" value="${getInputValue(item, 'silver')}"></td>
+                            <td><input type="number" class="form-control" name="gold[${item}]" min="0" value="${getInputValue(item, 'gold')}"></td>
+                            <td><button class="btn btn-sm btn-danger" onclick="clickDelete(${i})"><i class="fa fa-trash"></i></button></td>
+                        </tr>`;
+            $('#tableBody').append(row);
+        });
+    }
+
+    function tambahSatuan() {
+        console.log('list',listSatuan);
+        
+        if ($satuanBaru.val() === '') {
+            return;
+        }
+        if (listSatuan.includes($satuanBaru.val())) {
+            swal("Satuan sudah ada", "", "warning");
+            return;
+        }
+        listSatuan.push($satuanBaru.val());
+        $satuanBaru.val('');
+        updateTable();
+    }
+
+
+    function clickDelete(index) {
+        listSatuan.splice(index, 1);
+        updateTable();
     }
 
     // Function to generate JSON object from the input values
@@ -114,64 +217,13 @@
             const value = $(this).val();
             const [field, id] = key.split(/\[|\]\[|\]/).filter(Boolean);
             json.push({
-                id: id,
+                unit: id,
                 name: field,
                 value: value
             });
         });
         return json;
     }
-    const dataUnit = <?php echo json_encode($list_units) ?>;
-    $(document).ready(function() {
-        console.log('dataUnit', dataUnit);
-
-        // Event listener for changes in the multi-select
-        $('#unit').on('change', updateDataTable);
-        // Store input values separately
-        const inputValues = {};
-
-        // Function to update the data table based on multi-select changes
-        function updateDataTable() {
-            const selectedItems = $('#unit').val(); // Get an array of selected values
-
-            // Store the current input values before updating
-            saveInputValues();
-
-            // Clear the table body
-            $('#tableBody').empty();
-
-            // Populate the table with selected items and their stored values
-            selectedItems.forEach(item => {
-                const unit = dataUnit.find(unit => unit.id === parseInt(item)); // Find the corresponding unit object
-                if (unit) {
-                    const row = `<tr>
-                            <td>${item}</td>
-                            <td>${unit.name}</td>
-                            <td><input type="number" class="form-control" name="general[${item}]" min="0" value="${getInputValue(item, 'general')}"></td>
-                            <td><input type="number" class="form-control" name="bronze[${item}]" min="0" value="${getInputValue(item, 'bronze')}"></td>
-                            <td><input type="number" class="form-control" name="silver[${item}]" min="0" value="${getInputValue(item, 'silver')}"></td>
-                            <td><input type="number" class="form-control" name="gold[${item}]" min="0" value="${getInputValue(item, 'gold')}"></td>
-                        </tr>`;
-                    $('#tableBody').append(row);
-                }
-            });
-        }
-
-        // Save input values into the inputValues object
-        function saveInputValues() {
-            $('input[type="number"]').each(function() {
-                const key = $(this).attr('name');
-                const value = $(this).val();
-                inputValues[key] = value;
-            });
-        }
-
-        // Get saved input value for a specific unit and field
-        function getInputValue(unitId, field) {
-            const key = `${field}[${unitId}]`;
-            return inputValues[key] || '';
-        }
-    });
 </script>
 
 </html>

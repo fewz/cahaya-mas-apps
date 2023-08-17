@@ -10,12 +10,12 @@ class Pricing extends Model
     public $timestamps = false;
 
 
-    public static function add_pricing($id_inventory, $id_unit, $id_tier_customer, $sell_price)
+    public static function add_pricing($id_inventory, $id_unit, $tier_customer, $sell_price)
     {
         $data = new Pricing();
         $data->id_inventory = $id_inventory;
         $data->id_unit = $id_unit;
-        $data->id_tier_customer = $id_tier_customer;
+        $data->tier_customer = $tier_customer;
         $data->sell_price = $sell_price;
         $data->save();
     }

@@ -35,11 +35,9 @@ class InventoryController extends Controller
         // add view inventory
         $user = Auth::user();
         $list_category = CategoryInventory::get();
-        $list_units = Unit::get();
         $data = [
             'user' => $user,
-            'list_category' => $list_category,
-            'list_units' => $list_units
+            'list_category' => $list_category
         ];
         return view("admin.inventory.add", $data);
     }
@@ -49,30 +47,22 @@ class InventoryController extends Controller
         // add inventory to database
         try {
             $pricing = json_decode($request->pricing);
-            $tier = [
-                "general" => "1",
-                "bronze" => "2",
-                "silver" => "3",
-                "gold" => "4",
-            ];
             $data = new Inventory();
             $data->code = $request->code;
             $data->name = $request->name;
             $data->id_category = $request->id_category;
             $data->save();
 
-            if (isset($request->units)) {
-                // add inventory unit to database
-                foreach ($request->units as $unit_id) {
-                    InventoryUnit::add_inventory_unit($data->id, $unit_id);
+            Unit::add_unit($data->id, $request->satuan_terkecil, NULL);
+            foreach ($pricing as $key => $value) {
+                $id_unit = Unit::add_unit($data->id, $key, $value->refunit[0]);
+                foreach ($value as $keyVal => $val) {
+                    if ($keyVal !== 'refunit') {
+                        Pricing::add_pricing($data->id, $id_unit, $keyVal, $val[0]);
+                    }
                 }
             }
-            if (count($pricing) > 0) {
-                // add pricing to database
-                foreach ($pricing as $p) {
-                    Pricing::add_pricing($data->id, $p->id, $tier[$p->name], $p->value);
-                }
-            }
+
             CommonHelper::showAlert("Success", "Insert data success", "success", "/admin/master_inventory");
         } catch (\Illuminate\Database\QueryException $ex) {
             // catch error
@@ -95,20 +85,19 @@ class InventoryController extends Controller
         $user = Auth::user();
         $data_inventory = Inventory::find($id);
         $list_category = CategoryInventory::get();
-        $list_unit = unit::get();
-        $inventory_unit = InventoryUnit::where('id_inventory', $id)->get('id_unit')->toArray();
-        foreach ($inventory_unit as $key => $value) {
-            // mapping id unit to show on view template
-            $inventory_unit[$key] = $value['id_unit'];
-        }
+        $list_unit = Unit::where("unit.id_inventory", $id)
+            ->leftJoin('tier_pricing', 'tier_pricing.id_unit', '=', 'unit.id')
+            ->orderBy('unit.id', 'asc')
+            ->get();
 
         $data = [
             'user' => $user,
             'data_inventory' => $data_inventory,
             'list_category' => $list_category,
-            'list_unit' => $list_unit,
-            'inventory_unit' => $inventory_unit
+            'list_unit' => $list_unit
         ];
+
+        // print_r($list_unit);
 
         return view("admin.inventory.edit", $data);
     }
@@ -117,21 +106,26 @@ class InventoryController extends Controller
     {
         // edit inventory to database
         try {
+            $pricing = json_decode($request->pricing);
             $data = Inventory::where("id", $id)->first();
             $data->code = $request->code;
             $data->name = $request->name;
             $data->id_category = $request->id_category;
             $data->save();
 
-            // delete previous existing inventory_unit database
-            InventoryUnit::where("id_inventory", $request->id)->delete();
+            Unit::where("id_inventory", $request->id)->delete();
+            Pricing::where("id_inventory", $request->id)->delete();
 
-            if (isset($request->units)) {
-                // add inventory_unit database
-                foreach ($request->units as $id_unit) {
-                    InventoryUnit::add_inventory_unit($id, $id_unit);
+            Unit::add_unit($data->id, $request->satuan_terkecil, NULL);
+            foreach ($pricing as $key => $value) {
+                $id_unit = Unit::add_unit($data->id, $key, $value->refunit[0]);
+                foreach ($value as $keyVal => $val) {
+                    if ($keyVal !== 'refunit') {
+                        Pricing::add_pricing($data->id, $id_unit, $keyVal, $val[0]);
+                    }
                 }
             }
+
             CommonHelper::showAlert("Success", "Edit data success", "success", "/admin/master_inventory");
         } catch (\Illuminate\Database\QueryException $ex) {
             // catch error

@@ -14,7 +14,7 @@
                         <div class="col-sm-12">
                             <h1 class="m-0">
                                 <a href="{{URL('admin/master_inventory')}}">Master Inventory</a>
-                                / Add
+                                / Edit
                             </h1>
                         </div><!-- /.col -->
                     </div><!-- /.row -->
@@ -56,25 +56,50 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="form-group">
-                                    <label>Allowed Units</label>
-                                    <select class="duallistbox" multiple="multiple" name="units[]">
-                                        @foreach ($list_unit as $dt )
-                                        @if (in_array($dt->id, $inventory_unit))
-                                        <option value="{{$dt->id}}" selected>{{$dt->name}}</option>
-                                        @else
-                                        <option value="{{$dt->id}}">{{$dt->name}}</option>
-                                        @endif
-                                        @endforeach
-                                    </select>
-                                </div>
                             </div>
                             <!-- /.card-body -->
-
-                            <div class="card-footer">
-                                <div class="btn btn-primary" onclick="submit()">Submit</div>
-                            </div>
+                            <input id="pricing" type="hidden" name="pricing" />
+                            <input id="units" type="hidden" name="units" />
+                            <input id="satuan_terkecil" type="hidden" name="satuan_terkecil" />
                         </form>
+                    </div>
+
+                    <div class="card card-info">
+                        <div class="card-header">
+                            <h3 class="card-title">Unit & Pricing</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label>Satuan Terkecil</label>
+                                <input type="text" id="satuanterkecil" class="form-control required" placeholder="Satuan Terkecil" value="{{$list_unit[0]->name}}">
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Tambah Satuan Baru</label>
+                                <input id="satuanBaru" type="text" class="form-control" placeholder="Satuan Baru">
+                                <button class="btn btn-primary mt-3" onclick="tambahSatuan()">Tambah</button>
+                            </div>
+                            <label>Pricing by Tier</label>
+                            <table id="example1" class="table table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Unit</th>
+                                        <th>Per satuan terkecil</th>
+                                        <th>General</th>
+                                        <th>Bronze</th>
+                                        <th>Silver</th>
+                                        <th>Gold</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tableBody">
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="card-footer">
+                            <div class="btn btn-primary" onclick="submit()">Submit</div>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -84,13 +109,169 @@
 
 @include('script_footer')
 <script>
+    const $satuanBaru = $("#satuanBaru");
+
+    let listSatuan = <?php echo $list_unit; ?>;
+    let listUnit = {};
+
+    console.log('tes', listSatuan);
+
+    $(function() {
+        listSatuan.forEach((val) => {
+            if (val.qty_reference !== null) {
+                console.log('sa', val);
+                if (!listUnit[val.name]) {
+                    listUnit[val.name] = {};
+                }
+                listUnit[val.name][val.tier_customer] = val.sell_price;
+                listUnit[val.name]['qty_reference'] = val.qty_reference;
+            }
+        });
+
+        console.log('l', listUnit);
+        listSatuan = [];
+
+        // Clear the table body
+        $('#tableBody').empty();
+        let i = 0;
+        for (var key in listUnit) {
+            // skip loop if the property is from prototype
+            if (!listUnit.hasOwnProperty(key)) continue;
+
+            var obj = listUnit[key];
+
+            console.log('ob', obj);
+
+            // your code
+            const row = `<tr>
+                            <td>${key}</td>
+                            <td><input type="number" class="form-control" name="refunit[${key}]" min="0" value="${obj.qty_reference}"></td>
+                            <td><input type="number" class="form-control" name="general[${key}]" min="0" value="${obj.general}"></td>
+                            <td><input type="number" class="form-control" name="bronze[${key}]" min="0" value="${obj.bronze}"></td>
+                            <td><input type="number" class="form-control" name="silver[${key}]" min="0" value="${obj.silver}"></td>
+                            <td><input type="number" class="form-control" name="gold[${key}]" min="0" value="${obj.gold}"></td>
+                            <td><button class="btn btn-sm btn-danger" onclick="clickDelete(${i})"><i class="fa fa-trash"></i></button></td>
+                        </tr>`;
+            $('#tableBody').append(row);
+            listSatuan.push(key);
+            i++;
+        }
+
+    });
+
     function submit() {
         // submit form
         if (!validateForm()) {
             // validate form required
             return;
         }
+        const jsonData = generateJSON();
+        console.log(jsonData);
+
+        const groupedData = groupJSON(jsonData);
+        console.log(groupedData);
+        $("#pricing").val(JSON.stringify(groupedData));
+        $("#satuan_terkecil").val($("#satuanterkecil").val());
+
         $('#formadd').submit();
+    }
+
+    function groupJSON(data) {
+
+        const groupedData = {};
+
+        for (const item of data) {
+            const {
+                unit,
+                name,
+                value
+            } = item;
+
+            if (!groupedData[unit]) {
+                groupedData[unit] = {};
+            }
+
+            if (!groupedData[unit][name]) {
+                groupedData[unit][name] = [];
+            }
+
+            groupedData[unit][name].push(value);
+        }
+        return groupedData;
+    }
+
+    const inputValues = {};
+
+    // Save input values into the inputValues object
+    function saveInputValues() {
+        $('input[type="number"]').each(function() {
+            const key = $(this).attr('name');
+            const value = $(this).val();
+            inputValues[key] = value;
+        });
+    }
+
+    // Get saved input value for a specific unit and field
+    function getInputValue(unitId, field) {
+        const key = `${field}[${unitId}]`;
+        return inputValues[key] || '';
+    }
+
+    function updateTable() {
+        // Store the current input values before updating
+        saveInputValues();
+
+        // Clear the table body
+        $('#tableBody').empty();
+
+        // Populate the table with selected items and their stored values
+        listSatuan.forEach((item, i) => {
+            const row = `<tr>
+                            <td>${item}</td>
+                            <td><input type="number" class="form-control" name="refunit[${item}]" min="0" value="${getInputValue(item, 'refunit')}"></td>
+                            <td><input type="number" class="form-control" name="general[${item}]" min="0" value="${getInputValue(item, 'general')}"></td>
+                            <td><input type="number" class="form-control" name="bronze[${item}]" min="0" value="${getInputValue(item, 'bronze')}"></td>
+                            <td><input type="number" class="form-control" name="silver[${item}]" min="0" value="${getInputValue(item, 'silver')}"></td>
+                            <td><input type="number" class="form-control" name="gold[${item}]" min="0" value="${getInputValue(item, 'gold')}"></td>
+                            <td><button class="btn btn-sm btn-danger" onclick="clickDelete(${i})"><i class="fa fa-trash"></i></button></td>
+                        </tr>`;
+            $('#tableBody').append(row);
+        });
+    }
+
+    function tambahSatuan() {
+        if ($satuanBaru.val() === '') {
+            return;
+        }
+        if (listSatuan.includes($satuanBaru.val())) {
+            swal("Satuan sudah ada", "", "warning");
+            return;
+        }
+        listSatuan.push($satuanBaru.val());
+        $satuanBaru.val('');
+        updateTable();
+    }
+
+
+    function clickDelete(index) {
+        listSatuan.splice(index, 1);
+        updateTable();
+    }
+
+    // Function to generate JSON object from the input values
+    function generateJSON() {
+        const json = [];
+        $('input[type="number"]').each(function() {
+            const key = $(this).attr('name');
+            const value = $(this).val();
+            const [field, id] = key.split(/\[|\]\[|\]/).filter(Boolean);
+            json.push({
+                unit: id,
+                name: field,
+                value: value
+            });
+        });
+        return json;
     }
 </script>
 

@@ -1,9 +1,6 @@
 <link href="{{URL::asset('assets/dist/css/datatables.min.css')}}" rel="stylesheet">
 <script src="{{URL::asset('assets/dist/js/datatables.min.js')}}"></script>
 
-<!-- Select2 -->
-<link rel="stylesheet" href="{{URL::asset('assets/plugins/select2/css/select2.min.css')}}">
-<link rel="stylesheet" href="{{URL::asset('assets/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css')}}">
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
 <script src="{{URL::asset('assets/plugins/select2/js/select2.full.min.js')}}"></script>

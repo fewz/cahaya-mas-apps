@@ -60,6 +60,7 @@
                             <!-- /.card-body -->
                             <input id="pricing" type="hidden" name="pricing" />
                             <input id="units" type="hidden" name="units" />
+                            <input id="list_units" type="hidden" name="list_units" />
                             <input id="satuan_terkecil" type="hidden" name="satuan_terkecil" />
                         </form>
                     </div>
@@ -71,7 +72,7 @@
                         <div class="card-body">
                             <div class="form-group">
                                 <label>Satuan Terkecil</label>
-                                <input type="text" id="satuanterkecil" class="form-control required" placeholder="Satuan Terkecil" value="{{$list_unit[0]->name}}">
+                                <input type="text" id="satuanterkecil" class="form-control required" placeholder="Satuan Terkecil" value="{{$list_unit[0]->name}}" onchange="satuanTerkecilChange()">
                                 </select>
                             </div>
                             <div class="form-group">
@@ -114,21 +115,27 @@
     let listSatuan = <?php echo $list_unit; ?>;
     let listUnit = {};
 
-    console.log('tes', listSatuan);
 
     $(function() {
         listSatuan.forEach((val) => {
+            console.log('val', val);
+            if (!listUnit[val.name]) {
+                listUnit[val.name] = {};
+            }
+            if (!listUnit[val.name][val.tier_customer]) {
+                listUnit[val.name][val.tier_customer] = {};
+            }
+            listUnit[val.name][val.tier_customer]['sell_price'] = val.sell_price;
+            listUnit[val.name]['id'] = val.id_unit;
+            listUnit[val.name][val.tier_customer]['id'] = val.id;
             if (val.qty_reference !== null) {
-                console.log('sa', val);
-                if (!listUnit[val.name]) {
-                    listUnit[val.name] = {};
-                }
-                listUnit[val.name][val.tier_customer] = val.sell_price;
                 listUnit[val.name]['qty_reference'] = val.qty_reference;
             }
         });
 
-        console.log('l', listUnit);
+        console.log('tes', listUnit);
+
+
         listSatuan = [];
 
         // Clear the table body
@@ -140,17 +147,34 @@
 
             var obj = listUnit[key];
 
-            console.log('ob', obj);
 
-            // your code
             const row = `<tr>
-                            <td>${key}</td>
-                            <td><input type="number" class="form-control" name="refunit[${key}]" min="0" value="${obj.qty_reference}"></td>
-                            <td><input type="number" class="form-control" name="general[${key}]" min="0" value="${obj.general}"></td>
-                            <td><input type="number" class="form-control" name="bronze[${key}]" min="0" value="${obj.bronze}"></td>
-                            <td><input type="number" class="form-control" name="silver[${key}]" min="0" value="${obj.silver}"></td>
-                            <td><input type="number" class="form-control" name="gold[${key}]" min="0" value="${obj.gold}"></td>
-                            <td><button class="btn btn-sm btn-danger" onclick="clickDelete(${i})"><i class="fa fa-trash"></i></button></td>
+                            <td>
+                                ${key}
+                                <input type="number" class="form-control d-none" name="id[${key}]" value="${obj?.id}">
+                            </td>
+                            <td>
+                                <input type="number" class="form-control ${!obj?.qty_reference ? 'd-none' : ''}" name="refunit[${key}]" min="0" value="${obj?.qty_reference ? obj.qty_reference : null}">
+                            </td>
+                            <td>
+                                <input type="number" class="form-control" name="general[${key}]" min="0" value="${obj?.general?.sell_price || 0}">
+                                <input type="number" class="form-control d-none" name="id_general[${key}]" value="${obj?.general?.id}">
+                            </td>
+                            <td>
+                                <input type="number" class="form-control" name="bronze[${key}]" min="0" value="${obj?.bronze?.sell_price || 0}">
+                                <input type="number" class="form-control d-none" name="id_bronze[${key}]" value="${obj?.bronze?.id}">
+                            </td>
+                            <td>
+                                <input type="number" class="form-control" name="silver[${key}]" min="0" value="${obj?.silver?.sell_price || 0}">
+                                <input type="number" class="form-control d-none" name="id_silver[${key}]" value="${obj?.silver?.id}">
+                            </td>
+                            <td>
+                                <input type="number" class="form-control" name="gold[${key}]" min="0" value="${obj?.gold?.sell_price || 0}">
+                                <input type="number" class="form-control d-none" name="id_gold[${key}]" value="${obj?.gold?.id}">
+                            </td>
+                            <td>
+                                <button class="btn btn-sm btn-danger" onclick="clickDelete(${i})"><i class="fa fa-trash"></i></button>
+                            </td>
                         </tr>`;
             $('#tableBody').append(row);
             listSatuan.push(key);
@@ -166,22 +190,42 @@
             return;
         }
         const jsonData = generateJSON();
-        console.log(jsonData);
 
         const groupedData = groupJSON(jsonData);
-        console.log(groupedData);
+        const jsonUnit = getUnitJSON(groupedData);
+        console.log('grpdjson', groupedData);
+        console.log('jsonUnit', jsonUnit);
+
+
+
         $("#pricing").val(JSON.stringify(groupedData));
         $("#satuan_terkecil").val($("#satuanterkecil").val());
+        $("#list_units").val(JSON.stringify(jsonUnit));
 
         $('#formadd').submit();
     }
 
+    function getUnitJSON(data) {
+        const result = [];
+        Object.keys(data).forEach((key) => {
+            const res = {
+                id: data[key]['id']['value'],
+                name: key,
+                refunit: data[key]['refunit']?.value || null
+            };
+            result.push(res);
+        });
+        return result;
+    }
+
     function groupJSON(data) {
+        console.log('data', data);
+
 
         const groupedData = {};
 
         for (const item of data) {
-            const {
+            let {
                 unit,
                 name,
                 value
@@ -191,12 +235,25 @@
                 groupedData[unit] = {};
             }
 
-            if (!groupedData[unit][name]) {
-                groupedData[unit][name] = [];
+            let isId = false;
+            if (name.includes('id')) {
+                const temp = name.split('_');
+                if (temp.length > 1) {
+                    name = temp[1];
+                    isId = true;
+                }
             }
 
-            groupedData[unit][name].push(value);
+            if (!groupedData[unit][name]) {
+                groupedData[unit][name] = {};
+            }
+            if (isId) {
+                groupedData[unit][name]['id'] = value;
+            } else {
+                groupedData[unit][name]['value'] = value;
+            }
         }
+
         return groupedData;
     }
 
@@ -217,6 +274,12 @@
         return inputValues[key] || '';
     }
 
+    function satuanTerkecilChange() {
+        const satuanTerkecil = $("#satuanterkecil").val();
+        listSatuan[0] = satuanTerkecil;
+        updateTable();
+    }
+
     function updateTable() {
         // Store the current input values before updating
         saveInputValues();
@@ -224,16 +287,36 @@
         // Clear the table body
         $('#tableBody').empty();
 
-        // Populate the table with selected items and their stored values
         listSatuan.forEach((item, i) => {
+            console.log('ite', item);
+
             const row = `<tr>
-                            <td>${item}</td>
-                            <td><input type="number" class="form-control" name="refunit[${item}]" min="0" value="${getInputValue(item, 'refunit')}"></td>
-                            <td><input type="number" class="form-control" name="general[${item}]" min="0" value="${getInputValue(item, 'general')}"></td>
-                            <td><input type="number" class="form-control" name="bronze[${item}]" min="0" value="${getInputValue(item, 'bronze')}"></td>
-                            <td><input type="number" class="form-control" name="silver[${item}]" min="0" value="${getInputValue(item, 'silver')}"></td>
-                            <td><input type="number" class="form-control" name="gold[${item}]" min="0" value="${getInputValue(item, 'gold')}"></td>
-                            <td><button class="btn btn-sm btn-danger" onclick="clickDelete(${i})"><i class="fa fa-trash"></i></button></td>
+                            <td>
+                                ${item}
+                                <input type="number" class="form-control d-none" name="id[${item}]" value="${getInputValue(item, 'id')}">
+                            </td>
+                            <td>
+                                <input type="number" class="form-control ${i === 0 ? 'd-none' : ''}" name="refunit[${item}]" min="0" value="${getInputValue(item, 'refunit')}">
+                            </td>
+                            <td>
+                                <input type="number" class="form-control" name="general[${item}]" min="0" value="${getInputValue(item, 'general')}">
+                                <input type="number" class="form-control d-none" name="id_general[${item}]" value="${getInputValue(item, 'idgeneral')}">
+                            </td>
+                            <td>
+                                <input type="number" class="form-control" name="bronze[${item}]" min="0" value="${getInputValue(item, 'bronze')}">
+                                <input type="number" class="form-control d-none" name="id_bronze[${item}]" value="${getInputValue(item, 'idbronze')}">
+                            </td>
+                            <td>
+                                <input type="number" class="form-control" name="silver[${item}]" min="0" value="${getInputValue(item, 'silver')}">
+                                <input type="number" class="form-control d-none" name="id_silver[${item}]" value="${getInputValue(item, 'idsilver')}">
+                            </td>
+                            <td>
+                                <input type="number" class="form-control" name="gold[${item}]" min="0" value="${getInputValue(item, 'gold')}">
+                                <input type="number" class="form-control d-none" name="id_gold[${item}]" value="${getInputValue(item, 'idgold')}">
+                            </td>
+                            <td>
+                                <button class="btn btn-sm btn-danger" onclick="clickDelete(${i})"><i class="fa fa-trash"></i></button>
+                            </td>
                         </tr>`;
             $('#tableBody').append(row);
         });
@@ -262,6 +345,7 @@
     function generateJSON() {
         const json = [];
         $('input[type="number"]').each(function() {
+
             const key = $(this).attr('name');
             const value = $(this).val();
             const [field, id] = key.split(/\[|\]\[|\]/).filter(Boolean);

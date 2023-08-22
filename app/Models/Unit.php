@@ -18,4 +18,15 @@ class Unit extends Model
 
         return $data->id;
     }
+
+    public static function edit_unit($id_unit, $id_inventory, $name, $qty_reference)
+    {
+        $data = Unit::where("id", $id_unit)->first();
+        $data->id_inventory = $id_inventory;
+        $data->name = $name;
+        $data->qty_reference = $qty_reference;
+        $data->save();
+
+        return $data->id;
+    }
 }

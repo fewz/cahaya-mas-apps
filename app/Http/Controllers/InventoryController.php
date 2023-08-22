@@ -8,6 +8,7 @@ use App\Models\CategoryInventory;
 use App\Models\Inventory;
 use App\Models\InventoryUnit;
 use App\Models\Pricing;
+use App\Models\Stock;
 use App\Models\Unit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -47,20 +48,26 @@ class InventoryController extends Controller
         // add inventory to database
         try {
             $pricing = json_decode($request->pricing);
+            print_r($pricing);
             $data = new Inventory();
             $data->code = $request->code;
             $data->name = $request->name;
             $data->id_category = $request->id_category;
             $data->save();
 
-            Unit::add_unit($data->id, $request->satuan_terkecil, NULL);
+            $index = 0;
             foreach ($pricing as $key => $value) {
-                $id_unit = Unit::add_unit($data->id, $key, $value->refunit[0]);
+                if ($index === 0) {
+                    $id_unit = Unit::add_unit($data->id, $request->satuan_terkecil, NULL);
+                } else {
+                    $id_unit = Unit::add_unit($data->id, $key, $value->refunit[0]);
+                }
                 foreach ($value as $keyVal => $val) {
                     if ($keyVal !== 'refunit') {
                         Pricing::add_pricing($data->id, $id_unit, $keyVal, $val[0]);
                     }
                 }
+                $index++;
             }
 
             CommonHelper::showAlert("Success", "Insert data success", "success", "/admin/master_inventory");
@@ -87,7 +94,7 @@ class InventoryController extends Controller
         $list_category = CategoryInventory::get();
         $list_unit = Unit::where("unit.id_inventory", $id)
             ->leftJoin('tier_pricing', 'tier_pricing.id_unit', '=', 'unit.id')
-            ->orderBy('unit.id', 'asc')
+            ->orderBy('unit.qty_reference', 'asc')
             ->get();
 
         $data = [
@@ -106,29 +113,64 @@ class InventoryController extends Controller
     {
         // edit inventory to database
         try {
+            DB::beginTransaction();
             $pricing = json_decode($request->pricing);
+            $list_units = json_decode($request->list_units);
             $data = Inventory::where("id", $id)->first();
             $data->code = $request->code;
             $data->name = $request->name;
             $data->id_category = $request->id_category;
             $data->save();
 
-            Unit::where("id_inventory", $request->id)->delete();
-            Pricing::where("id_inventory", $request->id)->delete();
+            $oldUnit = Unit::where("id_inventory", $id)->get();
 
-            Unit::add_unit($data->id, $request->satuan_terkecil, NULL);
-            foreach ($pricing as $key => $value) {
-                $id_unit = Unit::add_unit($data->id, $key, $value->refunit[0]);
-                foreach ($value as $keyVal => $val) {
-                    if ($keyVal !== 'refunit') {
-                        Pricing::add_pricing($data->id, $id_unit, $keyVal, $val[0]);
+            foreach ($oldUnit as $old) {
+                //delete unnecessary unit
+                $isDeleted = true;
+                foreach ($list_units as $unit) {
+                    if ($old->id == $unit->id) {
+                        $isDeleted = false;
                     }
+                }
+
+                if ($isDeleted) {
+                    Unit::where('id', $old->id)->delete();
                 }
             }
 
+            foreach ($list_units as $unit) {
+                //edit unit
+                $isUpdate = false;
+                foreach ($oldUnit as $old) {
+                    if ($old->id == $unit->id) {
+                        Unit::edit_unit($unit->id, $id, $unit->name, $unit->refunit);
+                        $isUpdate = true;
+                    }
+                }
+                if (!$isUpdate) {
+                    $pricing->{$unit->name}->id->value = Unit::add_unit($id, $unit->name, $unit->refunit);
+                }
+            }
+
+            // delete old pricing
+            Pricing::where("id_inventory", $request->id)->delete();
+
+            foreach ($pricing as $value) {
+                // add new pricing
+                $id_unit = $value->id->value;
+                foreach ($value as $keyVal => $val) {
+                    if($keyVal === 'refunit' || $keyVal === 'id'){
+                        continue;
+                    }
+                    Pricing::add_pricing($id, $id_unit, $keyVal, $val->value);
+                }
+            }
+
+            DB::commit();
             CommonHelper::showAlert("Success", "Edit data success", "success", "/admin/master_inventory");
         } catch (\Illuminate\Database\QueryException $ex) {
             // catch error
+            DB::rollBack();
             if (str_contains($ex->getMessage(), 'Duplicate entry')) {
                 CommonHelper::showAlert(
                     "Failed",

@@ -67,7 +67,7 @@
                         <div class="card-body">
                             <div class="form-group">
                                 <label>Satuan Terkecil</label>
-                                <input type="text" id="satuanterkecil" class="form-control required" placeholder="Satuan Terkecil">
+                                <input type="text" id="satuanterkecil" class="form-control required" placeholder="Satuan Terkecil" onchange="updateTable()">
                                 </select>
                             </div>
                             <div class="form-group">
@@ -172,16 +172,26 @@
 
         // Clear the table body
         $('#tableBody').empty();
+        const satuanTerkecil = $("#satuanterkecil").val();
+        const firstRow = `<tr>
+                            <td>${satuanTerkecil}</td>
+                            <td></td>
+                            <td><input type="number" class="form-control required" name="general[${satuanTerkecil}]" min="0" value="${getInputValue(satuanTerkecil, 'general')}"></td>
+                            <td><input type="number" class="form-control required" name="bronze[${satuanTerkecil}]" min="0" value="${getInputValue(satuanTerkecil, 'bronze')}"></td>
+                            <td><input type="number" class="form-control required" name="silver[${satuanTerkecil}]" min="0" value="${getInputValue(satuanTerkecil, 'silver')}"></td>
+                            <td><input type="number" class="form-control required" name="gold[${satuanTerkecil}]" min="0" value="${getInputValue(satuanTerkecil, 'gold')}"></td>
+                        </tr>`;
+        $('#tableBody').append(firstRow);
 
         // Populate the table with selected items and their stored values
         listSatuan.forEach((item, i) => {
             const row = `<tr>
                             <td>${item}</td>
-                            <td><input type="number" class="form-control" name="refunit[${item}]" min="0" value="${getInputValue(item, 'refunit')}"></td>
-                            <td><input type="number" class="form-control" name="general[${item}]" min="0" value="${getInputValue(item, 'general')}"></td>
-                            <td><input type="number" class="form-control" name="bronze[${item}]" min="0" value="${getInputValue(item, 'bronze')}"></td>
-                            <td><input type="number" class="form-control" name="silver[${item}]" min="0" value="${getInputValue(item, 'silver')}"></td>
-                            <td><input type="number" class="form-control" name="gold[${item}]" min="0" value="${getInputValue(item, 'gold')}"></td>
+                            <td><input type="number" class="form-control required" name="refunit[${item}]" min="0" value="${getInputValue(item, 'refunit')}"></td>
+                            <td><input type="number" class="form-control required" name="general[${item}]" min="0" value="${getInputValue(item, 'general')}"></td>
+                            <td><input type="number" class="form-control required" name="bronze[${item}]" min="0" value="${getInputValue(item, 'bronze')}"></td>
+                            <td><input type="number" class="form-control required" name="silver[${item}]" min="0" value="${getInputValue(item, 'silver')}"></td>
+                            <td><input type="number" class="form-control required" name="gold[${item}]" min="0" value="${getInputValue(item, 'gold')}"></td>
                             <td><button class="btn btn-sm btn-danger" onclick="clickDelete(${i})"><i class="fa fa-trash"></i></button></td>
                         </tr>`;
             $('#tableBody').append(row);
@@ -189,8 +199,8 @@
     }
 
     function tambahSatuan() {
-        console.log('list',listSatuan);
-        
+        console.log('list', listSatuan);
+
         if ($satuanBaru.val() === '') {
             return;
         }

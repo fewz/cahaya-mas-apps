@@ -81,7 +81,7 @@
                                 <button class="btn btn-primary mt-3" onclick="tambahSatuan()">Tambah</button>
                             </div>
                             <label>Pricing by Tier</label>
-                            <table id="example1" class="table table-bordered table-striped">
+                            <table class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
                                         <th>Unit</th>

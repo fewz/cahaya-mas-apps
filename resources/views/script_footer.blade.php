@@ -12,7 +12,9 @@
         $("#example1").DataTable();
 
         //Initialize Select2 Elements
-        $('.select2').select2();
+        $('.select2').select2({
+            paging: false
+        });
 
         //Initialize Select2 Elements
         $('.select2bs4').select2({
@@ -85,5 +87,9 @@
             }
         });
         return isValid;
+    }
+
+    function numberWithCommas(x) {
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
 </script>

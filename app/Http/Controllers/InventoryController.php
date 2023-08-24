@@ -48,7 +48,6 @@ class InventoryController extends Controller
         // add inventory to database
         try {
             $pricing = json_decode($request->pricing);
-            print_r($pricing);
             $data = new Inventory();
             $data->code = $request->code;
             $data->name = $request->name;
@@ -103,8 +102,6 @@ class InventoryController extends Controller
             'list_category' => $list_category,
             'list_unit' => $list_unit
         ];
-
-        // print_r($list_unit);
 
         return view("admin.inventory.edit", $data);
     }

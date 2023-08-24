@@ -46,16 +46,42 @@
                             </p>
                         </a>
                     </li>
-                    <li class="nav-item">
+                    <!-- <li class="nav-item">
                         <a href="{{ URL('admin/master_supplier') }}" class="nav-link {{$activePage === 'master_supplier' ? 'active' : ''}}">
                             <i class="nav-icon fas fa-truck"></i>
                             <p>
                                 Supplier
                             </p>
                         </a>
+                    </li> -->
+                    <?php
+                    $supplier_menu = ['master_supplier', 'purchase_order'];
+                    ?>
+                    <li class="nav-item expandable {{in_array($activePage, $supplier_menu)  ? 'menu-is-opening menu-open' : ''}}">
+                        <a href="#" class="nav-link {{in_array($activePage, $supplier_menu) ? 'active' : ''}}">
+                            <i class="nav-icon fa fa-truck"></i>
+                            <p>
+                                Supplier
+                                <i class="right fas fa-angle-left"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="{{ URL('admin/master_supplier') }}" class="nav-link {{$activePage === 'master_supplier' ? 'active' : ''}}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Master Supplier</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ URL('admin/purchase_order') }}" class="nav-link {{$activePage === 'purchase_order' ? 'active' : ''}}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Purchase Order</p>
+                                </a>
+                            </li>
+                        </ul>
                     </li>
                     <?php
-                    $inventory_menu = ['master_inventory', 'master_category', 'master_unit', 'master_stock', 'master_pricing'];
+                    $inventory_menu = ['master_inventory', 'master_category'];
                     ?>
                     <li class="nav-item expandable {{in_array($activePage, $inventory_menu)  ? 'menu-is-opening menu-open' : ''}}">
                         <a href="#" class="nav-link {{in_array($activePage, $inventory_menu) ? 'active' : ''}}">
@@ -76,12 +102,6 @@
                                 <a href="{{ URL('admin/master_category') }}" class="nav-link {{$activePage === 'master_category' ? 'active' : ''}}">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>Master Category</p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a  href="{{ URL('admin/master_stock') }}" class="nav-link {{$activePage === 'master_stock' ? 'active' : ''}}">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Stock</p>
                                 </a>
                             </li>
                         </ul>

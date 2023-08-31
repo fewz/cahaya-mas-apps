@@ -20,10 +20,19 @@ class InventoryController extends Controller
     {
         // list view inventory
         $user = Auth::user();
+        // $stok = Unit::hitung_stok(30);
+        // echo $stok;
         $list_inventory = DB::table('inventory')
             ->join('category_inventory', 'category_inventory.id', '=', 'inventory.id_category')
             ->select('inventory.*', 'category_inventory.name as category')
             ->get();
+
+        foreach ($list_inventory as $inventory) {
+            $stok = Unit::hitung_stok($inventory->id);
+            $harga = Pricing::get_harga_general_list_inventory($inventory->id);
+            $inventory->stok = $stok;
+            $inventory->list_harga = $harga;
+        }
         $data = [
             'user' => $user,
             'list_inventory' => $list_inventory
@@ -156,7 +165,7 @@ class InventoryController extends Controller
                 // add new pricing
                 $id_unit = $value->id->value;
                 foreach ($value as $keyVal => $val) {
-                    if($keyVal === 'refunit' || $keyVal === 'id'){
+                    if ($keyVal === 'refunit' || $keyVal === 'id') {
                         continue;
                     }
                     Pricing::add_pricing($id, $id_unit, $keyVal, $val->value);

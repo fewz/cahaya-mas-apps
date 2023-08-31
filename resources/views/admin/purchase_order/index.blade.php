@@ -42,6 +42,7 @@
                                                 <th>Supplier</th>
                                                 <th>Created Date</th>
                                                 <th>Status</th>
+                                                <th>Grand Total</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
@@ -54,13 +55,21 @@
                                                 <td>{{$dt->created_date}}</td>
                                                 <td>{{$status[$dt->status]}}</td>
                                                 <td>
+                                                    {{$dt->grand_total > 0 ? number_format($dt->grand_total,0,',','.') : "-"}}
+                                                </td>
+                                                <td>
                                                     @if($dt->status == 0)
                                                     <a href="{{ URL('admin/purchase_order/edit/'.$dt->id) }}" class="btn btn-sm btn-primary">
                                                         <i class="fa fa-edit"></i>
                                                     </a>
+                                                    <button class="btn btn-sm btn-danger" onclick="clickDelete('{{$dt->id}}')"><i class="fa fa-trash"></i></button>
                                                     @elseif ($dt->status == 1)
                                                     <a href="{{ URL('admin/purchase_order/finish/'.$dt->id) }}" class="btn btn-sm btn-primary">
                                                         <i class="fa fa-check"></i>
+                                                    </a>
+                                                    @elseif ($dt->status == 2)
+                                                    <a href="{{ URL('admin/purchase_order/view/'.$dt->id) }}" class="btn btn-sm btn-primary">
+                                                        <i class="fa fa-eye"></i>
                                                     </a>
                                                     @endif
                                                     <!-- <button class="btn btn-sm btn-danger" onclick="clickDelete('{{$dt->id}}')"><i class="fa fa-trash"></i></button> -->
@@ -78,7 +87,7 @@
         </div>
     </div>
 </body>
-<form id="formDelete" action="{{URL('admin/master_supplier/delete')}}" method="POST">
+<form id="formDelete" action="{{URL('admin/purchase_order/delete')}}" method="POST">
     @csrf
     <input type="hidden" name="id" id="id_delete">
 </form>

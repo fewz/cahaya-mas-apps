@@ -33,6 +33,10 @@
                                         <a href="{{ URL('admin/master_inventory/add') }}" class="btn btn-sm btn-primary">ADD <i class="fa fa-plus"></i></a>
                                     </div>
                                 </div>
+                                <div class="py-2 px-3">
+                                    <p class="text-info m-0">* Stok berdasarkan dari satuan terkecil per unit</p>
+                                    <p class="text-info">* Harga berdasarkan dari satuan terkecil per tier dari atas (General - Bronze - Silver - Gold)</p>
+                                </div>
                                 <!-- /.card-header -->
                                 <div class="card-body">
                                     <table id="example1" class="table table-bordered table-striped">
@@ -41,6 +45,8 @@
                                                 <th>Code</th>
                                                 <th>Name</th>
                                                 <th>Category</th>
+                                                <th>Stok*</th>
+                                                <th>Harga*</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
@@ -50,6 +56,13 @@
                                                 <td>{{$dt->code}}</td>
                                                 <td>{{$dt->name}}</td>
                                                 <td>{{$dt->category}}</td>
+                                                <td>{{$dt->stok}}</td>
+                                                <td>
+                                                    Rp. {{$dt->list_harga[0]}}<br>
+                                                    Rp. {{$dt->list_harga[1]}}<br>
+                                                    Rp. {{$dt->list_harga[2]}}<br>
+                                                    Rp. {{$dt->list_harga[3]}}
+                                                </td>
                                                 <td>
                                                     <a href="{{ URL('admin/master_inventory/edit/'.$dt->id) }}" class="btn btn-sm btn-primary">
                                                         <i class="fa fa-edit"></i>

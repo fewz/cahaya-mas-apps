@@ -41,6 +41,10 @@
                                     <input type="text" class="form-control required" name="order_number" placeholder="Order Number" value="{{$data_purchase_order->order_number}}">
                                 </div>
                                 <div class="form-group">
+                                    <label>Tanggal Order</label>
+                                    <input type="date" class="form-control required" name="created_date" placeholder="Tanggal Order" value="{{$data_purchase_order->created_date}}">
+                                </div>
+                                <div class="form-group">
                                     <label>Supplier</label>
                                     <select id="supplier" class="form-control select2bs4" name="id_supplier" style="width: 100%;" onchange="getProductSupplier()">
                                         @foreach ($list_supplier as $dt )
@@ -56,7 +60,7 @@
                                     <label>Status</label>
                                     <select class="form-control select2bs4" name="status" style="width: 100%;">
                                         <option value="0" <?php echo $data_purchase_order->status === 0 ? 'selected' : ''; ?>>Draft</option>
-                                        <option value="1" <?php echo $data_purchase_order->status === 1 ? 'selected' : ''; ?>>Diproses Supplier</option>
+                                        <option value="1" <?php echo $data_purchase_order->status === 1 ? 'selected' : ''; ?>>Kirim ke supplier</option>
                                     </select>
                                 </div>
                                 <input type="hidden" id="list_produk" name="list_produk">

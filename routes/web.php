@@ -83,6 +83,7 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::post('/purchase_order/delete', [PurchaseOrder::class, 'delete'])->name('purchase_order/delete');
     Route::get('/purchase_order/finish/{id}', [PurchaseOrder::class, 'finish'])->name('purchase_order/finish');
     Route::post('/purchase_order/do_finish/{id}', [PurchaseOrder::class, 'do_finish'])->name('purchase_order/do_finish');
+    Route::get('/purchase_order/view/{id}', [PurchaseOrder::class, 'view'])->name('purchase_order/view');
 });
 
 

@@ -41,6 +41,10 @@
                                     <input type="text" class="form-control required" name="order_number" placeholder="Order Number">
                                 </div>
                                 <div class="form-group">
+                                    <label>Tanggal Order</label>
+                                    <input type="date" class="form-control required" name="created_date" placeholder="Tanggal Order">
+                                </div>
+                                <div class="form-group">
                                     <label>Supplier</label>
                                     <select id="supplier" class="form-control select2bs4" name="id_supplier" style="width: 100%;" onchange="getProductSupplier()">
                                         @foreach ($list_supplier as $dt)
@@ -52,7 +56,7 @@
                                     <label>Status</label>
                                     <select class="form-control select2bs4" name="status" style="width: 100%;">
                                         <option value="0">Draft</option>
-                                        <option value="1">Diproses Supplier</option>
+                                        <option value="1">Kirim ke supplier</option>
                                     </select>
                                 </div>
                                 <input type="hidden" id="list_produk" name="list_produk">

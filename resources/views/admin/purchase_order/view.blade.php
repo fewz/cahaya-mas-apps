@@ -14,7 +14,7 @@
                         <div class="col-sm-12">
                             <h1 class="m-0">
                                 <a href="{{URL('admin/purchase_order')}}">Purchase Order</a>
-                                / Finish
+                                / View
                             </h1>
                         </div><!-- /.col -->
                     </div><!-- /.row -->
@@ -57,6 +57,7 @@
                                     <select disabled class="form-control select2bs4" name="status" style="width: 100%;">
                                         <option value="0" <?php echo $data_purchase_order->status === 0 ? 'selected' : ''; ?>>Draft</option>
                                         <option value="1" <?php echo $data_purchase_order->status === 1 ? 'selected' : ''; ?>>Diproses Supplier</option>
+                                        <option value="2" <?php echo $data_purchase_order->status === 2 ? 'selected' : ''; ?>>Selesai</option>
                                     </select>
                                 </div>
                                 <div class="form-group">
@@ -65,7 +66,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label>Finish Date</label>
-                                    <input type="date" class="form-control" name="finish_date">
+                                    <input type="date" class="form-control" value="{{$data_purchase_order->finish_date}}" name="finish_date" disabled>
                                 </div>
                                 <input type="hidden" id="list_produk" name="list_produk">
                                 <input type="hidden" id="grand_total" name="grand_total">
@@ -88,7 +89,6 @@
                                         <th>Qty</th>
                                         <th>Exp Date</th>
                                         <th>Harga per unit</th>
-                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody id="tableBody">
@@ -97,13 +97,10 @@
 
                             <div class="mt-3 float-right text-right">
                                 <label>Grand Total</label>
-                                <p id="totalHarga"></p>
+                                <p id="totalHarga">Rp. {{number_format($data_purchase_order->grand_total,0,'.','.')}}</p>
                             </div>
                         </div>
                         <!-- /.card-body -->
-                        <div class="card-footer">
-                            <div class="btn btn-primary" onclick="submit()">Terima Barang</div>
-                        </div>
                     </div>
                 </div>
             </section>
@@ -122,6 +119,7 @@
         listProduk = [];
         temp.forEach((val, index) => {
             console.log('index', index);
+            console.log('val', val);
 
             const unit = {
                 id: val.id_unit,
@@ -131,6 +129,9 @@
                 id_product: val.id_inventory,
                 product_name: val.product_name,
                 product_code: val.product_code,
+                price: val.price_buy,
+                qty: val.qty,
+                date_expired: val.date_expired,
                 unit: JSON.stringify(unit)
             };
             const key = val.product_code + '-' + val.unit_name;
@@ -243,14 +244,12 @@
                             <td>${object.product_code}</td>
                             <td>${object.product_name}</td>
                             <td>${unit.name}</td>
-                            <td><input class="form-control" type="number" name="qty[${key}]" value="${getInputValue(key, 'qty')}"/></td>
-                            <td><input class="form-control" type="date" name="expdate[${key}]" value="${getInputValue(key, 'expdate')}"/></td>
-                            <td><input class="form-control" type="number" name="price[${key}]" value="${getInputValue(key, 'price')}" onchange="hitungTotal()"/></td>
-                            <td><button class="btn btn-sm btn-danger" onclick="clickDelete(${i})"><i class="fa fa-trash"></i></button></td>
+                            <td>${object.qty}</td>
+                            <td>${object.date_expired}</td>
+                            <td>Rp. ${numberWithCommas(object.price)}</td>
                         </tr>`;
             $('#tableBody').append(row);
         });
-        hitungTotal();
     }
 
     function clickDelete(index) {

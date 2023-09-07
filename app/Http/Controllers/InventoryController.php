@@ -20,15 +20,13 @@ class InventoryController extends Controller
     {
         // list view inventory
         $user = Auth::user();
-        // $stok = Unit::hitung_stok(30);
-        // echo $stok;
         $list_inventory = DB::table('inventory')
             ->join('category_inventory', 'category_inventory.id', '=', 'inventory.id_category')
             ->select('inventory.*', 'category_inventory.name as category')
             ->get();
 
         foreach ($list_inventory as $inventory) {
-            $stok = Unit::hitung_stok($inventory->id);
+            $stok = Unit::hitung_stok_terkecil($inventory->id);
             $harga = Pricing::get_harga_general_list_inventory($inventory->id);
             $inventory->stok = $stok;
             $inventory->list_harga = $harga;

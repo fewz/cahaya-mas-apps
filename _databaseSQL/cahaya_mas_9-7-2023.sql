@@ -1,10 +1,10 @@
 -- phpMyAdmin SQL Dump
--- version 5.0.4
+-- version 5.1.0
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Sep 07, 2023 at 11:33 AM
--- Server version: 10.4.17-MariaDB
+-- Host: localhost
+-- Generation Time: Sep 07, 2023 at 05:57 PM
+-- Server version: 10.4.18-MariaDB
 -- PHP Version: 7.3.27
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -117,9 +117,8 @@ CREATE TABLE `d_purchase_order` (
 --
 
 INSERT INTO `d_purchase_order` (`id`, `id_h_purchase_order`, `id_inventory`, `id_unit`, `date_expired`, `qty`, `sisa_qty`, `order_qty`, `price_buy`) VALUES
-(49, 16, 30, 118, '2023-09-07', 20, 5, 25, 15000),
-(50, 16, 30, 119, '2023-09-07', 5, 10, 15, 35000),
-(51, 17, 32, 122, NULL, 0, 35, 35, NULL);
+(54, 18, 30, 118, '2023-09-07', 5, 0, 5, 25000),
+(55, 18, 31, 121, '2023-09-07', 5, 0, 5, 35000);
 
 -- --------------------------------------------------------
 
@@ -142,8 +141,7 @@ CREATE TABLE `h_purchase_order` (
 --
 
 INSERT INTO `h_purchase_order` (`id`, `id_supplier`, `created_date`, `finish_date`, `order_number`, `status`, `grand_total`) VALUES
-(16, 9, '2023-09-07', '2023-09-08', 'ORD001', 2, 475000),
-(17, 10, '2023-08-10', '2023-09-07', 'ORD002', 0, 0);
+(18, 9, '2023-09-07', '2023-09-07', 'ORD001', 2, 300000);
 
 -- --------------------------------------------------------
 
@@ -166,6 +164,32 @@ INSERT INTO `inventory` (`id`, `code`, `name`, `id_category`) VALUES
 (30, 'ROK001', 'ROKOK SURYA', 1),
 (31, 'ROK002', 'ROKOK MALBORO', 1),
 (32, 'AQ001', 'AQUA 350ML', 2);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `log_terima_barang`
+--
+
+CREATE TABLE `log_terima_barang` (
+  `id` int(11) NOT NULL,
+  `id_inventory` int(11) NOT NULL,
+  `id_h_purchase_order` int(11) NOT NULL,
+  `id_unit` int(11) NOT NULL,
+  `qty` int(11) NOT NULL,
+  `created_date` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `log_terima_barang`
+--
+
+INSERT INTO `log_terima_barang` (`id`, `id_inventory`, `id_h_purchase_order`, `id_unit`, `qty`, `created_date`) VALUES
+(1, 30, 18, 118, 3, '2023-09-06 17:00:00'),
+(2, 31, 18, 121, 0, '2023-09-06 17:00:00'),
+(3, 30, 18, 118, 2, '2023-09-07 15:56:00'),
+(4, 31, 18, 121, 4, '2023-09-07 15:56:00'),
+(5, 31, 18, 121, 1, '2023-09-07 15:56:50');
 
 -- --------------------------------------------------------
 
@@ -365,12 +389,12 @@ CREATE TABLE `unit` (
 --
 
 INSERT INTO `unit` (`id`, `name`, `qty_reference`, `id_inventory`, `stok`) VALUES
-(118, 'pcs', NULL, 30, 62),
-(119, 'dos', 24, 30, 15),
+(118, 'pcs', NULL, 30, 5),
+(119, 'dos', 24, 30, 0),
 (120, 'pcs', NULL, 31, 0),
-(121, 'lusin', 12, 31, 2),
+(121, 'lusin', 12, 31, 5),
 (122, 'pcs', NULL, 32, 0),
-(123, 'dos', 12, 32, 3);
+(123, 'dos', 12, 32, 0);
 
 -- --------------------------------------------------------
 
@@ -433,6 +457,12 @@ ALTER TABLE `h_purchase_order`
 ALTER TABLE `inventory`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `code` (`code`);
+
+--
+-- Indexes for table `log_terima_barang`
+--
+ALTER TABLE `log_terima_barang`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `permission`
@@ -518,19 +548,25 @@ ALTER TABLE `customer`
 -- AUTO_INCREMENT for table `d_purchase_order`
 --
 ALTER TABLE `d_purchase_order`
-  MODIFY `id` int(8) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
+  MODIFY `id` int(8) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
 
 --
 -- AUTO_INCREMENT for table `h_purchase_order`
 --
 ALTER TABLE `h_purchase_order`
-  MODIFY `id` int(8) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int(8) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `inventory`
 --
 ALTER TABLE `inventory`
   MODIFY `id` int(8) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+
+--
+-- AUTO_INCREMENT for table `log_terima_barang`
+--
+ALTER TABLE `log_terima_barang`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `permission`

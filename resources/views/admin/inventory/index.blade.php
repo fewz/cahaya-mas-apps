@@ -64,8 +64,11 @@
                                                     Rp. {{$dt->list_harga[3]}}
                                                 </td>
                                                 <td>
-                                                    <a href="{{ URL('admin/master_inventory/edit/'.$dt->id) }}" class="btn btn-sm btn-primary">
+                                                    <a href="{{ URL('admin/master_inventory/edit/'.$dt->id) }}" class="btn btn-sm btn-primary" title="edit inventory">
                                                         <i class="fa fa-edit"></i>
+                                                    </a>
+                                                    <a href="{{ URL('admin/master_inventory/view_stok/'.$dt->id) }}" class="btn btn-sm btn-primary" title="Lihat stok">
+                                                        <i class="fa fa-list"></i>
                                                     </a>
                                                     <button class="btn btn-sm btn-danger" onclick="clickDelete('{{$dt->id}}')"><i class="fa fa-trash"></i></button>
                                                 </td>

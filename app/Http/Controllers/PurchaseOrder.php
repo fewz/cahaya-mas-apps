@@ -51,7 +51,7 @@ class PurchaseOrder extends Controller
             $data->id_supplier = $request->id_supplier;
             $data->order_number = $request->order_number;
             $data->created_date = $request->created_date;
-            $data->status = $request->status;
+            $data->status = 0;
             $data->save();
 
             foreach ($list_produk as $lp) {
@@ -96,16 +96,16 @@ class PurchaseOrder extends Controller
             $data = HeaderPurchaseOrder::where("id", $id)->first();
             $data->id_supplier = $request->id_supplier;
             $data->order_number = $request->order_number;
-            $data->status = $request->status;
+            $data->status = 1;
             $data->save();
 
             DetailPurchaseOrder::where("id_h_purchase_order", $id)->delete();
             foreach ($list_produk as $lp) {
-                DetailPurchaseOrder::add_detail($data->id, $lp->id_product, $lp->id_unit, NULL, $lp->qty, NULL);
+                DetailPurchaseOrder::add_detail($data->id, $lp->id_product, $lp->id_unit, NULL, $lp->qty, $lp->price);
             }
 
             DB::commit();
-            CommonHelper::showAlert("Success", "Edit data success", "success", "/admin/purchase_order");
+            CommonHelper::showAlert("Success", "Kirim pesanan ke supplier berhasil", "success", "/admin/purchase_order");
         } catch (\Illuminate\Database\QueryException $ex) {
             // catch error
             DB::rollBack();
@@ -149,14 +149,15 @@ class PurchaseOrder extends Controller
             DB::beginTransaction();
             $list_produk = json_decode($request->list_produk);
             $data = HeaderPurchaseOrder::where("id", $id)->first();
-            $data->status = 2;
-            $data->grand_total = $request->grand_total;
-            $data->finish_date = $request->finish_date;
+            if ($request->is_finish === '1') {
+                $data->status = 2;
+                $data->finish_date = $request->finish_date;
+            }
+            $data->grand_total = (int)$data->grand_total + (int)$request->grand_total;
             $data->save();
 
-            DetailPurchaseOrder::where("id_h_purchase_order", $id)->delete();
             foreach ($list_produk as $lp) {
-                DetailPurchaseOrder::add_detail($data->id, $lp->id_product, $lp->id_unit, $lp->expdate, $lp->qty, $lp->price);
+                DetailPurchaseOrder::terima_barang($data->id, $lp->id_product, $lp->id_unit, $lp->expdate, $lp->qty);
                 Unit::add_stok($lp->id_unit, $lp->qty);
             }
 

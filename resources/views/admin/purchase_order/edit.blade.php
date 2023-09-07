@@ -14,7 +14,7 @@
                         <div class="col-sm-12">
                             <h1 class="m-0">
                                 <a href="{{URL('admin/purchase_order')}}">Purchase Order</a>
-                                / Edit
+                                / Kirim ke supplier
                             </h1>
                         </div><!-- /.col -->
                     </div><!-- /.row -->
@@ -58,9 +58,8 @@
                                 </div>
                                 <div class="form-group">
                                     <label>Status</label>
-                                    <select class="form-control select2bs4" name="status" style="width: 100%;">
-                                        <option value="0" <?php echo $data_purchase_order->status === 0 ? 'selected' : ''; ?>>Draft</option>
-                                        <option value="1" <?php echo $data_purchase_order->status === 1 ? 'selected' : ''; ?>>Kirim ke supplier</option>
+                                    <select class="form-control select2bs4" name="status" style="width: 100%;" disabled>
+                                        <option value="1">Kirim ke supplier</option>
                                     </select>
                                 </div>
                                 <input type="hidden" id="list_produk" name="list_produk">
@@ -91,12 +90,17 @@
                                         <th>Nama</th>
                                         <th>Unit</th>
                                         <th>Qty</th>
+                                        <th>Harga per unit</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody id="tableBody">
                                 </tbody>
                             </table>
+                            <div class="mt-3 float-right text-right">
+                                <label>Perkiraan Total Pengeluaran</label>
+                                <p id="totalHarga"></p>
+                            </div>
                         </div>
                         <!-- /.card-body -->
                         <div class="card-footer">
@@ -133,7 +137,7 @@
                 unit: JSON.stringify(unit)
             };
             const key = val.product_code + '-' + val.unit_name;
-            inputValues[`qty[${key}]`] = val.qty;
+            inputValues[`qty[${key}]`] = val.order_qty;
             listProduk.push(JSON.stringify(res));
         });
 
@@ -211,10 +215,12 @@
             const key = obj.product_code + '-' + unit.name;
 
             const qty = getInputValue(key, 'qty');
+            const harga = getInputValue(key, 'price');
             const res = {
                 id_product: obj.id_product,
                 id_unit: unit.id,
-                qty: qty
+                qty: qty,
+                price: harga,
             }
             result.push(res);
         });
@@ -250,6 +256,26 @@
         updateTable();
     }
 
+    function hitungTotal() {
+        saveInputValues();
+        let totalHarga = 0;
+        console.log('inputval', inputValues);
+        listProduk.forEach((val) => {
+            const obj = JSON.parse(val);
+            const unit = JSON.parse(obj.unit);
+            const key = obj.product_code + '-' + unit.name;
+            const harga = getInputValue(key, 'price') || 0;
+            const qty = getInputValue(key, 'qty') || 0;
+            console.log('har', harga);
+
+
+            totalHarga += (parseInt(harga) * parseInt(qty));
+        })
+
+        $("#totalHarga").text('Rp. ' + numberWithCommas(totalHarga));
+        $("#grand_total").val(totalHarga);
+    }
+
     const inputValues = {};
 
     // Save input values into the inputValues object
@@ -283,6 +309,7 @@
                             <td>${object.product_name}</td>
                             <td>${unit.name}</td>
                             <td><input class="form-control" type="number" name="qty[${key}]" value="${getInputValue(key, 'qty')}"/></td>
+                            <td><input class="form-control" type="number" name="price[${key}]" value="${getInputValue(key, 'price')}" onchange="hitungTotal()"/></td>
                             <td><button class="btn btn-sm btn-danger" onclick="clickDelete(${i})"><i class="fa fa-trash"></i></button></td>
                         </tr>`;
             $('#tableBody').append(row);

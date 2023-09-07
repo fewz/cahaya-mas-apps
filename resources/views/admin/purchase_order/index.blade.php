@@ -59,13 +59,16 @@
                                                 </td>
                                                 <td>
                                                     @if($dt->status == 0)
-                                                    <a href="{{ URL('admin/purchase_order/edit/'.$dt->id) }}" class="btn btn-sm btn-primary">
-                                                        <i class="fa fa-edit"></i>
+                                                    <a href="{{ URL('admin/purchase_order/edit/'.$dt->id) }}" class="btn btn-sm btn-primary" title="sent to supplier">
+                                                        <i class="fa fa-truck"></i>
                                                     </a>
-                                                    <button class="btn btn-sm btn-danger" onclick="clickDelete('{{$dt->id}}')"><i class="fa fa-trash"></i></button>
+                                                    <button class="btn btn-sm btn-danger" onclick="clickDelete('{{$dt->id}}')" title="delete order"><i class="fa fa-trash"></i></button>
                                                     @elseif ($dt->status == 1)
                                                     <a href="{{ URL('admin/purchase_order/finish/'.$dt->id) }}" class="btn btn-sm btn-primary">
-                                                        <i class="fa fa-check"></i>
+                                                        <i class="fa fa-check" title="terima pesanan"></i>
+                                                    </a>
+                                                    <a href="{{ URL('admin/purchase_order/view/'.$dt->id) }}" class="btn btn-sm btn-primary">
+                                                        <i class="fa fa-eye"></i>
                                                     </a>
                                                     @elseif ($dt->status == 2)
                                                     <a href="{{ URL('admin/purchase_order/view/'.$dt->id) }}" class="btn btn-sm btn-primary">

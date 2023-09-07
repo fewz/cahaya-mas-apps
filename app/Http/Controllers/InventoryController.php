@@ -202,4 +202,22 @@ class InventoryController extends Controller
             CommonHelper::showAlert("Failed", $ex->getMessage(), "error", "back");
         }
     }
+
+    public function view_stok($id)
+    {
+        // edit view inventory
+        $user = Auth::user();
+        $data_inventory = Inventory::find($id);
+        $list_unit = Unit::where("unit.id_inventory", $id)
+            ->orderBy('unit.qty_reference', 'asc')
+            ->get();
+
+        $data = [
+            'user' => $user,
+            'data_inventory' => $data_inventory,
+            'list_unit' => $list_unit
+        ];
+
+        return view("admin.inventory.view_stok", $data);
+    }
 }

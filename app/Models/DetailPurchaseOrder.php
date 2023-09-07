@@ -16,8 +16,22 @@ class DetailPurchaseOrder extends Model
         $data->id_inventory = $id_inventory;
         $data->id_unit = $id_unit;
         $data->date_expired = $date_expired;
-        $data->qty = $qty;
+        $data->qty = 0;
+        $data->order_qty = $qty;
+        $data->sisa_qty = $qty;
         $data->price_buy = $price_buy;
+        $data->save();
+    }
+
+    public static function terima_barang($id_header, $id_inventory, $id_unit, $date_expired, $qty)
+    {
+        $data = DetailPurchaseOrder::where('id_h_purchase_order', $id_header)
+            ->where('id_inventory', $id_inventory)
+            ->where('id_unit', $id_unit)
+            ->first();
+        $data->date_expired = $date_expired;
+        $data->qty = (int)$data->qty + (int)$qty;
+        $data->sisa_qty = (int)$data->sisa_qty - (int)$qty;
         $data->save();
     }
 }

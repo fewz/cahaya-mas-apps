@@ -67,6 +67,7 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::get('/master_inventory/edit/{id}', [InventoryController::class, 'edit'])->name('master_inventory/edit');
     Route::post('/master_inventory/do_edit/{id}', [InventoryController::class, 'do_edit'])->name('master_inventory/do_edit');
     Route::post('/master_inventory/delete', [InventoryController::class, 'delete'])->name('master_inventory/delete');
+    Route::get('/master_inventory/view_stok/{id}', [InventoryController::class, 'view_stok'])->name('master_inventory/view_stok');
 
     Route::get('/master_category', [CategoryController::class, 'index'])->name('master_category');
     Route::get('/master_category/add', [CategoryController::class, 'add'])->name('master_category/add');

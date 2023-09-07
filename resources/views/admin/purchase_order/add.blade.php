@@ -54,9 +54,8 @@
                                 </div>
                                 <div class="form-group">
                                     <label>Status</label>
-                                    <select class="form-control select2bs4" name="status" style="width: 100%;">
+                                    <select class="form-control select2bs4" name="status" style="width: 100%;" disabled>
                                         <option value="0">Draft</option>
-                                        <option value="1">Kirim ke supplier</option>
                                     </select>
                                 </div>
                                 <input type="hidden" id="list_produk" name="list_produk">

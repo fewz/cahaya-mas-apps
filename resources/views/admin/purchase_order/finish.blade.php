@@ -14,7 +14,7 @@
                         <div class="col-sm-12">
                             <h1 class="m-0">
                                 <a href="{{URL('admin/purchase_order')}}">Purchase Order</a>
-                                / Finish
+                                / Terima Barang
                             </h1>
                         </div><!-- /.col -->
                     </div><!-- /.row -->
@@ -68,6 +68,7 @@
                                     <input type="date" class="form-control" name="finish_date">
                                 </div>
                                 <input type="hidden" id="list_produk" name="list_produk">
+                                <input type="hidden" id="is_finish" name="is_finish">
                                 <input type="hidden" id="grand_total" name="grand_total">
                             </div>
                         </form>
@@ -85,10 +86,11 @@
                                         <th>Kode</th>
                                         <th>Nama</th>
                                         <th>Unit</th>
-                                        <th>Qty</th>
-                                        <th>Exp Date</th>
+                                        <th>Qty Order</th>
+                                        <th>Qty Sisa</th>
                                         <th>Harga per unit</th>
-                                        <th>Action</th>
+                                        <th>Qty Terima</th>
+                                        <th>Exp Date</th>
                                     </tr>
                                 </thead>
                                 <tbody id="tableBody">
@@ -98,11 +100,12 @@
                             <div class="mt-3 float-right text-right">
                                 <label>Grand Total</label>
                                 <p id="totalHarga"></p>
+                                <div class="btn btn-info" onclick="terima()">Terima Barang</div>
                             </div>
                         </div>
                         <!-- /.card-body -->
                         <div class="card-footer">
-                            <div class="btn btn-primary" onclick="submit()">Terima Barang</div>
+                            <div class="btn btn-primary" onclick="selesai()">Selesaikan Pesanan</div>
                         </div>
                     </div>
                 </div>
@@ -117,26 +120,52 @@
     console.log('li', listProduk);
 
 
+    function terima() {
+        $("#is_finish").val('0');
+        submit();
+    }
+
+    function selesai() {
+        swal({
+                title: "Selesaikan Pesanan?",
+                text: "Pastikan qty yang diterima sudah sesuai, karena tidak dapat diedit kembali",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willFinish) => {
+                if (willFinish) {
+                    $("#is_finish").val('1');
+                    submit();
+                }
+            });
+    }
+
     $(function() {
         const temp = listProduk;
         listProduk = [];
         temp.forEach((val, index) => {
-            console.log('index', index);
+            console.log('index', val);
 
-            const unit = {
-                id: val.id_unit,
-                name: val.unit_name
-            };
-            const res = {
-                id_product: val.id_inventory,
-                product_name: val.product_name,
-                product_code: val.product_code,
-                unit: JSON.stringify(unit)
-            };
-            const key = val.product_code + '-' + val.unit_name;
-            inputValues[`qty[${key}]`] = val.qty;
-            inputValues[`price[${key}]`] = 0;
-            listProduk.push(JSON.stringify(res));
+            if (val.sisa_qty > 0) {
+                const unit = {
+                    id: val.id_unit,
+                    name: val.unit_name
+                };
+                const res = {
+                    id_product: val.id_inventory,
+                    product_name: val.product_name,
+                    product_code: val.product_code,
+                    price: val.price_buy,
+                    unit: JSON.stringify(unit)
+                };
+                const key = val.product_code + '-' + val.unit_name;
+                inputValues[`qty_order[${key}]`] = val.order_qty;
+                inputValues[`qty_sisa[${key}]`] = val.sisa_qty;
+                inputValues[`price[${key}]`] = val.price_buy;
+                inputValues[`expdate[${key}]`] = new Date().toDateInputValue();
+                listProduk.push(JSON.stringify(res));
+            }
         });
         saveInputValues();
 
@@ -166,12 +195,16 @@
             const key = obj.product_code + '-' + unit.name;
 
             const qty = getInputValue(key, 'qty');
+            const qty_sisa = getInputValue(key, 'qty_sisa');
+            const qty_order = getInputValue(key, 'qty_order');
             const harga = getInputValue(key, 'price');
             const expdate = getInputValue(key, 'expdate');
             const res = {
                 id_product: obj.id_product,
                 id_unit: unit.id,
                 qty: qty,
+                qty_sisa: qty_sisa,
+                qty_order: qty_order,
                 price: harga,
                 expdate: expdate
             }
@@ -243,13 +276,24 @@
                             <td>${object.product_code}</td>
                             <td>${object.product_name}</td>
                             <td>${unit.name}</td>
-                            <td><input class="form-control" type="number" name="qty[${key}]" value="${getInputValue(key, 'qty')}"/></td>
+                            <td><input class="form-control" type="number" name="qty_order[${key}]" disabled value="${getInputValue(key, 'qty_order')}"/></td>
+                            <td><input class="form-control" type="number" name="qty_sisa[${key}]" disabled value="${getInputValue(key, 'qty_sisa')}"/></td>
+                            <td><input class="form-control" type="number" name="price[${key}]" value="${getInputValue(key, 'price')}" disabled onchange="hitungTotal()"/></td>
+                            <td><input class="form-control" type="number" name="qty[${key}]" value="${getInputValue(key, 'qty')}" onchange="qtyChange(this, ${getInputValue(key, 'qty_sisa')})"/></td>
                             <td><input class="form-control" type="date" name="expdate[${key}]" value="${getInputValue(key, 'expdate')}"/></td>
-                            <td><input class="form-control" type="number" name="price[${key}]" value="${getInputValue(key, 'price')}" onchange="hitungTotal()"/></td>
-                            <td><button class="btn btn-sm btn-danger" onclick="clickDelete(${i})"><i class="fa fa-trash"></i></button></td>
                         </tr>`;
             $('#tableBody').append(row);
         });
+        hitungTotal();
+    }
+
+    function qtyChange(comp, sisa) {
+        const val = parseInt($(comp).val());
+
+        if (val > sisa) {
+            $(comp).val(sisa);
+        }
+
         hitungTotal();
     }
 

@@ -58,10 +58,10 @@
                                                 <td>{{$dt->category}}</td>
                                                 <td>{{$dt->stok}}</td>
                                                 <td>
-                                                    Rp. {{$dt->list_harga[0]}}<br>
-                                                    Rp. {{$dt->list_harga[1]}}<br>
-                                                    Rp. {{$dt->list_harga[2]}}<br>
-                                                    Rp. {{$dt->list_harga[3]}}
+                                                    Rp. {{$dt->list_harga[0]}} (General)<br>
+                                                    Rp. {{$dt->list_harga[1]}} (Bronze)<br>
+                                                    Rp. {{$dt->list_harga[2]}} (Silver)<br>
+                                                    Rp. {{$dt->list_harga[3]}} (Gold)
                                                 </td>
                                                 <td>
                                                     <a href="{{ URL('admin/master_inventory/edit/'.$dt->id) }}" class="btn btn-sm btn-primary" title="edit inventory">

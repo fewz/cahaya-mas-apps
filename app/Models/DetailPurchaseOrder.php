@@ -33,5 +33,7 @@ class DetailPurchaseOrder extends Model
         $data->qty = (int)$data->qty + (int)$qty;
         $data->sisa_qty = (int)$data->sisa_qty - (int)$qty;
         $data->save();
+
+        LogTerimaBarang::add_log($id_inventory, $id_header, $id_unit, $qty);
     }
 }

@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\CategoryInventory;
 use App\Models\DetailPurchaseOrder;
 use App\Models\HeaderPurchaseOrder;
+use App\Models\LogTerimaBarang;
 use App\Models\Supplier;
 use App\Models\Unit;
 use Illuminate\Http\Request;
@@ -179,12 +180,20 @@ class PurchaseOrder extends Controller
             ->join("unit", "unit.id", "=", "d_purchase_order.id_unit")
             ->select("d_purchase_order.*", "inventory.name as product_name", "unit.name as unit_name", "inventory.code as product_code")
             ->get();
+
+        $data_log = LogTerimaBarang::where("log_terima_barang.id_h_purchase_order", $id)
+            ->join("inventory", "inventory.id", "=", "log_terima_barang.id_inventory")
+            ->join("unit", "unit.id", "=", "log_terima_barang.id_unit")
+            ->select("log_terima_barang.*", "inventory.name as product_name", "unit.name as unit_name", "inventory.code as product_code")
+            ->orderBy("log_terima_barang.created_date")
+            ->get();
         $list_supplier = Supplier::get();
         $data = [
             'user' => $user,
             'data_purchase_order' => $data_purchase_order,
             'list_supplier' => $list_supplier,
-            'data_product' => $data_product
+            'data_product' => $data_product,
+            'data_log' => $data_log
         ];
         return view("admin.purchase_order.view", $data);
     }

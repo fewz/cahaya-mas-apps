@@ -76,7 +76,7 @@
 
                     <div class="card card-info">
                         <div class="card-header">
-                            <h3 class="card-title">Konfirmasi Produk yang dikirim</h3>
+                            <h3 class="card-title">Produk yang diterima</h3>
                         </div>
                         <div class="card-body">
                             <label>Produk yang terkirim</label>
@@ -99,6 +99,38 @@
                                 <label>Grand Total</label>
                                 <p id="totalHarga">Rp. {{number_format($data_purchase_order->grand_total,0,'.','.')}}</p>
                             </div>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+
+                    <div class="card card-info">
+                        <div class="card-header">
+                            <h3 class="card-title">Log Produk yang diterima</h3>
+                        </div>
+                        <div class="card-body">
+                            <label>Log Produk yang diterima</label>
+                            <table class="table table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Tanggal</th>
+                                        <th>Kode</th>
+                                        <th>Nama</th>
+                                        <th>Unit</th>
+                                        <th>Qty</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tableBody">
+                                    @foreach ($data_log as $data )
+                                        <tr>
+                                            <td>{{$data->created_date}}</td>
+                                            <td>{{$data->product_code}}</td>
+                                            <td>{{$data->product_name}}</td>
+                                            <td>{{$data->unit_name}}</td>
+                                            <td>{{$data->qty}}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
                         </div>
                         <!-- /.card-body -->
                     </div>

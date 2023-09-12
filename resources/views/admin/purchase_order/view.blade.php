@@ -68,6 +68,16 @@
                                     <label>Finish Date</label>
                                     <input type="date" class="form-control" value="{{$data_purchase_order->finish_date}}" name="finish_date" disabled>
                                 </div>
+                                <div class="form-group">
+                                    <label>Payment Method</label>
+                                    <input type="text" class="form-control" value="{{$data_purchase_order->payment_method}}" disabled>
+                                </div>
+                                @if(isset($data_purchase_order->due_date))
+                                <div class="form-group">
+                                    <label>Due Date</label>
+                                    <input type="date" class="form-control" value="{{$data_purchase_order->due_date}}" disabled>
+                                </div>
+                                @endif
                                 <input type="hidden" id="list_produk" name="list_produk">
                                 <input type="hidden" id="grand_total" name="grand_total">
                             </div>

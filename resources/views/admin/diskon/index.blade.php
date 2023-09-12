@@ -4,7 +4,7 @@
 
 <body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper">
-        @include('admin.sidebar', ['activePage' => 'master_role'])
+        @include('admin.sidebar', ['activePage' => 'master_diskon'])
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
             <!-- Content Header (Page header) -->
@@ -12,7 +12,7 @@
                 <div class="container-fluid">
                     <div class="row mb-2">
                         <div class="col-sm-12">
-                            <h1 class="m-0">Master Role</h1>
+                            <h1 class="m-0">Master Diskon</h1>
                         </div><!-- /.col -->
                     </div><!-- /.row -->
                 </div><!-- /.container-fluid -->
@@ -28,9 +28,9 @@
                         <div class="col-12">
                             <div class="card">
                                 <div class="card-header d-flex">
-                                    <h3 class="card-title">List Role</h3>
+                                    <h3 class="card-title">List Diskon</h3>
                                     <div class="ml-auto">
-                                        <a href="{{ URL('admin/master_role/add') }}" class="btn btn-sm btn-primary">ADD <i class="fa fa-plus"></i></a>
+                                        <a href="{{ URL('admin/master_diskon/add') }}" class="btn btn-sm btn-primary">ADD <i class="fa fa-plus"></i></a>
                                     </div>
                                 </div>
                                 <!-- /.card-header -->
@@ -38,21 +38,25 @@
                                     <table id="example1" class="table table-bordered table-striped">
                                         <thead>
                                             <tr>
-                                                <th>ID</th>
-                                                <th>Name</th>
+                                                <th>Product</th>
+                                                <th>Minimal Beli</th>
+                                                <th>Unit</th>
+                                                <th>Diskon</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach ($list_role as $dt )
+                                            @foreach ($data_diskon as $dt )
                                             <tr>
-                                                <td>{{$dt->id}}</td>
-                                                <td>{{$dt->name}}</td>
+                                                <td>{{$dt->product_name}}</td>
+                                                <td>{{$dt->minimal}}</td>
+                                                <td>{{$dt->unit}}</td>
+                                                <td>{{$dt->potongan}}</td>
                                                 <td>
-                                                    <a href="{{ URL('admin/master_role/edit/'.$dt->id) }}" class="btn btn-sm btn-primary">
+                                                    <a href="{{ URL('admin/master_diskon/edit/'.$dt->id) }}" class="btn btn-sm btn-primary">
                                                         <i class="fa fa-edit"></i>
                                                     </a>
-                                                    <!-- <button class="btn btn-sm btn-danger" onclick="clickDelete('{{$dt->id}}')"><i class="fa fa-trash"></i></button> -->
+                                                    <button class="btn btn-sm btn-danger" onclick="clickDelete('{{$dt->id}}')"><i class="fa fa-trash"></i></button>
                                                 </td>
                                             </tr>
                                             @endforeach
@@ -67,12 +71,12 @@
         </div>
     </div>
 </body>
-<form id="formDelete" action="{{URL('admin/master_role/delete')}}" method="POST">
+<form id="formDelete" action="{{URL('admin/master_diskon/delete')}}" method="POST">
     @csrf
     <input type="hidden" name="id" id="id_delete">
 </form>
-@include('script_footer')
 
+@include('script_footer')
 <script>
     function clickDelete(id) {
         // confirmation delete

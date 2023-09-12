@@ -86,7 +86,8 @@
                                         <th>Kode</th>
                                         <th>Nama</th>
                                         <th>Unit</th>
-                                        <th>Qty</th>
+                                        <th>Qty Order</th>
+                                        <th>Qty Terima</th>
                                         <th>Exp Date</th>
                                         <th>Harga per unit</th>
                                     </tr>
@@ -163,6 +164,7 @@
                 product_code: val.product_code,
                 price: val.price_buy,
                 qty: val.qty,
+                qty_order: val.order_qty,
                 date_expired: val.date_expired,
                 unit: JSON.stringify(unit)
             };
@@ -276,6 +278,7 @@
                             <td>${object.product_code}</td>
                             <td>${object.product_name}</td>
                             <td>${unit.name}</td>
+                            <td>${object.qty_order}</td>
                             <td>${object.qty}</td>
                             <td>${object.date_expired}</td>
                             <td>Rp. ${numberWithCommas(object.price)}</td>

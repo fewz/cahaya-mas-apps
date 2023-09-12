@@ -154,6 +154,10 @@ class PurchaseOrder extends Controller
                 $data->status = 2;
                 $data->finish_date = $request->finish_date;
             }
+            $data->payment_method = $request->payment_method;
+            if ($request->payment_method === 'CREDIT') {
+                $data->due_date = $request->due_date;
+            }
             $data->grand_total = (int)$data->grand_total + (int)$request->grand_total;
             $data->save();
 

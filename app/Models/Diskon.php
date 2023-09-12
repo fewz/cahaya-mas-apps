@@ -4,8 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Permission extends Model
+class Diskon extends Model
 {
-    protected $table = 'permission';
+    protected $table = 'diskon';
     public $timestamps = false;
+
 }

@@ -17,4 +17,12 @@ class PermissionRole extends Model
         $data->id_permission = $id_permission;
         $data->save();
     }
+
+    public static function get_permission($id_role)
+    {
+        $permission = PermissionRole::where('permission_role.id_role', $id_role)
+            ->join('permission', 'permission.id', 'permission_role.id_permission')
+            ->get();
+        return $permission;
+    }
 }

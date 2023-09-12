@@ -21,7 +21,19 @@
                             </p>
                         </a>
                     </li>
+                    <li class="nav-header">TRANSAKSI</li>
+                    @if(Session::get('MASTER_TRANSACTION'))
+                    <li class="nav-item">
+                        <a href="{{ URL('admin/transaction') }}" class="nav-link {{$activePage === 'transaction' ? 'active' : ''}}">
+                            <i class="nav-icon fas fa-shopping-cart"></i>
+                            <p>
+                                Transaksi
+                            </p>
+                        </a>
+                    </li>
+                    @endif
                     <li class="nav-header">MASTER</li>
+                    @if(Session::get('MASTER_USER'))
                     <li class="nav-item">
                         <a href="{{ URL('admin/master_user') }}" class="nav-link {{$activePage === 'master_user' ? 'active' : ''}}">
                             <i class="nav-icon fas fa-user"></i>
@@ -30,6 +42,8 @@
                             </p>
                         </a>
                     </li>
+                    @endif
+                    @if(Session::get('MASTER_ROLE'))
                     <li class="nav-item">
                         <a href="{{ URL('admin/master_role') }}" class="nav-link {{$activePage === 'master_role' ? 'active' : ''}}">
                             <i class="nav-icon fas fa-check"></i>
@@ -38,6 +52,8 @@
                             </p>
                         </a>
                     </li>
+                    @endif
+                    @if(Session::get('MASTER_CUSTOMER'))
                     <li class="nav-item">
                         <a href="{{ URL('admin/master_customer') }}" class="nav-link {{$activePage === 'master_customer' ? 'active' : ''}}">
                             <i class="nav-icon fas fa-users"></i>
@@ -46,40 +62,32 @@
                             </p>
                         </a>
                     </li>
-                    <!-- <li class="nav-item">
-                        <a href="{{ URL('admin/master_supplier') }}" class="nav-link {{$activePage === 'master_supplier' ? 'active' : ''}}">
-                            <i class="nav-icon fas fa-truck"></i>
-                            <p>
-                                Supplier
-                            </p>
+                    @if(Session::get('PURCHASE_ORDER'))
+                    <li class="nav-item">
+                        <a href="{{ URL('admin/purchase_order') }}" class="nav-link {{$activePage === 'purchase_order' ? 'active' : ''}}">
+                            <i class="fa fa-truck nav-icon"></i>
+                            <p>Purchase Order</p>
                         </a>
-                    </li> -->
-                    <?php
-                    $supplier_menu = ['master_supplier', 'purchase_order'];
-                    ?>
-                    <li class="nav-item expandable {{in_array($activePage, $supplier_menu)  ? 'menu-is-opening menu-open' : ''}}">
-                        <a href="#" class="nav-link {{in_array($activePage, $supplier_menu) ? 'active' : ''}}">
-                            <i class="nav-icon fa fa-truck"></i>
-                            <p>
-                                Supplier
-                                <i class="right fas fa-angle-left"></i>
-                            </p>
-                        </a>
-                        <ul class="nav nav-treeview">
-                            <li class="nav-item">
-                                <a href="{{ URL('admin/master_supplier') }}" class="nav-link {{$activePage === 'master_supplier' ? 'active' : ''}}">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Master Supplier</p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="{{ URL('admin/purchase_order') }}" class="nav-link {{$activePage === 'purchase_order' ? 'active' : ''}}">
-                                    <i class="far fa-circle nav-icon"></i>
-                                    <p>Purchase Order</p>
-                                </a>
-                            </li>
-                        </ul>
                     </li>
+                    @endif
+                    @endif
+
+                    @if(Session::get('MASTER_SUPPLIER'))
+                    <li class="nav-item">
+                        <a href="{{ URL('admin/master_supplier') }}" class="nav-link {{$activePage === 'master_supplier' ? 'active' : ''}}">
+                            <i class="fa fa-industry nav-icon"></i>
+                            <p>Master Supplier</p>
+                        </a>
+                    </li>
+                    @endif
+                    @if(Session::get('MASTER_DISKON'))
+                    <li class="nav-item">
+                        <a href="{{ URL('admin/master_diskon') }}" class="nav-link {{$activePage === 'master_diskon' ? 'active' : ''}}">
+                            <i class="fa fa-percentage nav-icon"></i>
+                            <p>Master Diskon</p>
+                        </a>
+                    </li>
+                    @endif
                     <?php
                     $inventory_menu = ['master_inventory', 'master_category'];
                     ?>
@@ -92,18 +100,22 @@
                             </p>
                         </a>
                         <ul class="nav nav-treeview">
+                            @if(Session::get('MASTER_INVENTORY'))
                             <li class="nav-item">
                                 <a href="{{ URL('admin/master_inventory') }}" class="nav-link {{$activePage === 'master_inventory' ? 'active' : ''}}">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>Master Inventory</p>
                                 </a>
                             </li>
+                            @endif
+                            @if(Session::get('MASTER_CATEGORY'))
                             <li class="nav-item">
                                 <a href="{{ URL('admin/master_category') }}" class="nav-link {{$activePage === 'master_category' ? 'active' : ''}}">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>Master Category</p>
                                 </a>
                             </li>
+                            @endif
                         </ul>
                     </li>
                 </ul>

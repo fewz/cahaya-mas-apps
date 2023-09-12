@@ -67,6 +67,17 @@
                                     <label>Finish Date</label>
                                     <input type="date" class="form-control" name="finish_date">
                                 </div>
+                                <div class="form-group">
+                                    <label>Payment Method</label>
+                                    <select id="payment_method" class="form-control select2bs4" name="payment_method" style="width: 100%;" onchange="paymentChange()">
+                                        <option value="CASH">Cash</option>
+                                        <option value="CREDIT">Credit</option>
+                                    </select>
+                                </div>
+                                <div class="form-group d-none" id="dueDate">
+                                    <label>Due Date</label>
+                                    <input type="date" class="form-control" name="due_date">
+                                </div>
                                 <input type="hidden" id="list_produk" name="list_produk">
                                 <input type="hidden" id="is_finish" name="is_finish">
                                 <input type="hidden" id="grand_total" name="grand_total">
@@ -139,6 +150,14 @@
                     submit();
                 }
             });
+    }
+
+    function paymentChange() {
+        if ($("#payment_method").val() === "CASH") {
+            $("#dueDate").addClass('d-none');
+        } else {
+            $("#dueDate").removeClass('d-none');
+        }
     }
 
     $(function() {

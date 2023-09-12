@@ -4,12 +4,14 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DiskonController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\PricingController;
 use App\Http\Controllers\PurchaseOrder;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\Transaction;
 use App\Http\Controllers\UnitController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -85,6 +87,15 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::get('/purchase_order/finish/{id}', [PurchaseOrder::class, 'finish'])->name('purchase_order/finish');
     Route::post('/purchase_order/do_finish/{id}', [PurchaseOrder::class, 'do_finish'])->name('purchase_order/do_finish');
     Route::get('/purchase_order/view/{id}', [PurchaseOrder::class, 'view'])->name('purchase_order/view');
+
+    Route::get('/master_diskon', [DiskonController::class, 'index'])->name('master_diskon');
+    Route::get('/master_diskon/add', [DiskonController::class, 'add'])->name('master_diskon/add');
+    Route::post('/master_diskon/do_add', [DiskonController::class, 'do_add'])->name('master_diskon/do_add');
+    Route::get('/master_diskon/edit/{id}', [DiskonController::class, 'edit'])->name('master_diskon/edit');
+    Route::post('/master_diskon/do_edit/{id}', [DiskonController::class, 'do_edit'])->name('master_diskon/do_edit');
+    Route::post('/master_diskon/delete', [DiskonController::class, 'delete'])->name('master_diskon/delete');
+    
+    Route::get('/transaction', [Transaction::class, 'index'])->name('transaction');
 });
 
 

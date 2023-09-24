@@ -44,11 +44,12 @@ class Unit extends Model
         return $result;
     }
 
-    public static function hitung_stok($id_unit){
+    public static function hitung_stok($id_unit)
+    {
         $data = Unit::where('id', $id_unit)->first();
         $stok_terkecil = Unit::hitung_stok_terkecil($data->id_inventory);
-        if($data->qty_reference !== NULL){
-             return $stok_terkecil / $data->qty_reference;
+        if ($data->qty_reference !== NULL) {
+            return $stok_terkecil / $data->qty_reference;
         }
         return $stok_terkecil;
     }
@@ -59,8 +60,15 @@ class Unit extends Model
         return $data->id;
     }
 
-    public static function add_stok($id_unit, $stok){
+    public static function add_stok($id_unit, $stok)
+    {
         Unit::find($id_unit)
-            -> increment('stok', $stok);
+            ->increment('stok', $stok);
+    }
+
+    public static function minus_stok($id_unit, $stok)
+    {
+        Unit::find($id_unit)
+            ->decrement('stok', $stok);
     }
 }

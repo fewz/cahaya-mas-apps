@@ -54,10 +54,11 @@
                                 </div>
                                 <div class="form-group">
                                     <label>Tier</label>
-                                    <select class="form-control select2bs4" name="id_tier" style="width: 100%;">
-                                        @foreach ($list_tier as $dt )
-                                        <option value="{{$dt->id}}">{{$dt->name}}</option>
-                                        @endforeach
+                                    <select class="form-control select2bs4" name="tier_customer" style="width: 100%;">
+                                        <option value="general">General</option>
+                                        <option value="bronze">Bronze</option>
+                                        <option value="silver">Silver</option>
+                                        <option value="gold">Gold</option>
                                     </select>
                                 </div>
                             </div>

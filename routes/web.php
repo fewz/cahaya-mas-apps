@@ -96,6 +96,12 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::post('/master_diskon/delete', [DiskonController::class, 'delete'])->name('master_diskon/delete');
     
     Route::get('/transaction', [Transaction::class, 'index'])->name('transaction');
+    Route::get('/transaction/add', [Transaction::class, 'add'])->name('transaction/add');
+    Route::post('/transaction/do_add', [Transaction::class, 'do_add'])->name('transaction/do_add');
+    Route::get('/transaction/edit/{id}', [Transaction::class, 'edit'])->name('transaction/edit');
+    Route::get('/transaction/view/{id}', [Transaction::class, 'view'])->name('transaction/view');
+    Route::post('/transaction/do_edit/{id}', [Transaction::class, 'do_edit'])->name('transaction/do_edit');
+    Route::post('/transaction/delete', [Transaction::class, 'delete'])->name('transaction/delete');
 });
 
 

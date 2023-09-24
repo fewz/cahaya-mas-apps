@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helpers\CommonHelper;
 use App\Http\Controllers\Controller;
+use App\Models\Diskon;
 use App\Models\Inventory;
 use App\Models\Pricing;
 use App\Models\Role;
@@ -14,6 +15,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use stdClass;
 
 class PricingController extends Controller
 {
@@ -40,12 +42,10 @@ class PricingController extends Controller
         $user = Auth::user();
         $list_inventory = Inventory::get();
         $list_unit = Unit::get();
-        $list_tier_customer = TierCustomer::get();
         $data = [
             'user' => $user,
             'list_inventory' => $list_inventory,
-            'list_unit' => $list_unit,
-            'list_tier_customer' => $list_tier_customer
+            'list_unit' => $list_unit
         ];
         return view("admin.inventory.pricing.add", $data);
     }
@@ -74,13 +74,11 @@ class PricingController extends Controller
         $data_pricing = Pricing::find($id);
         $list_inventory = Inventory::get();
         $list_unit = Unit::get();
-        $list_tier_customer = TierCustomer::get();
         $data = [
             'user' => $user,
             'data_pricing' => $data_pricing,
             'list_inventory' => $list_inventory,
-            'list_unit' => $list_unit,
-            'list_tier_customer' => $list_tier_customer
+            'list_unit' => $list_unit
         ];
         return view("admin.inventory.pricing.edit", $data);
     }
@@ -110,5 +108,19 @@ class PricingController extends Controller
         } catch (\Illuminate\Database\QueryException $ex) {
             CommonHelper::showAlert("Failed", $ex->getMessage(), "error", "back");
         }
+    }
+
+    public function get_price_and_stock(Request $request)
+    {
+        $data = new stdClass();
+        $data->pricing = Pricing::where("id_unit", $request->id_unit)
+            ->where("id_inventory", $request->id_inventory)
+            ->where("tier_customer", $request->tier)
+            ->first();
+        $data->stock = Unit::find($request->id_unit)->stok;
+        $data->discount = Diskon::where("id_unit", $request->id_unit)
+            ->where("id_inventory", $request->id_inventory)
+            ->first();
+        return $this->createSuccessMessage($data);
     }
 }

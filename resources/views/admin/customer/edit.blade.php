@@ -54,14 +54,11 @@
                                 </div>
                                 <div class="form-group">
                                     <label>Tier</label>
-                                    <select class="form-control select2bs4" name="id_tier" style="width: 100%;">
-                                        @foreach ($list_tier as $dt )
-                                        @if ($dt->id === $data_customer->id_tier)
-                                        <option value="{{$dt->id}}" selected>{{$dt->name}}</option>
-                                        @else
-                                        <option value="{{$dt->id}}">{{$dt->name}}</option>
-                                        @endif
-                                        @endforeach
+                                    <select class="form-control select2bs4" name="tier_customer" style="width: 100%;">
+                                        <option value="general" <?php echo $data_customer->tier_customer === 'general' ? 'selected' : ''; ?>>General</option>
+                                        <option value="bronze" <?php echo $data_customer->tier_customer === 'bronze' ? 'selected' : ''; ?>>Bronze</option>
+                                        <option value="silver" <?php echo $data_customer->tier_customer === 'silver' ? 'selected' : ''; ?>>Silver</option>
+                                        <option value="gold" <?php echo $data_customer->tier_customer === 'gold' ? 'selected' : ''; ?>>Gold</option>
                                     </select>
                                 </div>
                             </div>

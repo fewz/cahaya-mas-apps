@@ -16,10 +16,7 @@ class CustomerController extends Controller
     {
         // list view customer
         $user = Auth::user();
-        $list_customer = DB::table('customer')
-            ->join('tier_customer', 'tier_customer.id', '=', 'customer.id_tier')
-            ->select('customer.*', 'tier_customer.name as tier_name')
-            ->get();
+        $list_customer = Customer::get();
         $data = [
             'user' => $user,
             'list_customer' => $list_customer
@@ -31,10 +28,8 @@ class CustomerController extends Controller
     {
         // add view customer
         $user = Auth::user();
-        $list_tier = TierCustomer::get();
         $data = [
-            'user' => $user,
-            'list_tier' => $list_tier
+            'user' => $user
         ];
         return view("admin.customer.add", $data);
     }
@@ -48,7 +43,7 @@ class CustomerController extends Controller
             $data->full_name = $request->full_name;
             $data->phone = $request->phone;
             $data->address = $request->address;
-            $data->id_tier = $request->id_tier;
+            $data->tier_customer = $request->tier_customer;
             $data->save();
             CommonHelper::showAlert("Success", "Insert data success", "success", "/admin/master_customer");
         } catch (\Illuminate\Database\QueryException $ex) {
@@ -71,11 +66,9 @@ class CustomerController extends Controller
         // edit view customer
         $user = Auth::user();
         $data_customer = Customer::find($id);
-        $list_tier = TierCustomer::get();
         $data = [
             'user' => $user,
-            'data_customer' => $data_customer,
-            'list_tier' => $list_tier
+            'data_customer' => $data_customer
         ];
         return view("admin.customer.edit", $data);
     }
@@ -89,7 +82,7 @@ class CustomerController extends Controller
             $data->full_name = $request->full_name;
             $data->phone = $request->phone;
             $data->address = $request->address;
-            $data->id_tier = $request->id_tier;
+            $data->tier_customer = $request->tier_customer;
             $data->save();
             CommonHelper::showAlert("Success", "Edit data success", "success", "/admin/master_customer");
         } catch (\Illuminate\Database\QueryException $ex) {

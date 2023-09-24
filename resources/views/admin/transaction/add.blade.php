@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+@include('header')
+
+<body class="hold-transition sidebar-mini layout-fixed">
+    <div class="wrapper">
+        @include('admin.sidebar', ['activePage' => 'trannsaction'])
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+            <!-- Content Header (Page header) -->
+            <div class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-sm-12">
+                            <h1 class="m-0">
+                                <a href="{{URL('admin/transaction')}}">Transaksi</a>
+                                / New
+                            </h1>
+                        </div><!-- /.col -->
+                    </div><!-- /.row -->
+                </div><!-- /.container-fluid -->
+            </div>
+            <!-- /.content-header -->
+
+            <!-- Main content -->
+            <section class="content">
+                <!-- /.card -->
+
+                <div class="container-fluid">
+                    <div id="container1" class="card card-info">
+                        <div class="card-header">
+                            <h3 class="card-title">Transaksi Baru</h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <!-- form start -->
+                        <form id="formadd" action="{{URL('admin/transaction/do_add')}}" method="POST">
+                            @csrf
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label>Order Number</label>
+                                    <input type="text" class="form-control required" name="order_number" placeholder="Order Number">
+                                </div>
+                                <div class="form-group">
+                                    <label>Tanggal Order</label>
+                                    <input type="date" class="form-control required" name="created_date" placeholder="Tanggal Order">
+                                </div>
+                                <div class="form-group">
+                                    <label>Payment Method</label>
+                                    <select class="form-control select2bs4" name="payment_method" style="width: 100%;">
+                                        <option value="CASH">Cash</option>
+                                        <option value="CREDIT">Credit</option>
+                                    </select>
+                                </div>
+                                <input type="hidden" id="list_produk" name="list_produk">
+                                <input type="hidden" id="grand_total" name="grand_total">
+                                <input type="hidden" id="total_diskon" name="total_diskon">
+                                <input type="hidden" id="id_customer" name="id_customer">
+                            </div>
+                        </form>
+                    </div>
+
+                    <div id="container2" class="card card-info">
+                        <div class="card-header">
+                            <h3 class="card-title">Customer</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label>Customer</label>
+                                <select id="customer" class="form-control select2bs4" name="id_customer" style="width: 100%;" onchange="customerChange()">
+                                    @foreach ($list_customer as $dt)
+                                    <option value="{{$dt->id}}">{{$dt->full_name}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <label>Kode Customer</label>
+                                    <p id="label_kode_customer"></p>
+                                </div>
+                                <div class="col-6">
+                                    <label>Phone</label>
+                                    <p id="label_phone_customer"></p>
+                                </div>
+                                <div class="col-6">
+                                    <label>Alamat</label>
+                                    <p id="label_alamat_customer"></p>
+                                </div>
+                                <div class="col-6">
+                                    <label>Tier</label>
+                                    <p id="label_tier_customer"></p>
+                                </div>
+                                <div class="col-6">
+                                    <label>Poin</label>
+                                    <p id="label_poin_customer"></p>
+                                </div>
+                            </div>
+                            <!-- <div class="custom-control custom-checkbox" id="bisa_cashback">
+                                <input class="custom-control-input" type="checkbox" id="use_point">
+                                <label for="use_point" class="custom-control-label">Pakai poin cashback</label>
+                            </div> -->
+                        </div>
+                    </div>
+
+                    <div id="container3" class="card card-info">
+                        <div class="card-header">
+                            <h3 class="card-title">Tambah Produk</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label>Produk</label>
+                                <select id="listproduk" class="form-control select2bs4" style="width: 100%;" onchange="getUnit()">
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Unit</label>
+                                <select id="unitproduk" class="form-control select2bs4" style="width: 100%;" onchange="getPriceAndStock()">
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Qty</label>
+                                <input onclick="this.select();" id="qtyproduk" type="number" class="form-control required" placeholder="Qty" value="0" onchange="countSubTotal()" />
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-6">
+                                    <label>Stok</label>
+                                    <p id="label_stok_produk"></p>
+                                </div>
+                                <div class="col-6">
+                                    <label>Harga</label>
+                                    <p id="label_harga_produk"></p>
+                                </div>
+                                <div class="col-6">
+                                    <label>Diskon</label>
+                                    <p id="label_diskon_produk">-</p>
+                                </div>
+                                <div class="col-6">
+                                    <label>Subtotal</label>
+                                    <p id="label_subtotal_produk"></p>
+                                </div>
+                            </div>
+                            <button class="btn btn-primary mt-3" onclick="tambahProduk()">Tambah Produk ke Keranjang</button>
+
+                            <div class="form-group mt-3">
+                                <label>Keranjang Belanja</label>
+                                <table class="table table-bordered table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Kode</th>
+                                            <th>Nama</th>
+                                            <th>Unit</th>
+                                            <th>Qty</th>
+                                            <th>Harga</th>
+                                            <th>Diskon</th>
+                                            <th>Subtotal</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tableBody">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- /.card-body -->
+                        <div class="card-footer">
+                            <div class="btn btn-primary" onclick="submit()">Submit</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</body>
+
+@include('script_footer')
+<script>
+    let listProduk = [];
+    let availableProduct = <?php echo $list_inventory; ?>;
+    let listCustomer = <?php echo $list_customer; ?>;
+
+    let customer = $("#customer").val();
+    let selectedCustomer = listCustomer.filter((val) => val.id == customer)[0];
+
+    let selectedProductPrice = 0;
+    let selectedProductStock = 0;
+    let subTotalProduct = 0;
+    let selectedMinimalDiskon = null;
+    let selectedDiskon = 0;
+
+    function initialize() {
+        getProductSupplier();
+        customerChange();
+    }
+
+    function hitungDiskon() {
+        $("#label_diskon_produk").html('-');
+        if (selectedMinimalDiskon && selectedMinimalDiskon <= $("#qtyproduk").val()) {
+            subTotalProduct -= selectedDiskon;
+            $("#label_diskon_produk").html(selectedDiskon);
+            $("#label_subtotal_produk").html(subTotalProduct);
+        }
+    }
+
+    function getPriceAndStock() {
+        const id_unit = JSON.parse($("#unitproduk").val()).id;
+        const produkBaru = $("#listproduk").val();
+        const object = JSON.parse(produkBaru);
+        $.get(`/api/get_price_and_stock?id_unit=${id_unit}&id_inventory=${object.id_product}&tier=${selectedCustomer.tier_customer}`, function(data) {
+            console.log('dat', data);
+
+            const payload = data.payload;
+            $("#label_stok_produk").html(payload.stock);
+            $("#label_harga_produk").html(payload.pricing.sell_price);
+            if (payload.discount) {
+                selectedMinimalDiskon = payload.discount.minimal;
+                selectedDiskon = payload.discount.potongan;
+            } else {
+                selectedMinimalDiskon = null;
+                selectedDiskon = 0;
+            }
+            selectedProductPrice = payload.pricing.sell_price;
+            selectedProductStock = payload.stock;
+            countSubTotal();
+        }).fail(function(error) {
+            console.error('Error fetching API data', error);
+        });
+    }
+
+    function countSubTotal() {
+
+        if ($("#qtyproduk").val() > selectedProductStock) {
+            $("#qtyproduk").val(selectedProductStock);
+        }
+        const qty = $("#qtyproduk").val();
+        subTotalProduct = qty * selectedProductPrice;
+        $("#label_subtotal_produk").html(subTotalProduct);
+        hitungDiskon();
+    }
+
+    function customerChange() {
+        customer = $("#customer").val();
+        selectedCustomer = listCustomer.filter((val) => val.id == customer)[0];
+
+        $("#label_kode_customer").html(selectedCustomer.code);
+        $("#label_phone_customer").html(selectedCustomer.phone);
+        $("#label_alamat_customer").html(selectedCustomer.address);
+        $("#label_tier_customer").html(selectedCustomer.tier_customer);
+        $("#label_poin_customer").html(selectedCustomer.poin);
+
+        if (parseInt(selectedCustomer.poin) <= 0) {
+            $("#bisa_cashback").addClass('d-none');
+        }
+    }
+
+    function getProductSupplier() {
+        $("#listproduk option").remove();
+        availableProduct.forEach((val) => {
+            optionText = val.name;
+            optionValue = {
+                id_product: val.id,
+                product_name: val.name,
+                product_code: val.code
+            };
+
+            $('#listproduk').append(new Option(optionText, JSON.stringify(optionValue)));
+        });
+        getUnit();
+    }
+
+    function getUnit() {
+        $("#unitproduk option").remove();
+        const produkBaru = $("#listproduk").val();
+        const object = JSON.parse(produkBaru);
+        console.log('object', object);
+
+        $.get(`/api/available_unit?id=${object.id_product}`, function(data) {
+            console.log('dat', data);
+
+            const unit = data.payload;
+            unit.forEach((val) => {
+                optionText = val.name;
+                optionValue = {
+                    id: val.id,
+                    name: val.name
+                };
+
+                $('#unitproduk').append(new Option(optionText, JSON.stringify(optionValue)));
+            });
+            getPriceAndStock();
+        }).fail(function(error) {
+            console.error('Error fetching API data', error);
+        });
+    }
+
+    function submit() {
+        // submit form
+        saveInputValues();
+        if (!validateForm()) {
+            // validate form required
+            return;
+        }
+        const jsonObject = getJSONProduk();
+        console.log('js', jsonObject);
+
+        $("#id_customer").val($("#customer").val());
+        $("#grand_total").val(grand_total);
+        $("#list_produk").val(JSON.stringify(jsonObject));
+        $("#total_diskon").val(total_diskon);
+
+        $('#formadd').submit();
+    }
+
+    let grand_total = 0;
+    let total_diskon = 0;
+
+    function getJSONProduk() {
+        grand_total = 0;
+        total_diskon = 0;
+        const result = [];
+        listProduk.forEach((val, i) => {
+            const obj = JSON.parse(val);
+
+            const unit = JSON.parse(obj.unit);
+            const key = obj.product_code + '-' + unit.name;
+
+            const qty = getInputValue(key, 'qty');
+
+            const res = {
+                id_product: obj.id_product,
+                id_unit: unit.id,
+                qty: parseInt(obj.qty),
+                subtotal: obj.subtotal,
+                diskon: obj.diskon,
+                price: obj.harga
+            }
+            grand_total += obj.subtotal;
+            total_diskon += obj.diskon;
+            result.push(res);
+        });
+
+        return result;
+
+    }
+
+    function tambahProduk() {
+        const produkBaru = $("#listproduk").val();
+        const unit = $("#unitproduk").val();
+        const object = JSON.parse(produkBaru);
+        const objectUnit = JSON.parse(unit);
+
+        let duplicate = false;
+        listProduk.forEach((val) => {
+            console.log('tes', val);
+
+            const obj = JSON.parse(val);
+            const un = JSON.parse(obj.unit);
+            if (obj.product_name === object.product_name && un.id === objectUnit.id) {
+                duplicate = true;
+            }
+        });
+
+        if (duplicate) {
+            swal("Produk sudah ditambahkan", "", "warning");
+            return;
+        };
+
+
+        object.unit = unit;
+        object.qty = $("#qtyproduk").val();
+        object.harga = selectedProductPrice;
+        object.subtotal = subTotalProduct;
+        object.diskon = 0;
+        if (selectedMinimalDiskon && selectedMinimalDiskon <= $("#qtyproduk").val()) {
+            object.diskon = selectedDiskon;
+        }
+
+        listProduk.push(JSON.stringify(object));
+        updateTable();
+    }
+
+    const inputValues = {};
+
+    // Save input values into the inputValues object
+    function saveInputValues() {
+        $('input[type="number"]').each(function() {
+            const key = $(this).attr('name');
+            const value = $(this).val();
+            inputValues[key] = value;
+        });
+    }
+
+    // Get saved input value for a specific unit and field
+    function getInputValue(unitId, field) {
+        const key = `${field}[${unitId}]`;
+        return inputValues[key] || '';
+    }
+
+    function updateTable() {
+        // Store the current input values before updating
+        saveInputValues();
+
+        // Clear the table body
+        $('#tableBody').empty();
+        // Populate the table with selected items and their stored values
+        let total = 0;
+        listProduk.forEach((item, i) => {
+            const object = JSON.parse(item);
+            const unit = JSON.parse(object.unit);
+            console.log('tee', object);
+            const key = object.product_code + '-' + unit.name;
+            const row = `<tr>
+                            <td>${object.product_code}</td>
+                            <td>${object.product_name}</td>
+                            <td>${unit.name}</td>
+                            <td>${object.qty}</td>
+                            <td>${object.harga}</td>
+                            <td>${object.diskon}</td>
+                            <td>${object.subtotal}</td>
+                            <td><button class="btn btn-sm btn-danger" onclick="clickDelete(${i})"><i class="fa fa-trash"></i></button></td>
+                        </tr>`;
+            $('#tableBody').append(row);
+            total += object.subtotal;
+        });
+        const row = `<tr>
+                        <td colspan="6" style="font-weight:bold; text-align:right;">Grand Total</td>
+                        <td colspan="2" style="font-weight:bold; text-align:left;">${total}</td>
+                    </tr>`;
+        $("#tableBody").append(row);
+    }
+
+    function clickDelete(index) {
+        listProduk.splice(index, 1);
+        updateTable();
+    }
+    $(function() {
+        console.log('avai', availableProduct);
+        initialize();
+
+    });
+</script>
+
+</html>

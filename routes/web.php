@@ -70,6 +70,7 @@ Route::prefix('admin')->middleware('auth', 'roleCheck:user')->group(function () 
     Route::post('/master_inventory/do_edit/{id}', [InventoryController::class, 'do_edit'])->name('master_inventory/do_edit');
     Route::post('/master_inventory/delete', [InventoryController::class, 'delete'])->name('master_inventory/delete');
     Route::get('/master_inventory/view_stok/{id}', [InventoryController::class, 'view_stok'])->name('master_inventory/view_stok');
+    Route::post('/master_inventory/edit_stok', [InventoryController::class, 'edit_stok'])->name('master_inventory/edit_stok');
 
     Route::get('/master_category', [CategoryController::class, 'index'])->name('master_category');
     Route::get('/master_category/add', [CategoryController::class, 'add'])->name('master_category/add');

@@ -218,4 +218,31 @@ class InventoryController extends Controller
 
         return view("admin.inventory.view_stok", $data);
     }
+    public function edit_stok(Request $request)
+    {
+        // edit inventory to database
+        try {
+            DB::beginTransaction();
+
+            $data = Unit::find($request->id);
+            $data->stok = $request->stok;
+
+            $data->save();
+            DB::commit();
+            CommonHelper::showAlert("Success", "Edit data success", "success", "/admin/master_inventory/view_stok/" . $data->id_inventory);
+        } catch (\Illuminate\Database\QueryException $ex) {
+            // catch error
+            DB::rollBack();
+            if (str_contains($ex->getMessage(), 'Duplicate entry')) {
+                CommonHelper::showAlert(
+                    "Failed",
+                    'Code ' . $request->code . ' already used',
+                    "error",
+                    "back"
+                );
+            } else {
+                CommonHelper::showAlert("Failed", $ex->getMessage(), "error", "back");
+            }
+        }
+    }
 }

@@ -64,15 +64,21 @@
                                         <th>Unit</th>
                                         <th>Stok</th>
                                         <th>Per satuan terkecil</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody id="tableBody">
                                     @foreach ($list_unit as $unit )
-                                        <tr>
-                                            <td>{{$unit->name}}</td>
-                                            <td>{{$unit->stok}}</td>
-                                            <td>{{$unit->qty_reference}}</td>
-                                        </tr>
+                                    <tr>
+                                        <td>{{$unit->name}}</td>
+                                        <td>{{$unit->stok}}</td>
+                                        <td>{{$unit->qty_reference}}</td>
+                                        <td>
+                                            <button type="button" class="btn btn-primary" onclick="openModalEdit('{{$unit->id}}', '{{$unit->name}}', '{{$unit->stok}}')">
+                                                <i class="fa fa-edit"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
                                     @endforeach
                                 </tbody>
                             </table>
@@ -83,6 +89,38 @@
         </div>
     </div>
 </body>
+<div id="modalEdit" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Update Stok</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="formedit" action="{{URL('admin/master_inventory/edit_stok')}}" method="POST">
+                    @csrf
+            <div class="modal-body">
+                    <div class="form-group">
+                        <label>Unit</label>
+                        <input disabled type="text" class="form-control required" id="edit-name">
+                    </div>
+                    <div class="form-group">
+                        <label>Stok</label>
+                        <input type="number" class="form-control required" id="edit-stok" name="stok">
+                    </div>
+                    <input type="hidden" class="form-control required" id="edit-id" name="id">
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <input type="submit" class="btn btn-primary" value="Save changes"/>
+            </div>
+                </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
 
 @include('script_footer')
 <script>
@@ -111,6 +149,13 @@
         $("#list_units").val(JSON.stringify(jsonUnit));
 
         $('#formadd').submit();
+    }
+
+    function openModalEdit(id, name, stok) {
+        $("#edit-name").val(name);
+        $("#edit-stok").val(stok);
+        $("#edit-id").val(id);
+        $("#modalEdit").modal();
     }
 
     function getUnitJSON(data) {

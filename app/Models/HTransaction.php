@@ -13,8 +13,8 @@ class HTransaction extends Model
     {
         $data = HTransaction::where('h_transaction.id_cashier', $id_cashier)
             ->join('customer', 'customer.id', 'h_transaction.id_customer')
-            ->join('user', 'user.id', 'h_transaction.id_cashier')
-            ->select('h_transaction.*', 'customer.name as customer_name', 'user.name as cashier_name')
+            ->join('users', 'users.id', 'h_transaction.id_cashier')
+            ->select('h_transaction.*', 'customer.full_name as customer_name', 'users.username as cashier_name')
             ->get();
         return $data;
     }

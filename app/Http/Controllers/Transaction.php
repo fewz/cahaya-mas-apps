@@ -90,7 +90,7 @@ class Transaction extends Controller
             ->select("d_transaction.*", "inventory.name as product_name", "unit.name as unit_name", "inventory.code as product_code")
             ->get();
 
-        $data_customer = Customer::find($data_order->id_customer)->first();
+        $data_customer = Customer::find($data_order->id_customer);
 
         $data = [
             'user' => $user,

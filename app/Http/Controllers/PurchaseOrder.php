@@ -161,9 +161,12 @@ class PurchaseOrder extends Controller
             $data->grand_total = (int)$data->grand_total + (int)$request->grand_total;
             $data->save();
 
+            $total_pengiriman = LogTerimaBarang::get_total_pengiriman($data->id);
             foreach ($list_produk as $lp) {
-                DetailPurchaseOrder::terima_barang($data->id, $lp->id_product, $lp->id_unit, $lp->expdate, $lp->qty);
-                Unit::add_stok($lp->id_unit, $lp->qty);
+                if ($lp->qty > 0) {
+                    DetailPurchaseOrder::terima_barang($data->id, $lp->id_product, $lp->id_unit, $lp->expdate, $lp->qty, $total_pengiriman);
+                    Unit::add_stok($lp->id_unit, $lp->qty);
+                }
             }
 
             DB::commit();
@@ -189,7 +192,7 @@ class PurchaseOrder extends Controller
             ->join("inventory", "inventory.id", "=", "log_terima_barang.id_inventory")
             ->join("unit", "unit.id", "=", "log_terima_barang.id_unit")
             ->select("log_terima_barang.*", "inventory.name as product_name", "unit.name as unit_name", "inventory.code as product_code")
-            ->orderBy("log_terima_barang.created_date")
+            ->orderBy("pengiriman_ke")
             ->get();
         $list_supplier = Supplier::get();
         $data = [

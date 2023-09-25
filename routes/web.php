@@ -32,7 +32,7 @@ Route::get('/', function () {
 })->name('login');
 
 
-Route::prefix('admin')->middleware('auth')->group(function () {
+Route::prefix('admin')->middleware('auth', 'roleCheck:user')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::get('/master_user', [UserController::class, 'index'])->name('master_user');
@@ -102,8 +102,11 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::get('/transaction/view/{id}', [Transaction::class, 'view'])->name('transaction/view');
     Route::post('/transaction/do_edit/{id}', [Transaction::class, 'do_edit'])->name('transaction/do_edit');
     Route::post('/transaction/delete', [Transaction::class, 'delete'])->name('transaction/delete');
+    Route::get('/test', [UserController::class, 'tests'])->name('test');
 });
 
 
 Route::post("/do_login", [LoginController::class, 'doLogin']);
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+
+Route::get('/no_access', [LoginController::class, 'no_access'])->name('no_access');

@@ -38,4 +38,9 @@ class LoginController extends Controller
         Auth::logout();
         CommonHelper::showAlert("Sukses", "Logout Berhasil", "success", "/");
     }
+
+    public function no_access()
+    {
+        return view("no_access");
+    }
 }

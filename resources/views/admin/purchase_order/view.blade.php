@@ -86,7 +86,7 @@
 
                     <div class="card card-info">
                         <div class="card-header">
-                            <h3 class="card-title">Produk yang diterima</h3>
+                            <h3 class="card-title">Ringkasan Produk yang diterima</h3>
                         </div>
                         <div class="card-body">
                             <label>Produk yang terkirim</label>
@@ -98,7 +98,6 @@
                                         <th>Unit</th>
                                         <th>Qty Order</th>
                                         <th>Qty Terima</th>
-                                        <th>Exp Date</th>
                                         <th>Harga per unit</th>
                                     </tr>
                                 </thead>
@@ -116,27 +115,31 @@
 
                     <div class="card card-info">
                         <div class="card-header">
-                            <h3 class="card-title">Log Produk yang diterima</h3>
+                            <h3 class="card-title">Detail Penerimaan barang</h3>
                         </div>
                         <div class="card-body">
-                            <label>Log Produk yang diterima</label>
+                            <label>Detail Penerimaan barang</label>
                             <table class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
+                                        <th style="width:150px;">Pengiriman ke</th>
                                         <th>Tanggal</th>
                                         <th>Kode</th>
                                         <th>Nama</th>
                                         <th>Unit</th>
+                                        <th>Expired</th>
                                         <th>Qty</th>
                                     </tr>
                                 </thead>
                                 <tbody id="tableBody">
                                     @foreach ($data_log as $data )
                                         <tr>
+                                            <td>{{$data->pengiriman_ke}}</td>
                                             <td>{{$data->created_date}}</td>
                                             <td>{{$data->product_code}}</td>
                                             <td>{{$data->product_name}}</td>
                                             <td>{{$data->unit_name}}</td>
+                                            <td>{{$data->exp_date}}</td>
                                             <td>{{$data->qty}}</td>
                                         </tr>
                                     @endforeach
@@ -290,7 +293,6 @@
                             <td>${unit.name}</td>
                             <td>${object.qty_order}</td>
                             <td>${object.qty}</td>
-                            <td>${object.date_expired}</td>
                             <td>Rp. ${numberWithCommas(object.price)}</td>
                         </tr>`;
             $('#tableBody').append(row);

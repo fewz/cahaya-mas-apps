@@ -22,7 +22,7 @@
                         </a>
                     </li>
                     <li class="nav-header">TRANSAKSI</li>
-                    @if(Session::get('MASTER_TRANSACTION'))
+                    @if(Session::get('TRANSACTION'))
                     <li class="nav-item">
                         <a href="{{ URL('admin/transaction') }}" class="nav-link {{$activePage === 'transaction' ? 'active' : ''}}">
                             <i class="nav-icon fas fa-shopping-cart"></i>

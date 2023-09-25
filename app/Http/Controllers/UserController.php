@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helpers\CommonHelper;
 use App\Http\Controllers\Controller;
+use App\Models\LogTerimaBarang;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -112,5 +113,13 @@ class UserController extends Controller
         } catch (\Illuminate\Database\QueryException $ex) {
             CommonHelper::showAlert("Failed", $ex->getMessage(), "error", "back");
         }
+    }
+
+    public function test(Request $request){
+        echo LogTerimaBarang::get_total_pengiriman(20);
+    }
+
+    public function tests(Request $request){
+        echo "tes";
     }
 }

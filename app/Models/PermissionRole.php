@@ -25,4 +25,14 @@ class PermissionRole extends Model
             ->get();
         return $permission;
     }
+
+    public static function is_have_permission($id_role, $perm)
+    {
+        $perm = strtoupper($perm);
+        $permission = PermissionRole::where('permission_role.id_role', $id_role)
+            ->where('permission.description', $perm)
+            ->join('permission', 'permission.id', 'permission_role.id_permission')
+            ->count();
+        return $permission;
+    }
 }

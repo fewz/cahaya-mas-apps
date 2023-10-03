@@ -120,6 +120,8 @@ class PricingController extends Controller
         $data->stock = Unit::find($request->id_unit)->stok;
         $data->discount = Diskon::where("id_unit", $request->id_unit)
             ->where("id_inventory", $request->id_inventory)
+            ->whereDate('start_date', '<=', now())
+            ->whereDate('end_date', '>=', now())
             ->first();
         return $this->createSuccessMessage($data);
     }

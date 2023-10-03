@@ -148,11 +148,15 @@ class PurchaseOrder extends Controller
     {
         try {
             DB::beginTransaction();
+            $file = $request->file('file');
             $list_produk = json_decode($request->list_produk);
             $data = HeaderPurchaseOrder::where("id", $id)->first();
             if ($request->is_finish === '1') {
                 $data->status = 2;
                 $data->finish_date = $request->finish_date;
+                if ($request->payment_method === 'CASH') {
+                    $data->lunas = 1;
+                }
             }
             $data->payment_method = $request->payment_method;
             if ($request->payment_method === 'CREDIT') {
@@ -162,9 +166,10 @@ class PurchaseOrder extends Controller
             $data->save();
 
             $total_pengiriman = LogTerimaBarang::get_total_pengiriman($data->id);
+            $file->move('surat_jalan', 'P' . $data->id . ($total_pengiriman + 1));
             foreach ($list_produk as $lp) {
                 if ($lp->qty > 0) {
-                    DetailPurchaseOrder::terima_barang($data->id, $lp->id_product, $lp->id_unit, $lp->expdate, $lp->qty, $total_pengiriman);
+                    DetailPurchaseOrder::terima_barang($data->id, $lp->id_product, $lp->id_unit, $lp->expdate, $lp->qty, $total_pengiriman, $lp->keterangan);
                     Unit::add_stok($lp->id_unit, $lp->qty);
                 }
             }
@@ -203,5 +208,17 @@ class PurchaseOrder extends Controller
             'data_log' => $data_log
         ];
         return view("admin.purchase_order.view", $data);
+    }
+
+    public function upload_bukti_transfer(Request $request)
+    {
+        $file = $request->file('file');
+
+        $file->move('bukti_transfer_purchase_order', $request->id);
+        $data = HeaderPurchaseOrder::where("id", $request->id)->first();
+        $data->lunas = 1;
+        $data->tanggal_bayar = $request->tanggal_bayar;
+        $data->save();
+        CommonHelper::showAlert("Success", "Upload Bukti Transfer Berhasil", "success", "/admin/purchase_order");
     }
 }

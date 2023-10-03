@@ -68,6 +68,14 @@
                                     <label>Potongan</label>
                                     <input type="text" class="form-control required" name="potongan" placeholder="Phone" value="{{$data_diskon->potongan}}">
                                 </div>
+                                <div class="form-group">
+                                    <label>Tanggal Mulai Diskon</label>
+                                    <input type="date" class="form-control required" name="start_date" value="{{$data_diskon->start_date}}">
+                                </div>
+                                <div class="form-group">
+                                    <label>Tanggal Berakhir Diskon</label>
+                                    <input type="date" class="form-control required" name="end_date" value="{{$data_diskon->end_date}}">
+                                </div>
                             </div>
                             <!-- /.card-body -->
 

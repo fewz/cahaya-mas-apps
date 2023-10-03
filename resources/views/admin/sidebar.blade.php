@@ -118,6 +118,14 @@
                             @endif
                         </ul>
                     </li>
+                    @if(Session::get('MASTER_SETTING'))
+                    <li class="nav-item">
+                        <a href="{{ URL('admin/master_setting') }}" class="nav-link {{$activePage === 'master_setting' ? 'active' : ''}}">
+                            <i class="fa fa-wrench nav-icon"></i>
+                            <p>Master Setting</p>
+                        </a>
+                    </li>
+                    @endif
                 </ul>
             </nav>
             <div class="mt-auto">

@@ -57,6 +57,14 @@
                                     <label>Potongan</label>
                                     <input type="text" class="form-control required" name="potongan" placeholder="Potongan">
                                 </div>
+                                <div class="form-group">
+                                    <label>Tanggal Mulai Diskon</label>
+                                    <input type="date" class="form-control required" name="start_date">
+                                </div>
+                                <div class="form-group">
+                                    <label>Tanggal Berakhir Diskon</label>
+                                    <input type="date" class="form-control required" name="end_date">
+                                </div>
                             </div>
                             <!-- /.card-body -->
 
@@ -77,7 +85,7 @@
         inventoryChange();
     });
 
-    function inventoryChange(){
+    function inventoryChange() {
         const id = $("#id_inventory").val();
         getUnit(id);
     }

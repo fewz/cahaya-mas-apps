@@ -99,8 +99,8 @@
                 </button>
             </div>
             <form id="formedit" action="{{URL('admin/master_inventory/edit_stok')}}" method="POST">
-                    @csrf
-            <div class="modal-body">
+                @csrf
+                <div class="modal-body">
                     <div class="form-group">
                         <label>Unit</label>
                         <input disabled type="text" class="form-control required" id="edit-name">
@@ -110,12 +110,12 @@
                         <input type="number" class="form-control required" id="edit-stok" name="stok">
                     </div>
                     <input type="hidden" class="form-control required" id="edit-id" name="id">
-            </div>
-            <div class="modal-footer justify-content-between">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <input type="submit" class="btn btn-primary" value="Save changes"/>
-            </div>
-                </form>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <input type="submit" class="btn btn-primary" value="Save changes" />
+                </div>
+            </form>
         </div>
         <!-- /.modal-content -->
     </div>

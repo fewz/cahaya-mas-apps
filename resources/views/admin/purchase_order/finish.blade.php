@@ -33,7 +33,7 @@
                         </div>
                         <!-- /.card-header -->
                         <!-- form start -->
-                        <form id="formadd" action="{{URL('admin/purchase_order/do_finish').'/'.$data_purchase_order->id}}" method="POST">
+                        <form id="formadd" action="{{URL('admin/purchase_order/do_finish').'/'.$data_purchase_order->id}}" method="POST" enctype="multipart/form-data">
                             @csrf
                             <div class="card-body">
                                 <div class="form-group">
@@ -78,6 +78,10 @@
                                     <label>Due Date</label>
                                     <input type="date" class="form-control" name="due_date">
                                 </div>
+                                <div class="form-group">
+                                    <label> Bukti Nota / Surat Jalan</label><br>
+                                    <input class="required" type="file" name="file" accept="image/png, image/jpeg">
+                                </div>
                                 <input type="hidden" id="list_produk" name="list_produk">
                                 <input type="hidden" id="is_finish" name="is_finish">
                                 <input type="hidden" id="grand_total" name="grand_total">
@@ -102,6 +106,7 @@
                                         <th>Harga per unit</th>
                                         <th>Qty Terima</th>
                                         <th>Exp Date</th>
+                                        <th>Keterangan</th>
                                     </tr>
                                 </thead>
                                 <tbody id="tableBody">
@@ -208,6 +213,7 @@
 
     function getJSONProduk() {
         const result = [];
+
         listProduk.forEach((val, i) => {
             const obj = JSON.parse(val);
             const unit = JSON.parse(obj.unit);
@@ -218,6 +224,7 @@
             const qty_order = getInputValue(key, 'qty_order');
             const harga = getInputValue(key, 'price');
             const expdate = getInputValue(key, 'expdate');
+            const keterangan = getInputValue(key, 'keterangan');
             const res = {
                 id_product: obj.id_product,
                 id_unit: unit.id,
@@ -225,7 +232,8 @@
                 qty_sisa: qty_sisa,
                 qty_order: qty_order,
                 price: harga,
-                expdate: expdate
+                expdate: expdate,
+                keterangan: keterangan
             }
             result.push(res);
         });
@@ -267,7 +275,7 @@
 
     // Save input values into the inputValues object
     function saveInputValues() {
-        $('#tableBody input[type="number"], #tableBody input[type="date"]').each(function() {
+        $('#tableBody input[type="number"], #tableBody input[type="date"], #tableBody input[type="text"]').each(function() {
             const key = $(this).attr('name');
             const value = $(this).val();
             inputValues[key] = value;
@@ -298,8 +306,9 @@
                             <td><input class="form-control" type="number" name="qty_order[${key}]" disabled value="${getInputValue(key, 'qty_order')}"/></td>
                             <td><input class="form-control" type="number" name="qty_sisa[${key}]" disabled value="${getInputValue(key, 'qty_sisa')}"/></td>
                             <td><input class="form-control" type="number" name="price[${key}]" value="${getInputValue(key, 'price')}" disabled onchange="hitungTotal()"/></td>
-                            <td><input class="form-control" type="number" name="qty[${key}]" value="${getInputValue(key, 'qty')}" onchange="qtyChange(this, ${getInputValue(key, 'qty_sisa')})"/></td>
+                            <td><input class="form-control required" type="number" name="qty[${key}]" value="${getInputValue(key, 'qty')}" onchange="qtyChange(this, ${getInputValue(key, 'qty_sisa')})"/></td>
                             <td><input class="form-control" type="date" name="expdate[${key}]" value="${getInputValue(key, 'expdate')}"/></td>
+                            <td><input class="form-control" type="text" name="keterangan[${key}]" value="${getInputValue(key, 'keterangan')}"/></td>
                         </tr>`;
             $('#tableBody').append(row);
         });

@@ -122,26 +122,30 @@
                             <table class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
-                                        <th style="width:150px;">Pengiriman ke</th>
+                                        <th style="width:150px;">Kode Pengiriman</th>
                                         <th>Tanggal</th>
                                         <th>Kode</th>
                                         <th>Nama</th>
                                         <th>Unit</th>
                                         <th>Expired</th>
                                         <th>Qty</th>
+                                        <th>Keterangan</th>
+                                        <th>Surat Jalan</th>
                                     </tr>
                                 </thead>
                                 <tbody id="tableBody">
                                     @foreach ($data_log as $data )
-                                        <tr>
-                                            <td>{{$data->pengiriman_ke}}</td>
-                                            <td>{{$data->created_date}}</td>
-                                            <td>{{$data->product_code}}</td>
-                                            <td>{{$data->product_name}}</td>
-                                            <td>{{$data->unit_name}}</td>
-                                            <td>{{$data->exp_date}}</td>
-                                            <td>{{$data->qty}}</td>
-                                        </tr>
+                                    <tr>
+                                        <td>P{{$data_purchase_order->id}}{{$data->pengiriman_ke}}</td>
+                                        <td>{{$data->created_date}}</td>
+                                        <td>{{$data->product_code}}</td>
+                                        <td>{{$data->product_name}}</td>
+                                        <td>{{$data->unit_name}}</td>
+                                        <td>{{$data->exp_date}}</td>
+                                        <td>{{$data->qty}}</td>
+                                        <td>{{$data->keterangan}}</td>
+                                        <td><a href="{{URL('surat_jalan/'.'P'.$data_purchase_order->id.$data->pengiriman_ke)}}" target="_blank">Lihat</a></td>
+                                    </tr>
                                     @endforeach
                                 </tbody>
                             </table>

@@ -88,6 +88,7 @@ Route::prefix('admin')->middleware('auth', 'roleCheck:user')->group(function () 
     Route::get('/purchase_order/finish/{id}', [PurchaseOrder::class, 'finish'])->name('purchase_order/finish');
     Route::post('/purchase_order/do_finish/{id}', [PurchaseOrder::class, 'do_finish'])->name('purchase_order/do_finish');
     Route::get('/purchase_order/view/{id}', [PurchaseOrder::class, 'view'])->name('purchase_order/view');
+    Route::post('/purchase_order/upload_bukti_transfer', [PurchaseOrder::class, 'upload_bukti_transfer'])->name('purchase_order/upload_bukti_transfer');
 
     Route::get('/master_diskon', [DiskonController::class, 'index'])->name('master_diskon');
     Route::get('/master_diskon/add', [DiskonController::class, 'add'])->name('master_diskon/add');
@@ -103,6 +104,10 @@ Route::prefix('admin')->middleware('auth', 'roleCheck:user')->group(function () 
     Route::get('/transaction/view/{id}', [Transaction::class, 'view'])->name('transaction/view');
     Route::post('/transaction/do_edit/{id}', [Transaction::class, 'do_edit'])->name('transaction/do_edit');
     Route::post('/transaction/delete', [Transaction::class, 'delete'])->name('transaction/delete');
+
+    Route::get('/master_setting', [UserController::class, 'master_setting'])->name('master_setting');
+    Route::post('/master_setting/edit', [UserController::class, 'edit_setting'])->name('master_setting/edit');
+
     Route::get('/test', [UserController::class, 'tests'])->name('test');
 });
 

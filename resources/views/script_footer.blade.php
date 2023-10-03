@@ -58,6 +58,7 @@
         let isValid = true;
 
         $field.each((_, element) => {
+            console.log('el', element);
             if (element.value == undefined || element.value == '' || !element.value) {
                 // console.log('elem', element);
 

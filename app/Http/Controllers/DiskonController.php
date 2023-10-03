@@ -46,6 +46,8 @@ class DiskonController extends Controller
             $data->minimal = $request->minimal;
             $data->potongan = $request->potongan;
             $data->id_unit = $request->id_unit;
+            $data->start_date = $request->start_date;
+            $data->end_date = $request->end_date;
             $data->save();
             CommonHelper::showAlert("Success", "Insert data success", "success", "/admin/master_diskon");
         } catch (\Illuminate\Database\QueryException $ex) {
@@ -86,6 +88,8 @@ class DiskonController extends Controller
             $data->minimal = $request->minimal;
             $data->potongan = $request->potongan;
             $data->id_unit = $request->id_unit;
+            $data->start_date = $request->start_date;
+            $data->end_date = $request->end_date;
             $data->save();
             CommonHelper::showAlert("Success", "Edit data success", "success", "/admin/master_diskon");
         } catch (\Illuminate\Database\QueryException $ex) {

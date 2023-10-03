@@ -6,6 +6,7 @@ use App\Helpers\CommonHelper;
 use App\Http\Controllers\Controller;
 use App\Models\LogTerimaBarang;
 use App\Models\Role;
+use App\Models\Setting;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -115,11 +116,46 @@ class UserController extends Controller
         }
     }
 
-    public function test(Request $request){
+    public function master_setting()
+    {
+        $user = Auth::user();
+        $list_setting = Setting::get();
+        $data = [
+            'user' => $user,
+            'list_setting' => $list_setting
+        ];
+        return view("admin.user.setting", $data);
+    }
+
+
+    public function edit_setting(Request $request)
+    {
+        try {
+            $data = Setting::where("id", $request->id)->first();
+            $data->value = $request->value;
+            $data->save();
+            CommonHelper::showAlert("Success", "Edit data success", "success", "/admin/master_setting");
+        } catch (\Illuminate\Database\QueryException $ex) {
+            if (str_contains($ex->getMessage(), 'Duplicate entry')) {
+                CommonHelper::showAlert(
+                    "Failed",
+                    'Username ' . $request->username . ' already used',
+                    "error",
+                    "back"
+                );
+            } else {
+                CommonHelper::showAlert("Failed", $ex->getMessage(), "error", "back");
+            }
+        }
+    }
+
+    public function test(Request $request)
+    {
         echo LogTerimaBarang::get_total_pengiriman(20);
     }
 
-    public function tests(Request $request){
+    public function tests(Request $request)
+    {
         echo "tes";
     }
 }

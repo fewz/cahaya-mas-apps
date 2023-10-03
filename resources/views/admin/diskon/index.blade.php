@@ -42,6 +42,8 @@
                                                 <th>Minimal Beli</th>
                                                 <th>Unit</th>
                                                 <th>Diskon</th>
+                                                <th>Tanggal Mulai Diskon</th>
+                                                <th>Tanggal Berakhir Diskon</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
@@ -52,6 +54,8 @@
                                                 <td>{{$dt->minimal}}</td>
                                                 <td>{{$dt->unit}}</td>
                                                 <td>{{$dt->potongan}}</td>
+                                                <td>{{$dt->start_date}}</td>
+                                                <td>{{$dt->end_date}}</td>
                                                 <td>
                                                     <a href="{{ URL('admin/master_diskon/edit/'.$dt->id) }}" class="btn btn-sm btn-primary">
                                                         <i class="fa fa-edit"></i>

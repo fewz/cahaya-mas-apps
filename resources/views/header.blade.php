@@ -78,6 +78,8 @@
     <script src="{{ URL::asset('assets/plugins/datatables-buttons/js/buttons.colVis.min.js')}}"></script>
 
     <style>
-
+        input[type='file'].is-invalid {
+            color: red;
+        }
     </style>
 </head>

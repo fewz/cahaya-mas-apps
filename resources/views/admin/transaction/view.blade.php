@@ -115,12 +115,12 @@
                                         </tr>
                                         @endforeach
                                         <tr>
-                                            <td colspan="6" style="font-weight:bold; text-align:right;">Grand Total</td>
-                                            <td>{{number_format($data_order->grand_total,0,"",".")}}</td>
+                                            <td colspan="6" style="font-weight:bold; text-align:right;">Diskon Poin</td>
+                                            <td>{{number_format($data_order->diskon_poin,0,"",".")}}</td>
                                         </tr>
                                         <tr>
-                                            <td colspan="6" style="font-weight:bold; text-align:right;">Total Potongan</td>
-                                            <td>{{number_format($data_order->total_diskon,0,"",".")}}</td>
+                                            <td colspan="6" style="font-weight:bold; text-align:right;">Grand Total</td>
+                                            <td>{{number_format($data_order->grand_total,0,"",".")}}</td>
                                         </tr>
                                     </tbody>
                                 </table>

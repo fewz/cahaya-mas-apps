@@ -60,10 +60,14 @@ class Transaction extends Controller
             $data->total_diskon = $request->total_diskon;
             $data->grand_total = $request->grand_total;
             $data->payment_method = $request->payment_method;
+            $data->diskon_poin = $request->diskon_poin;
+            $data->transaction_type = $request->type;
             if ($request->payment_method === 'CASH') {
                 $data->status = 1;
+                Customer::add_poin($request->id_customer, $request->grand_total);
             } else {
                 $data->status = 2;
+                $data->due_date = $request->due_date;
             }
             $data->save();
 

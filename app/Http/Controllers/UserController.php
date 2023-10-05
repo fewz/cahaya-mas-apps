@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helpers\CommonHelper;
 use App\Http\Controllers\Controller;
+use App\Models\Customer;
 use App\Models\LogTerimaBarang;
 use App\Models\Role;
 use App\Models\Setting;
@@ -151,7 +152,7 @@ class UserController extends Controller
 
     public function test(Request $request)
     {
-        echo LogTerimaBarang::get_total_pengiriman(20);
+        Customer::add_poin(1, 150000);
     }
 
     public function tests(Request $request)

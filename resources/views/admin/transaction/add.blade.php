@@ -46,15 +46,27 @@
                                 </div>
                                 <div class="form-group">
                                     <label>Payment Method</label>
-                                    <select class="form-control select2bs4" name="payment_method" style="width: 100%;">
+                                    <select id="payment_method" class="form-control select2bs4" name="payment_method" style="width: 100%;" onchange="paymentMethodChange(this)">
                                         <option value="CASH">Cash</option>
                                         <option value="CREDIT">Credit</option>
+                                    </select>
+                                </div>
+                                <div class="form-group d-none" id="jatuh_tempo">
+                                    <label>Tanggal Jatuh Tempo</label>
+                                    <input type="date" class="form-control" name="due_date" placeholder="Tanggal Jatuh Tempo" id="due_date">
+                                </div>
+                                <div class="form-group">
+                                    <label>Tipe Transaksi</label>
+                                    <select class="form-control select2bs4" name="type" style="width: 100%;" id="type_transaction">
+                                        <option value="OFFLINE">Offline</option>
+                                        <option value="DELIVERY">Delivery</option>
                                     </select>
                                 </div>
                                 <input type="hidden" id="list_produk" name="list_produk">
                                 <input type="hidden" id="grand_total" name="grand_total">
                                 <input type="hidden" id="total_diskon" name="total_diskon">
                                 <input type="hidden" id="id_customer" name="id_customer">
+                                <input type="hidden" id="diskon_poin" name="diskon_poin">
                             </div>
                         </form>
                     </div>
@@ -130,6 +142,10 @@
                                     <p id="label_harga_produk"></p>
                                 </div>
                                 <div class="col-6">
+                                    <label>Minimal Beli untuk Potongan</label>
+                                    <p id="label_minimal_diskon"></p>
+                                </div>
+                                <div class="col-6">
                                     <label>Diskon</label>
                                     <p id="label_diskon_produk">-</p>
                                 </div>
@@ -194,10 +210,11 @@
 
     function hitungDiskon() {
         $("#label_diskon_produk").html('-');
+        $("#label_minimal_diskon").html(selectedMinimalDiskon);
         if (selectedMinimalDiskon && selectedMinimalDiskon <= $("#qtyproduk").val()) {
             subTotalProduct -= selectedDiskon;
-            $("#label_diskon_produk").html(selectedDiskon);
-            $("#label_subtotal_produk").html(subTotalProduct);
+            $("#label_diskon_produk").html(numberWithCommas(selectedDiskon));
+            $("#label_subtotal_produk").html(numberWithCommas(subTotalProduct));
         }
     }
 
@@ -206,11 +223,10 @@
         const produkBaru = $("#listproduk").val();
         const object = JSON.parse(produkBaru);
         $.get(`/api/get_price_and_stock?id_unit=${id_unit}&id_inventory=${object.id_product}&tier=${selectedCustomer.tier_customer}`, function(data) {
-            console.log('dat', data);
 
             const payload = data.payload;
-            $("#label_stok_produk").html(payload.stock);
-            $("#label_harga_produk").html(payload.pricing.sell_price);
+            $("#label_stok_produk").html(numberWithCommas(payload.stock));
+            $("#label_harga_produk").html(numberWithCommas(payload.pricing.sell_price));
             if (payload.discount) {
                 selectedMinimalDiskon = payload.discount.minimal;
                 selectedDiskon = payload.discount.potongan;
@@ -233,7 +249,7 @@
         }
         const qty = $("#qtyproduk").val();
         subTotalProduct = qty * selectedProductPrice;
-        $("#label_subtotal_produk").html(subTotalProduct);
+        $("#label_subtotal_produk").html(numberWithCommas(subTotalProduct));
         hitungDiskon();
     }
 
@@ -271,11 +287,8 @@
         $("#unitproduk option").remove();
         const produkBaru = $("#listproduk").val();
         const object = JSON.parse(produkBaru);
-        console.log('object', object);
 
         $.get(`/api/available_unit?id=${object.id_product}`, function(data) {
-            console.log('dat', data);
-
             const unit = data.payload;
             unit.forEach((val) => {
                 optionText = val.name;
@@ -292,6 +305,15 @@
         });
     }
 
+    function paymentMethodChange(comp) {
+        if ($(comp).val() === "CREDIT") {
+            $("#jatuh_tempo").removeClass('d-none');
+        } else {
+            $("#jatuh_tempo").addClass('d-none');
+        }
+
+    }
+
     function submit() {
         // submit form
         saveInputValues();
@@ -299,13 +321,29 @@
             // validate form required
             return;
         }
+
         const jsonObject = getJSONProduk();
         console.log('js', jsonObject);
+
+        if ($("#payment_method").val() === 'CREDIT') {
+            if (!$("#due_date").val()) {
+                swal('Tanggal jatuh tempo tidak boleh kosong');
+                return;
+            }
+        }
+        if ($("#type_transaction").val() === 'DELIVERY') {
+            console.log(grand_total);
+            if (parseInt(grand_total) < 5000000) {
+                swal('Transaksi Minimal untuk Delivery adalah 5.000.000');
+                return;
+            }
+        }
 
         $("#id_customer").val($("#customer").val());
         $("#grand_total").val(grand_total);
         $("#list_produk").val(JSON.stringify(jsonObject));
         $("#total_diskon").val(total_diskon);
+        $("#diskon_poin").val(diskon_poin);
 
         $('#formadd').submit();
     }
@@ -316,6 +354,7 @@
     function getJSONProduk() {
         grand_total = 0;
         total_diskon = 0;
+        diskon_poin = 0;
         const result = [];
         listProduk.forEach((val, i) => {
             const obj = JSON.parse(val);
@@ -337,6 +376,11 @@
             total_diskon += obj.diskon;
             result.push(res);
         });
+
+        if (selectedCustomer.poin > 0) {
+            diskon_poin = selectedCustomer.poin;
+            grand_total -= diskon_poin;
+        }
 
         return result;
 
@@ -413,17 +457,25 @@
                             <td>${object.product_name}</td>
                             <td>${unit.name}</td>
                             <td>${object.qty}</td>
-                            <td>${object.harga}</td>
-                            <td>${object.diskon}</td>
-                            <td>${object.subtotal}</td>
+                            <td>${numberWithCommas(object.harga)}</td>
+                            <td>${numberWithCommas(object.diskon)}</td>
+                            <td>${numberWithCommas(object.subtotal)}</td>
                             <td><button class="btn btn-sm btn-danger" onclick="clickDelete(${i})"><i class="fa fa-trash"></i></button></td>
                         </tr>`;
             $('#tableBody').append(row);
             total += object.subtotal;
         });
+        if (selectedCustomer.poin > 0) {
+            const row = `<tr>
+                        <td colspan="6" style="font-weight:bold; text-align:right;">Diskon Poin</td>
+                        <td colspan="2" style="font-weight:bold; text-align:left;">${numberWithCommas(selectedCustomer.poin)}</td>
+                    </tr>`;
+            $("#tableBody").append(row);
+            total -= selectedCustomer.poin;
+        }
         const row = `<tr>
                         <td colspan="6" style="font-weight:bold; text-align:right;">Grand Total</td>
-                        <td colspan="2" style="font-weight:bold; text-align:left;">${total}</td>
+                        <td colspan="2" style="font-weight:bold; text-align:left;">${numberWithCommas(total)}</td>
                     </tr>`;
         $("#tableBody").append(row);
     }

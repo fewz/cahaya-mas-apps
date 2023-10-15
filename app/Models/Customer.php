@@ -16,7 +16,7 @@ class Customer extends Model
         $poin = Setting::where('name', '=', 'NILAI_CASHBACK_POIN_RUPIAH')->first();
         if ($minimal_belanja->value <= $grand_total) {
             $customer = Customer::where("id", $id_customer)->first();
-            $customer->poin += ($grand_total / $minimal_belanja->value) * $poin->value;
+            $customer->poin += floor($grand_total / $minimal_belanja->value) * $poin->value;
             $customer->save();
         }
     }

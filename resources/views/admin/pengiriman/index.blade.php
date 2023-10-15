@@ -4,7 +4,7 @@
 
 <body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper">
-        @include('admin.sidebar', ['activePage' => 'transaction'])
+        @include('admin.sidebar', ['activePage' => 'pengiriman'])
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
             <!-- Content Header (Page header) -->
@@ -12,7 +12,7 @@
                 <div class="container-fluid">
                     <div class="row mb-2">
                         <div class="col-sm-12">
-                            <h1 class="m-0">Transaksi</h1>
+                            <h1 class="m-0">Pengiriman</h1>
                         </div><!-- /.col -->
                     </div><!-- /.row -->
                 </div><!-- /.container-fluid -->
@@ -28,9 +28,9 @@
                         <div class="col-12">
                             <div class="card">
                                 <div class="card-header d-flex">
-                                    <h3 class="card-title">List Transaksi</h3>
+                                    <h3 class="card-title">List Pengiriman</h3>
                                     <div class="ml-auto">
-                                        <a href="{{ URL('admin/transaction/add') }}" class="btn btn-sm btn-primary">ADD <i class="fa fa-plus"></i></a>
+                                        <a href="{{ URL('admin/pengiriman/add') }}" class="btn btn-sm btn-primary">ADD <i class="fa fa-plus"></i></a>
                                     </div>
                                 </div>
                                 <!-- /.card-header -->
@@ -38,32 +38,25 @@
                                     <table id="example1" class="table table-bordered table-striped">
                                         <thead>
                                             <tr>
-                                                <th>Order Number</th>
-                                                <th>Customer</th>
-                                                <th>Cashier</th>
-                                                <th>Created Date</th>
+                                                <th>Kode Pengiriman</th>
                                                 <th>Status</th>
-                                                <th>Grand Total</th>
+                                                <th>Delivery Date</th>
+                                                <th>Driver</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <?php $status = ["Draft", "Selesai", "Belum Lunas", "Belum Dikirim", "Siap Dikirim", "Sedang Dikirim"]; ?>
-                                            @foreach ($list_transaction as $dt )
+                                            <?php $status = ["Siap Jalan", "Dikirim", "Selesai"]; ?>
+                                            @foreach ($list_pengiriman as $dt )
                                             <tr>
-                                                <td>{{$dt->order_number}}</td>
-                                                <td>{{$dt->customer_name}}</td>
-                                                <td>{{$dt->cashier_name}}</td>
-                                                <td>{{$dt->created_date}}</td>
+                                                <td>{{$dt->code}}</td>
                                                 <td>{{$status[$dt->status]}}</td>
+                                                <td>{{$dt->delivery_date}}</td>
+                                                <td>{{$dt->driver}}</td>
                                                 <td>
-                                                    {{$dt->grand_total > 0 ? number_format($dt->grand_total,0,',','.') : "-"}}
-                                                </td>
-                                                <td>
-                                                    <a href="{{ URL('admin/transaction/view/'.$dt->id) }}" class="btn btn-sm btn-primary">
+                                                    <a href="{{ URL('admin/pengiriman/view/'.$dt->id) }}" class="btn btn-sm btn-primary">
                                                         <i class="fa fa-eye"></i>
                                                     </a>
-                                                    <!-- <button class="btn btn-sm btn-danger" onclick="clickDelete('{{$dt->id}}')"><i class="fa fa-trash"></i></button> -->
                                                 </td>
                                             </tr>
                                             @endforeach
@@ -82,7 +75,6 @@
     @csrf
     <input type="hidden" name="id" id="id_delete">
 </form>
-
 @include('script_footer')
 
 <script>

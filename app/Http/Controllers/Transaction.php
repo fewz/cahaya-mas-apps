@@ -12,6 +12,7 @@ use App\Models\Unit;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use stdClass;
 
 class Transaction extends Controller
 {
@@ -69,6 +70,9 @@ class Transaction extends Controller
                 $data->status = 2;
                 $data->due_date = $request->due_date;
             }
+            if ($data->transaction_type === 'DELIVERY') {
+                $data->status = 3;
+            }
             $data->save();
 
             foreach ($list_produk as $lp) {
@@ -103,5 +107,21 @@ class Transaction extends Controller
             'data_customer' => $data_customer
         ];
         return view("admin.transaction.view", $data);
+    }
+
+    public function get_detail($id)
+    {
+        $data = new stdClass();
+        $data->header = HTransaction::where('h_transaction.id', $id)
+            ->join('customer', 'customer.id', 'h_transaction.id_customer')
+            ->select('h_transaction.*', 'customer.full_name as customer', 'customer.address as address')
+            ->first();
+        $data->detail = DTransaction::where('d_transaction.id_h_transaction', $id)
+            ->join('inventory', 'inventory.id', 'd_transaction.id_inventory')
+            ->join('unit', 'unit.id', 'd_transaction.id_unit')
+            ->select('d_transaction.*', 'inventory.name as product_name', 'inventory.code as product_code', 'unit.name as unit')
+            ->get();
+
+        return $this->createSuccessMessage($data);
     }
 }

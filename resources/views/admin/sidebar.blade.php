@@ -32,6 +32,16 @@
                         </a>
                     </li>
                     @endif
+                    @if(Session::get('PENGIRIMAN'))
+                    <li class="nav-item">
+                        <a href="{{ URL('admin/pengiriman') }}" class="nav-link {{$activePage === 'pengiriman' ? 'active' : ''}}">
+                            <i class="nav-icon fas fa-truck"></i>
+                            <p>
+                                Pengiriman
+                            </p>
+                        </a>
+                    </li>
+                    @endif
                     <li class="nav-header">MASTER</li>
                     @if(Session::get('MASTER_USER'))
                     <li class="nav-item">

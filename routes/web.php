@@ -6,13 +6,11 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DiskonController;
 use App\Http\Controllers\InventoryController;
-use App\Http\Controllers\PricingController;
+use App\Http\Controllers\PengirimanController;
 use App\Http\Controllers\PurchaseOrder;
 use App\Http\Controllers\RoleController;
-use App\Http\Controllers\StockController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\Transaction;
-use App\Http\Controllers\UnitController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -105,8 +103,17 @@ Route::prefix('admin')->middleware('auth', 'roleCheck:user')->group(function () 
     Route::post('/transaction/do_edit/{id}', [Transaction::class, 'do_edit'])->name('transaction/do_edit');
     Route::post('/transaction/delete', [Transaction::class, 'delete'])->name('transaction/delete');
 
+    Route::get('/pengiriman', [PengirimanController::class, 'index'])->name('pengiriman');
+    Route::get('/pengiriman/add', [PengirimanController::class, 'add'])->name('pengiriman/add');
+    Route::post('/pengiriman/do_add', [PengirimanController::class, 'do_add'])->name('pengiriman/do_add');
+    Route::get('/pengiriman/view/{id}', [PengirimanController::class, 'view'])->name('pengiriman/view');
+    Route::get('/pengiriman/surat_jalan/{id}', [PengirimanController::class, 'surat_jalan'])->name('pengiriman/surat_jalan');
+    Route::post('/pengiriman/do_kirim', [PengirimanController::class, 'do_kirim'])->name('pengiriman/do_kirim');
+    Route::post('/pengiriman/do_finish', [PengirimanController::class, 'do_finish'])->name('pengiriman/do_finish');
+
     Route::get('/master_setting', [UserController::class, 'master_setting'])->name('master_setting');
     Route::post('/master_setting/edit', [UserController::class, 'edit_setting'])->name('master_setting/edit');
+    
 
     Route::get('/test', [UserController::class, 'tests'])->name('test');
 });

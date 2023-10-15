@@ -413,6 +413,9 @@
         object.qty = $("#qtyproduk").val();
         object.harga = selectedProductPrice;
         object.subtotal = subTotalProduct;
+        object.minimal_diskon = selectedMinimalDiskon;
+        object.besar_diskon = selectedDiskon;
+        object.stok = selectedProductStock;
         object.diskon = 0;
         if (selectedMinimalDiskon && selectedMinimalDiskon <= $("#qtyproduk").val()) {
             object.diskon = selectedDiskon;
@@ -460,7 +463,11 @@
                             <td>${numberWithCommas(object.harga)}</td>
                             <td>${numberWithCommas(object.diskon)}</td>
                             <td>${numberWithCommas(object.subtotal)}</td>
-                            <td><button class="btn btn-sm btn-danger" onclick="clickDelete(${i})"><i class="fa fa-trash"></i></button></td>
+                            <td>
+                                <button class="btn btn-sm btn-primary" onclick="minus(${i})"><i class="fa fa-minus"></i></button>
+                                <button class="btn btn-sm btn-primary" onclick="plus(${i})"><i class="fa fa-plus"></i></button>
+                                <button class="btn btn-sm btn-danger" onclick="clickDelete(${i})"><i class="fa fa-trash"></i></button>
+                            </td>
                         </tr>`;
             $('#tableBody').append(row);
             total += object.subtotal;
@@ -478,6 +485,38 @@
                         <td colspan="2" style="font-weight:bold; text-align:left;">${numberWithCommas(total)}</td>
                     </tr>`;
         $("#tableBody").append(row);
+    }
+
+    function plus(index) {
+        const prod = JSON.parse(listProduk[index]);
+        if (prod.qty <= prod.stok - 1) {
+            prod.qty = parseInt(prod.qty) + 1;
+            prod.subtotal = (prod.qty * prod.harga);
+            if (prod.qty >= prod.minimal_diskon) {
+                prod.subtotal -= prod.besar_diskon;
+                prod.diskon = prod.besar_diskon;
+            } else {
+                prod.diskon = 0;
+            }
+            listProduk[index] = JSON.stringify(prod);
+            updateTable();
+        }
+    }
+
+    function minus(index) {
+        const prod = JSON.parse(listProduk[index]);
+        if (prod.qty >= 2) {
+            prod.qty = parseInt(prod.qty) - 1;
+            prod.subtotal = (prod.qty * prod.harga);
+            if (prod.qty >= prod.minimal_diskon) {
+                prod.subtotal -= prod.besar_diskon;
+                prod.diskon = prod.besar_diskon;
+            } else {
+                prod.diskon = 0;
+            }
+            listProduk[index] = JSON.stringify(prod);
+            updateTable();
+        }
     }
 
     function clickDelete(index) {

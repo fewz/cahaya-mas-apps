@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Session;
 
 class Customer extends Model
 {
@@ -19,5 +21,24 @@ class Customer extends Model
             $customer->poin += floor($grand_total / $minimal_belanja->value) * $poin->value;
             $customer->save();
         }
+    }
+
+    public static function check_user($email, $password)
+    {
+        $customer = Customer::where('email', $email)->first();
+        if (!$customer) {
+            return null;
+        }
+
+        if (Hash::check($password, $customer->password)) {
+            return $customer;
+        }
+        return null;
+    }
+
+    public static function get_login_customer()
+    {
+        $customer = Session::get('customer_data');
+        return $customer;
     }
 }

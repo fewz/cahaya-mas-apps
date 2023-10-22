@@ -5,10 +5,13 @@ namespace App\Http\Controllers;
 use App\Helpers\CommonHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Customer;
+use App\Models\DTransaction;
+use App\Models\HTransaction;
 use App\Models\TierCustomer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class CustomerController extends Controller
 {
@@ -40,6 +43,8 @@ class CustomerController extends Controller
         try {
             $data = new Customer();
             $data->code = $request->code;
+            $data->email = $request->email;
+            $data->password = Hash::make($request->password);
             $data->full_name = $request->full_name;
             $data->phone = $request->phone;
             $data->address = $request->address;
@@ -79,6 +84,10 @@ class CustomerController extends Controller
         try {
             $data = Customer::where("id", $id)->first();
             $data->code = $request->code;
+            $data->email = $request->email;
+            if ($request->password) {
+                $data->password = Hash::make($request->password);
+            }
             $data->full_name = $request->full_name;
             $data->phone = $request->phone;
             $data->address = $request->address;
@@ -86,7 +95,7 @@ class CustomerController extends Controller
             $data->save();
             CommonHelper::showAlert("Success", "Edit data success", "success", "/admin/master_customer");
         } catch (\Illuminate\Database\QueryException $ex) {
-             // catch error
+            // catch error
             if (str_contains($ex->getMessage(), 'Duplicate entry')) {
                 CommonHelper::showAlert(
                     "Failed",
@@ -109,5 +118,62 @@ class CustomerController extends Controller
         } catch (\Illuminate\Database\QueryException $ex) {
             CommonHelper::showAlert("Failed", $ex->getMessage(), "error", "back");
         }
+    }
+
+    public function pesanan_saya()
+    {
+        $customer = Customer::get_login_customer();
+        $transaksi = HTransaction::where('id_customer', $customer->id)->get();
+        $data = [
+            'user' => $customer,
+            'transaksi' => $transaksi
+        ];
+        return view("customer.pesanan_saya", $data);
+    }
+
+    public function detail_pesanan($id)
+    {
+        $customer = Customer::get_login_customer();
+        $data_order = HTransaction::find($id);
+        $data_product = DTransaction::where("d_transaction.id_h_transaction", $id)
+            ->join("inventory", "inventory.id", "=", "d_transaction.id_inventory")
+            ->join("unit", "unit.id", "=", "d_transaction.id_unit")
+            ->select("d_transaction.*", "inventory.name as product_name", "unit.name as unit_name", "inventory.code as product_code")
+            ->get();
+
+        $data = [
+            'user' => $customer,
+            'data_order' => $data_order,
+            'data_product' => $data_product
+        ];
+        return view("customer.detail_pesanan", $data);
+    }
+
+    public function finish_pesanan(Request $request)
+    {
+
+        $id = $request->id;
+        $transaksi = HTransaction::find($id);
+        if ($transaksi->payment_method === 'CASH') {
+            $transaksi->status = 1;
+        } else {
+            $transaksi->status = 2;
+        }
+        $transaksi->save();
+
+        CommonHelper::showAlert("Success", "Barang telah diterima", "success", "/customer/pesanan_saya");
+    }
+
+    public function upload_bukti_transfer(Request $request)
+    {
+        $file = $request->file('file');
+
+        // print_r($file);
+        $file->move('bukti_transfer_transaction', $request->id);
+        $data = HTransaction::where("id", $request->id)->first();
+        $data->status = 1;
+        $data->finish_date = today();
+        $data->save();
+        CommonHelper::showAlert("Success", "Upload Bukti Transfer Berhasil", "success", "/customer/pesanan_saya");
     }
 }

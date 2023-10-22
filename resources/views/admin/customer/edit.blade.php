@@ -41,6 +41,18 @@
                                     <input type="text" class="form-control required" name="code" placeholder="Code" value="{{$data_customer->code}}">
                                 </div>
                                 <div class="form-group">
+                                    <label>Email</label>
+                                    <input type="text" class="form-control required" name="email" placeholder="Email" value="{{$data_customer->email}}">
+                                </div>
+                                <div class="form-group">
+                                    <label>Password</label>
+                                    <input id="password" type="password" class="form-control" name="password" placeholder="Password">
+                                </div>
+                                <div class="form-group">
+                                    <label>Confirm Password</label>
+                                    <input id="cpassword" type="password" class="form-control" name="cpassword" placeholder="Confirm Password">
+                                </div>
+                                <div class="form-group">
                                     <label>Full Name</label>
                                     <input type="text" class="form-control required" name="full_name" placeholder="Full Name" value="{{$data_customer->full_name}}">
                                 </div>
@@ -81,6 +93,11 @@
         // submit form
         if (!validateForm()) {
             // validate form required
+            return;
+        }
+
+        if ($("#password").val() !== $("#cpassword").val()) {
+            swal("confirm password tidak sama");
             return;
         }
         $('#formadd').submit();

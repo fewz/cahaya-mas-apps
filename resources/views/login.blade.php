@@ -15,7 +15,7 @@
                 <form action="/do_login" method="post">
                     @csrf
                     <div class="input-group mb-3">
-                        <input name="username" type="text" class="form-control" placeholder="Username">
+                        <input name="username" type="text" class="form-control" placeholder="Username / Email">
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <span class="fas fa-user"></span>

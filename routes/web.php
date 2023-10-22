@@ -29,6 +29,12 @@ Route::get('/', function () {
     return view('login');
 })->name('login');
 
+Route::prefix('customer')->middleware('customerCheck:user')->group(function () {
+    Route::get('/pesanan_saya', [CustomerController::class, 'pesanan_saya'])->name('customer/pesanan_saya');
+    Route::get('/detail_pesanan/{id}', [CustomerController::class, 'detail_pesanan'])->name('customer/detail_pesanan');
+    Route::post('/detail_pesanan/do_finish', [CustomerController::class, 'finish_pesanan'])->name('customer/detail_pesanan/do_finish');
+    Route::post('/detail_pesanan/upload_bukti_transfer', [CustomerController::class, 'upload_bukti_transfer'])->name('customer/detail_pesanan/upload_bukti_transfer');
+});
 
 Route::prefix('admin')->middleware('auth', 'roleCheck:user')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -76,7 +82,7 @@ Route::prefix('admin')->middleware('auth', 'roleCheck:user')->group(function () 
     Route::get('/master_category/edit/{id}', [CategoryController::class, 'edit'])->name('master_category/edit');
     Route::post('/master_category/do_edit/{id}', [CategoryController::class, 'do_edit'])->name('master_category/do_edit');
     Route::post('/master_category/delete', [CategoryController::class, 'delete'])->name('master_category/delete');
-    
+
     Route::get('/purchase_order', [PurchaseOrder::class, 'index'])->name('purchase_order');
     Route::get('/purchase_order/add', [PurchaseOrder::class, 'add'])->name('purchase_order/add');
     Route::post('/purchase_order/do_add', [PurchaseOrder::class, 'do_add'])->name('purchase_order/do_add');
@@ -94,7 +100,7 @@ Route::prefix('admin')->middleware('auth', 'roleCheck:user')->group(function () 
     Route::get('/master_diskon/edit/{id}', [DiskonController::class, 'edit'])->name('master_diskon/edit');
     Route::post('/master_diskon/do_edit/{id}', [DiskonController::class, 'do_edit'])->name('master_diskon/do_edit');
     Route::post('/master_diskon/delete', [DiskonController::class, 'delete'])->name('master_diskon/delete');
-    
+
     Route::get('/transaction', [Transaction::class, 'index'])->name('transaction');
     Route::get('/transaction/add', [Transaction::class, 'add'])->name('transaction/add');
     Route::post('/transaction/do_add', [Transaction::class, 'do_add'])->name('transaction/do_add');
@@ -113,7 +119,7 @@ Route::prefix('admin')->middleware('auth', 'roleCheck:user')->group(function () 
 
     Route::get('/master_setting', [UserController::class, 'master_setting'])->name('master_setting');
     Route::post('/master_setting/edit', [UserController::class, 'edit_setting'])->name('master_setting/edit');
-    
+
 
     Route::get('/test', [UserController::class, 'tests'])->name('test');
 });

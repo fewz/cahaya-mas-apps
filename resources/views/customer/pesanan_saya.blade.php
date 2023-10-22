@@ -4,7 +4,7 @@
 
 <body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper">
-        @include('admin.sidebar', ['activePage' => 'transaction'])
+        @include('customer.sidebar', ['activePage' => 'pesanan_saya'])
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
             <!-- Content Header (Page header) -->
@@ -12,7 +12,7 @@
                 <div class="container-fluid">
                     <div class="row mb-2">
                         <div class="col-sm-12">
-                            <h1 class="m-0">Transaksi</h1>
+                            <h1 class="m-0">Pesanan Saya</h1>
                         </div><!-- /.col -->
                     </div><!-- /.row -->
                 </div><!-- /.container-fluid -->
@@ -28,10 +28,7 @@
                         <div class="col-12">
                             <div class="card">
                                 <div class="card-header d-flex">
-                                    <h3 class="card-title">List Transaksi</h3>
-                                    <div class="ml-auto">
-                                        <a href="{{ URL('admin/transaction/add') }}" class="btn btn-sm btn-primary">ADD <i class="fa fa-plus"></i></a>
-                                    </div>
+                                    <h3 class="card-title">List Pesanan</h3>
                                 </div>
                                 <!-- /.card-header -->
                                 <div class="card-body">
@@ -39,35 +36,30 @@
                                         <thead>
                                             <tr>
                                                 <th>Order Number</th>
-                                                <th>Customer</th>
                                                 <th>Cashier</th>
-                                                <th>Created Date</th>
+                                                <th>Tanggal Transaksi</th>
                                                 <th>Status</th>
+                                                <th>Payment Method</th>
                                                 <th>Grand Total</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <?php $status = ["Draft", "Selesai", "Belum Lunas", "Belum Dikirim", "Siap Dikirim", "Sedang Dikirim", "Terkirim"]; ?>
-                                            @foreach ($list_transaction as $dt )
+                                            @foreach ($transaksi as $dt )
                                             <tr>
                                                 <td>{{$dt->order_number}}</td>
-                                                <td>{{$dt->customer_name}}</td>
                                                 <td>{{$dt->cashier_name}}</td>
                                                 <td>{{$dt->created_date}}</td>
                                                 <td>{{$status[$dt->status]}}</td>
+                                                <td>{{$dt->payment_method}}</td>
                                                 <td>
                                                     {{$dt->grand_total > 0 ? number_format($dt->grand_total,0,',','.') : "-"}}
                                                 </td>
                                                 <td>
-                                                    <a href="{{ URL('admin/transaction/view/'.$dt->id) }}" class="btn btn-sm btn-primary">
+                                                    <a href="{{ URL('customer/detail_pesanan/'.$dt->id) }}" class="btn btn-sm btn-primary">
                                                         <i class="fa fa-eye"></i>
                                                     </a>
-                                                    @if($dt->status === 1 && $dt->payment_method === 'CREDIT')
-                                                    <a href="{{ URL('/bukti_transfer_transaction/'.$dt->id) }}" class="btn btn-sm btn-primary" target="_blank">
-                                                        <i class="fa fa-image"></i>
-                                                    </a>
-                                                    @endif
                                                     <!-- <button class="btn btn-sm btn-danger" onclick="clickDelete('{{$dt->id}}')"><i class="fa fa-trash"></i></button> -->
                                                 </td>
                                             </tr>

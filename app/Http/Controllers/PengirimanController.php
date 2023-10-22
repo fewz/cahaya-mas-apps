@@ -180,11 +180,7 @@ class PengirimanController extends Controller
             $transaksi = HTransaction::where('id_h_pengiriman', $request->id)
                 ->get();
             foreach ($transaksi as $t) {
-                if ($t->payment_method === 'CASH') {
-                    $t->status = 1;
-                } else {
-                    $t->status = 2;
-                }
+                $t->status = 6;
                 $t->save();
             }
             DB::commit();

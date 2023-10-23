@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 22, 2023 at 07:25 PM
+-- Generation Time: Oct 23, 2023 at 10:32 AM
 -- Server version: 10.4.17-MariaDB
 -- PHP Version: 7.3.27
 
@@ -92,11 +92,11 @@ CREATE TABLE `customer` (
 --
 
 INSERT INTO `customer` (`id`, `code`, `email`, `password`, `full_name`, `phone`, `address`, `tier_customer`, `poin`) VALUES
-(1, 'AE0001', 'adrielegard@gmail.com', '', 'ADRIEL EDGARD', '085232654598', 'JL.TERNATE NO. 40, MAKASSAR', 'gold', 5174),
+(1, 'AE0001', 'adrielegard@gmail.com', '$2y$10$rXAAzvlGyZjHqoVxdgmmNut0P6Jg6S8NueXZWJLKRqyFfrlL0OS2i', 'ADRIEL EDGARD', '085232654598', 'JL.TERNATE NO. 40, MAKASSAR', 'gold', 7074),
 (2, 'KL0001', 'kennylisal@gmail.com', '', 'KENNY LISAL', '085656954252', 'JL. TANJUNG BUNGA NO. 50, MAKASSAR', 'silver', 5000),
 (3, 'WES001', 'willyendri@gmail.com', '', 'WILLY ENDRI SETIAWAN', '085212353958', 'JL.BANDANG NO.205, MAKASSAR', 'bronze', 5100),
 (4, 'EG0001', 'erlandgoeswanto@gmail.com', '', 'ERLAND GOESWANTO', '085212656958', 'JL. PONEGORO NO.80, MAKASSAR', 'general', 10212),
-(8, 'WS001', 'williamsurya@gmail.com', '$2y$10$LWjWcGm63a69SISjwK.HlugqPwzNPSF7xmphETSStXtXnGZ0l68tW', 'WILLIAM SURYA', '0812343392124', 'JL KARIMATA NO 44', 'general', 5000);
+(8, 'WS001', 'williamsurya@gmail.com', '$2y$10$LWjWcGm63a69SISjwK.HlugqPwzNPSF7xmphETSStXtXnGZ0l68tW', 'WILLIAM SURYA', '0812343392124', 'JL KARIMATA NO 44', 'general', 11000);
 
 -- --------------------------------------------------------
 
@@ -135,20 +135,6 @@ CREATE TABLE `d_pengiriman` (
   `id_h_transaction` int(8) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Dumping data for table `d_pengiriman`
---
-
-INSERT INTO `d_pengiriman` (`id`, `id_h_pengiriman`, `id_h_transaction`) VALUES
-(1, 2, 10),
-(2, 3, 14),
-(3, 3, 13),
-(4, 4, 15),
-(5, 4, 16),
-(6, 5, 21),
-(7, 5, 18),
-(8, 6, 22);
-
 -- --------------------------------------------------------
 
 --
@@ -172,20 +158,9 @@ CREATE TABLE `d_purchase_order` (
 --
 
 INSERT INTO `d_purchase_order` (`id`, `id_h_purchase_order`, `id_inventory`, `id_unit`, `date_expired`, `qty`, `sisa_qty`, `order_qty`, `price_buy`) VALUES
-(64, 20, 30, 118, '2023-09-25', 25, 0, 25, 15000),
-(65, 20, 30, 119, '2023-09-25', 15, 0, 15, 45000),
-(66, 20, 31, 120, '2023-09-25', 25, 0, 25, 15000),
-(67, 20, 31, 121, '2023-09-25', 15, 0, 15, 45000),
-(70, 21, 33, 124, '2023-10-02', 20, 5, 25, 12500),
-(71, 21, 33, 125, '2023-10-02', 5, 0, 5, 125000),
-(73, 22, 32, 123, '2023-10-03', 25, 0, 25, 45000),
-(75, 23, 34, 127, '2023-10-03', 15, 0, 15, 5000),
-(77, 24, 30, 118, '2023-10-03', 15, 0, 15, 15000),
-(81, 25, 30, 119, '2023-10-04', 50, 0, 50, 100000),
-(82, 25, 31, 121, '2023-10-04', 50, 0, 50, 100000),
-(83, 25, 33, 126, '2023-10-04', 100, 0, 100, 100000),
-(86, 26, 35, 129, '2023-10-12', 150, 0, 150, 150000),
-(87, 26, 35, 130, '2023-10-12', 150, 0, 150, 150000);
+(91, 27, 30, 118, '2023-10-23', 25, 0, 25, 10000),
+(92, 27, 31, 120, '2023-10-23', 35, 0, 35, 10000),
+(93, 27, 33, 124, '2023-10-23', 15, 0, 15, 10000);
 
 -- --------------------------------------------------------
 
@@ -209,31 +184,13 @@ CREATE TABLE `d_transaction` (
 --
 
 INSERT INTO `d_transaction` (`id`, `id_h_transaction`, `id_inventory`, `id_unit`, `sell_price`, `qty`, `diskon`, `sub_total`) VALUES
-(11, 7, 30, 118, 5000, 5, 500, 24500),
-(12, 7, 31, 121, 30000, 1, 0, 30000),
-(13, 8, 30, 118, 12500, 5, 500, 62000),
-(14, 9, 30, 118, 5000, 3, 500, 14500),
-(15, 10, 33, 126, 300000, 17, 0, 5100000),
-(16, 11, 30, 118, 5000, 5, 500, 24500),
-(17, 12, 30, 118, 5000, 5, 500, 24500),
-(18, 13, 35, 129, 1000000, 5, 0, 5000000),
-(19, 14, 30, 118, 5000, 5, 500, 24500),
-(20, 14, 31, 120, 25000, 5, 1500, 123500),
-(21, 14, 33, 124, 15000, 4, 0, 60000),
-(22, 14, 35, 129, 1000000, 5, 0, 5000000),
-(23, 15, 35, 129, 1000000, 5, 0, 5000000),
-(24, 15, 35, 130, 10000000, 1, 0, 10000000),
-(25, 16, 35, 130, 10000000, 1, 0, 10000000),
-(26, 16, 33, 124, 12500, 5, 0, 62500),
-(27, 17, 30, 118, 5000, 5, 500, 24500),
-(28, 17, 35, 129, 1000000, 5, 0, 5000000),
-(29, 18, 35, 129, 1000000, 5, 0, 5000000),
-(30, 18, 32, 122, 4500, 2, 0, 9000),
-(31, 19, 30, 118, 5000, 5, 500, 24500),
-(32, 19, 32, 123, 25000, 2, 0, 50000),
-(33, 20, 33, 124, 15000, 5, 0, 75000),
-(34, 21, 35, 129, 1000000, 5, 0, 5000000),
-(35, 22, 35, 129, 1000000, 6, 0, 6000000);
+(37, 24, 31, 120, 25000, 5, 1500, 123500),
+(38, 24, 30, 118, 15000, 5, 500, 74500),
+(39, 25, 30, 118, 5000, 1, 0, 5000),
+(40, 26, 35, 129, 1000000, 2, 0, 2000000),
+(41, 27, 35, 129, 1000000, 5, 0, 5000000),
+(42, 27, 31, 120, 25000, 5, 1500, 123500),
+(43, 28, 35, 129, 1000000, 6, 0, 6000000);
 
 -- --------------------------------------------------------
 
@@ -248,17 +205,6 @@ CREATE TABLE `h_pengiriman` (
   `delivery_date` date DEFAULT NULL,
   `driver` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `h_pengiriman`
---
-
-INSERT INTO `h_pengiriman` (`id`, `code`, `status`, `delivery_date`, `driver`) VALUES
-(2, 'PE001', 2, '2023-10-15', 'HADI'),
-(3, 'PE002', 1, '2023-10-26', 'HADI'),
-(4, 'PE003', 1, '2023-10-24', 'SABI'),
-(5, 'PEN001', 2, '2023-10-21', 'HADI'),
-(6, 'DEL0015', 2, '2023-10-22', 'SABI');
 
 -- --------------------------------------------------------
 
@@ -285,13 +231,7 @@ CREATE TABLE `h_purchase_order` (
 --
 
 INSERT INTO `h_purchase_order` (`id`, `id_supplier`, `created_date`, `finish_date`, `order_number`, `status`, `grand_total`, `due_date`, `payment_method`, `lunas`, `tanggal_bayar`) VALUES
-(20, 9, '2023-09-25', '2023-09-25', 'ORD001', 2, 2100000, NULL, 'CASH', 1, NULL),
-(21, 9, '2023-10-02', '2023-10-02', 'ORD004', 2, 875000, NULL, 'CASH', 1, NULL),
-(22, 10, '2023-10-03', '2023-10-03', '431253', 2, 1125000, NULL, 'CASH', 1, NULL),
-(23, 10, '2023-10-03', '2023-10-03', 'ORD006', 2, 75000, '2023-10-31', 'CREDIT', 1, NULL),
-(24, 9, '2023-10-03', '2023-10-02', '42351', 2, 225000, '2023-10-10', 'CREDIT', 1, '2023-10-02'),
-(25, 9, '2023-10-04', '2023-10-05', 'ORD010', 2, 20000000, NULL, 'CASH', 1, NULL),
-(26, 9, '2023-10-12', '2023-10-12', 'ORD0045', 2, 45000000, NULL, 'CASH', 1, NULL);
+(27, 9, '2023-10-23', '2023-10-24', 'PO2310230', 2, 750000, NULL, 'CASH', 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -322,22 +262,11 @@ CREATE TABLE `h_transaction` (
 --
 
 INSERT INTO `h_transaction` (`id`, `order_number`, `created_date`, `finish_date`, `delivery_date`, `id_customer`, `id_cashier`, `total_diskon`, `diskon_poin`, `grand_total`, `status`, `payment_method`, `due_date`, `transaction_type`, `id_h_pengiriman`) VALUES
-(7, '12451', '2023-09-26', NULL, NULL, 1, 1, 500, 0, 54500, 1, 'CASH', NULL, 'OFFLINE', NULL),
-(8, 'ORD0035', '2023-09-25', NULL, NULL, 3, 1, 500, 0, 62000, 1, 'CASH', NULL, 'OFFLINE', NULL),
-(9, 'ORD003', '2023-09-25', NULL, NULL, 2, 2, 500, 0, 14500, 1, 'CASH', NULL, 'OFFLINE', NULL),
-(10, 'DEL001', '2023-10-05', NULL, '2023-10-15', 3, 1, 0, 0, 5100000, 1, 'CASH', NULL, 'DELIVERY', 2),
-(11, 'ORD003', '2023-10-04', NULL, NULL, 1, 1, 500, 0, 24500, 2, 'CREDIT', '2023-10-12', 'OFFLINE', NULL),
-(12, 'ORD005', '2023-10-04', NULL, NULL, 1, 1, 500, 150, 24350, 1, 'CASH', NULL, 'OFFLINE', NULL),
-(13, 'DEL002', '2023-10-12', NULL, '2023-10-26', 2, 1, 0, 0, 5000000, 5, 'CASH', NULL, 'DELIVERY', 3),
-(14, 'DEL003', '2023-10-13', NULL, '2023-10-26', 4, 1, 2000, 0, 5208000, 5, 'CASH', NULL, 'DELIVERY', 3),
-(15, 'DEL005', '2023-10-15', NULL, '2023-10-24', 1, 1, 0, 150, 14999850, 5, 'CREDIT', '2023-11-15', 'DELIVERY', 4),
-(16, 'DEL006', '2023-10-17', NULL, '2023-10-24', 2, 1, 0, 5000, 10057500, 5, 'CREDIT', '2023-10-03', 'DELIVERY', 4),
-(17, 'DEL007', '2023-10-17', NULL, NULL, 1, 1, 500, 150, 5024350, 3, 'CASH', NULL, 'DELIVERY', NULL),
-(18, 'DEL008', '2023-10-17', NULL, '2023-10-21', 4, 1, 0, 5208, 5003792, 6, 'CASH', NULL, 'DELIVERY', 5),
-(19, 'ORD010', '2023-10-21', NULL, NULL, 8, 1, 500, 0, 74500, 2, 'CREDIT', '2023-10-31', 'OFFLINE', NULL),
-(20, 'ORD011', '2023-10-21', NULL, NULL, 8, 1, 0, 0, 75000, 1, 'CASH', NULL, 'OFFLINE', NULL),
-(21, 'ORD011', '2023-10-21', NULL, '2023-10-21', 8, 1, 0, 0, 5000000, 1, 'CASH', NULL, 'DELIVERY', 5),
-(22, 'DEL006', '2023-10-21', '2023-10-22', '2023-10-22', 8, 1, 0, 5000, 5995000, 1, 'CREDIT', '2023-10-30', 'DELIVERY', 6);
+(24, 'TR2310231', '2023-10-23', NULL, NULL, 8, 1, 2000, 5000, 193000, 1, 'CASH', NULL, 'OFFLINE', NULL),
+(25, 'TR2310231', '2023-10-24', NULL, NULL, 1, 1, 0, 0, 5000, 1, 'CASH', NULL, 'OFFLINE', NULL),
+(26, 'TR2310232', '2023-10-24', NULL, NULL, 1, 1, 0, 2500, 1997500, 1, 'CASH', NULL, 'OFFLINE', NULL),
+(27, 'TR2310233', '2023-10-23', NULL, NULL, 8, 1, 1500, 0, 5123500, 3, 'CREDIT', '2023-10-31', 'DELIVERY', NULL),
+(28, 'TR2310234', '2023-10-16', NULL, NULL, 8, 1, 0, 5100, 5994900, 3, 'CASH', NULL, 'DELIVERY', NULL);
 
 -- --------------------------------------------------------
 
@@ -411,7 +340,10 @@ INSERT INTO `log_terima_barang` (`id`, `id_inventory`, `id_h_purchase_order`, `i
 (38, 31, 25, 121, 1, 50, '2023-10-04 13:16:51', '2023-10-04', ''),
 (39, 33, 25, 126, 1, 100, '2023-10-04 13:16:51', '2023-10-04', ''),
 (40, 35, 26, 129, 1, 150, '2023-10-12 13:16:38', '2023-10-12', ''),
-(41, 35, 26, 130, 1, 150, '2023-10-12 13:16:38', '2023-10-12', '');
+(41, 35, 26, 130, 1, 150, '2023-10-12 13:16:38', '2023-10-12', ''),
+(42, 30, 27, 118, 1, 25, '2023-10-23 06:58:41', '2023-10-23', ''),
+(43, 31, 27, 120, 1, 35, '2023-10-23 06:58:41', '2023-10-23', ''),
+(44, 33, 27, 124, 1, 15, '2023-10-23 06:58:41', '2023-10-23', '');
 
 -- --------------------------------------------------------
 
@@ -657,18 +589,18 @@ CREATE TABLE `unit` (
 --
 
 INSERT INTO `unit` (`id`, `name`, `qty_reference`, `id_inventory`, `stok`) VALUES
-(118, 'pcs', NULL, 30, 23),
+(118, 'pcs', NULL, 30, 37),
 (119, 'dos', 24, 30, 66),
-(120, 'pcs', NULL, 31, 20),
+(120, 'pcs', NULL, 31, 45),
 (121, 'lusin', 12, 31, 68),
 (122, 'pcs', NULL, 32, 3),
 (123, 'dos', 12, 32, 23),
-(124, 'pcs', NULL, 33, 6),
+(124, 'pcs', NULL, 33, 21),
 (125, 'lusin', 12, 33, 5),
 (126, 'dos', 24, 33, 83),
 (127, 'pcs', NULL, 34, 15),
 (128, 'dos', 12, 34, 0),
-(129, 'pcs', NULL, 35, 114),
+(129, 'pcs', NULL, 35, 101),
 (130, 'dos', 12, 35, 148);
 
 -- --------------------------------------------------------
@@ -875,13 +807,13 @@ ALTER TABLE `d_pengiriman`
 -- AUTO_INCREMENT for table `d_purchase_order`
 --
 ALTER TABLE `d_purchase_order`
-  MODIFY `id` int(8) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=88;
+  MODIFY `id` int(8) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=94;
 
 --
 -- AUTO_INCREMENT for table `d_transaction`
 --
 ALTER TABLE `d_transaction`
-  MODIFY `id` int(8) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+  MODIFY `id` int(8) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
 
 --
 -- AUTO_INCREMENT for table `h_pengiriman`
@@ -893,13 +825,13 @@ ALTER TABLE `h_pengiriman`
 -- AUTO_INCREMENT for table `h_purchase_order`
 --
 ALTER TABLE `h_purchase_order`
-  MODIFY `id` int(8) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `id` int(8) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT for table `h_transaction`
 --
 ALTER TABLE `h_transaction`
-  MODIFY `id` int(8) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id` int(8) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT for table `inventory`
@@ -911,7 +843,7 @@ ALTER TABLE `inventory`
 -- AUTO_INCREMENT for table `log_terima_barang`
 --
 ALTER TABLE `log_terima_barang`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
 
 --
 -- AUTO_INCREMENT for table `permission`

@@ -2,6 +2,8 @@
 
 namespace App\Helpers;
 
+use App\Models\HTransaction;
+
 class CommonHelper
 {
 
@@ -39,4 +41,24 @@ class CommonHelper
             </script>';
         }
     }
+
+    public static function generateOrderNumber($prefix)
+    {
+        return $prefix . date('dmyHis');
+    }
+}
+
+function getNumberWithZeroString($number, $total_zero)
+{
+    $result = '';
+    $divider = pow(10, $total_zero);
+    while ($divider > 1) {
+        if ($number / $divider > 0) {
+            $result .= $number / $divider;
+        }
+        $number = $number % $divider;
+        $result .= '0';
+        $divider = $divider / 10;
+    }
+    return $result;
 }

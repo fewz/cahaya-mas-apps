@@ -48,9 +48,10 @@ class PurchaseOrder extends Controller
         try {
             DB::beginTransaction();
             $list_produk = json_decode($request->list_produk);
+            $total_PO =  count(HeaderPurchaseOrder::get());
             $data = new HeaderPurchaseOrder();
             $data->id_supplier = $request->id_supplier;
-            $data->order_number = $request->order_number;
+            $data->order_number = 'PO' . date('dmy') . $total_PO;
             $data->created_date = $request->created_date;
             $data->status = 0;
             $data->save();
@@ -96,7 +97,6 @@ class PurchaseOrder extends Controller
             $list_produk = json_decode($request->list_produk);
             $data = HeaderPurchaseOrder::where("id", $id)->first();
             $data->id_supplier = $request->id_supplier;
-            $data->order_number = $request->order_number;
             $data->status = 1;
             $data->save();
 

@@ -37,10 +37,6 @@
                             @csrf
                             <div class="card-body">
                                 <div class="form-group">
-                                    <label>Kode Pengiriman</label>
-                                    <input type="text" class="form-control required" name="code">
-                                </div>
-                                <div class="form-group">
                                     <label>Delivery Date</label>
                                     <input type="date" class="form-control required" name="delivery_date">
                                 </div>
@@ -62,12 +58,36 @@
                         <div class="card-body">
                             <div class="form-group">
                                 <label>Transaksi yg perlu dikirim</label>
-                                <select class="form-control select2bs4" id="id_transaction" name="id_transaction" style="width: 100%;" onchange="transaksiChange()">
+                                <table class="table table-bordered table-striped" id="example1">
+                                    <thead>
+                                        <tr>
+                                            <th>Order Number</th>
+                                            <th>Customer</th>
+                                            <th>Tanggal Transaksi</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($list_transaction as $dt )
+                                        <tr>
+                                            <td>{{$dt->order_number}}</td>
+                                            <td>{{$dt->customer_name}}</td>
+                                            <td>{{$dt->created_date}}</td>
+                                            <td>
+                                                <div class="btn btn-primary" onclick="getDetail(<?php echo $dt->id; ?>)">Detail</div>
+                                            </td>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                                <!-- <select class="form-control select2bs4" id="id_transaction" name="id_transaction" style="width: 100%;" onchange="transaksiChange()">
                                     @foreach ($list_transaction as $dt )
                                     <option value="{{$dt->id}}">{{$dt->order_number}}</option>
                                     @endforeach
-                                </select>
+                                </select> -->
                             </div>
+                            <hr>
+                            <label>DETAIL TRANSAKSI YANG AKAN DIMUAT</label>
                             <div class="row mt-3">
                                 <div class="col-6">
                                     <label>Created Date</label>
@@ -159,7 +179,7 @@
 @include('script_footer')
 <script>
     $(function() {
-        transaksiChange();
+        // transaksiChange();
     });
 
     function transaksiChange() {
@@ -171,6 +191,8 @@
     let barang_muat = [];
 
     function getDetail(id) {
+        console.log('daf', id);
+
         $.get(`/api/get_detail_transaction/${id}`, function(data) {
 
             header = data.payload.header;

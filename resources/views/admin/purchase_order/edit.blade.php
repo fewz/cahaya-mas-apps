@@ -38,7 +38,7 @@
                             <div class="card-body">
                                 <div class="form-group">
                                     <label>Order Number</label>
-                                    <input type="text" class="form-control required" name="order_number" placeholder="Order Number" value="{{$data_purchase_order->order_number}}">
+                                    <input type="text" disabled class="form-control required" name="order_number" placeholder="Order Number" value="{{$data_purchase_order->order_number}}">
                                 </div>
                                 <div class="form-group">
                                     <label>Tanggal Order</label>

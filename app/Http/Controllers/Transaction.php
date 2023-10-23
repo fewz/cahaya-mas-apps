@@ -53,8 +53,9 @@ class Transaction extends Controller
             DB::beginTransaction();
             $list_produk = json_decode($request->list_produk);
             $user = Auth::user();
+            $total_transaction =  count(HTransaction::get());
             $data = new HTransaction();
-            $data->order_number = $request->order_number;
+            $data->order_number = 'TR' . date('dmy') . $total_transaction;
             $data->id_cashier = $user->id;
             $data->created_date = $request->created_date;
             $data->id_customer = $request->id_customer;
@@ -123,5 +124,28 @@ class Transaction extends Controller
             ->get();
 
         return $this->createSuccessMessage($data);
+    }
+
+    public function invoice($id)
+    {
+
+        $user = Auth::user();
+        $header_transaction = HTransaction::where('h_transaction.id', $id)
+            ->join('customer', 'customer.id', 'h_transaction.id_customer')
+            ->join('users', 'users.id', 'h_transaction.id_cashier')
+            ->select('h_transaction.*', 'customer.full_name as customer_name', 'customer.address as alamat', 'customer.phone as telp', 'users.username as cashier')
+            ->first();
+        // print_r($header_transaction);
+        $detail_transaction = DTransaction::where('d_transaction.id_h_transaction', $id)
+            ->join('inventory', 'inventory.id', 'd_transaction.id_inventory')
+            ->join('unit', 'unit.id', 'd_transaction.id_unit')
+            ->select('d_transaction.*', 'unit.name as unit', 'inventory.code as code_inventory', 'inventory.name as inventory')
+            ->get();
+        $data = [
+            'user' => $user,
+            'header_transaction' => $header_transaction,
+            'detail_transaction' => $detail_transaction
+        ];
+        return view("admin.transaction.invoice", $data);
     }
 }

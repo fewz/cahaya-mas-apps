@@ -63,6 +63,9 @@
                                                     <a href="{{ URL('admin/transaction/view/'.$dt->id) }}" class="btn btn-sm btn-primary">
                                                         <i class="fa fa-eye"></i>
                                                     </a>
+                                                    <a href="{{ URL('admin/transaction/invoice/'.$dt->id) }}" class="btn btn-sm btn-primary">
+                                                        <i class="fa fa-file-invoice"></i>
+                                                    </a>
                                                     @if($dt->status === 1 && $dt->payment_method === 'CREDIT')
                                                     <a href="{{ URL('/bukti_transfer_transaction/'.$dt->id) }}" class="btn btn-sm btn-primary" target="_blank">
                                                         <i class="fa fa-image"></i>

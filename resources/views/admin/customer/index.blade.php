@@ -43,6 +43,7 @@
                                                 <th>Phone</th>
                                                 <th>Address</th>
                                                 <th>Tier</th>
+                                                <th>Poin</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
@@ -54,6 +55,7 @@
                                                 <td>{{$dt->phone}}</td>
                                                 <td>{{$dt->address}}</td>
                                                 <td>{{$dt->tier_customer}}</td>
+                                                <td>{{$dt->poin}}</td>
                                                 <td>
                                                     <a href="{{ URL('admin/master_customer/edit/'.$dt->id) }}" class="btn btn-sm btn-primary">
                                                         <i class="fa fa-edit"></i>

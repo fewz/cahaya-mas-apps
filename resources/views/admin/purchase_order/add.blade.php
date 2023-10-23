@@ -37,10 +37,6 @@
                             @csrf
                             <div class="card-body">
                                 <div class="form-group">
-                                    <label>Order Number</label>
-                                    <input type="text" class="form-control required" name="order_number" placeholder="Order Number">
-                                </div>
-                                <div class="form-group">
                                     <label>Tanggal Order</label>
                                     <input type="date" class="form-control required" name="created_date" placeholder="Tanggal Order">
                                 </div>

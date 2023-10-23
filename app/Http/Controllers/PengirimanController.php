@@ -53,11 +53,12 @@ class PengirimanController extends Controller
             DB::beginTransaction();
             $list_transaksi = json_decode($request->transaksi);
 
+            $total_delivery =  count(HPengiriman::get());
             $data = new HPengiriman();
             $data->status = 0;
             $data->delivery_date = $request->delivery_date;
             $data->driver = $request->driver;
-            $data->code = $request->code;
+            $data->code = 'DE' . date('dmy') . $total_delivery;
             $data->save();
 
             foreach ($list_transaksi as $t) {

@@ -2,9 +2,14 @@
 <html lang="en">
 @include('header')
 
+<?php
+
+use App\Helpers\CommonHelper;
+?>
+
 <body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper">
-        @include('admin.sidebar', ['activePage' => 'trannsaction'])
+        @include('admin.sidebar', ['activePage' => 'transaction'])
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
             <!-- Content Header (Page header) -->
@@ -36,10 +41,6 @@
                         <form id="formadd" action="{{URL('admin/transaction/do_add')}}" method="POST">
                             @csrf
                             <div class="card-body">
-                                <div class="form-group">
-                                    <label>Order Number</label>
-                                    <input type="text" class="form-control required" name="order_number" placeholder="Order Number">
-                                </div>
                                 <div class="form-group">
                                     <label>Tanggal Order</label>
                                     <input type="date" class="form-control required" name="created_date" placeholder="Tanggal Order">
@@ -104,6 +105,10 @@
                                 <div class="col-6">
                                     <label>Poin</label>
                                     <p id="label_poin_customer"></p>
+                                </div>
+                                <div class="col-6">
+                                    <label>Pakai Poin</label>
+                                    <input type="number" class="form-control" onchange="poinChange()" id="poin">
                                 </div>
                             </div>
                             <!-- <div class="custom-control custom-checkbox" id="bisa_cashback">
@@ -350,6 +355,7 @@
 
     let grand_total = 0;
     let total_diskon = 0;
+    let useDiskonPoint = 0;
 
     function getJSONProduk() {
         grand_total = 0;
@@ -378,7 +384,7 @@
         });
 
         if (selectedCustomer.poin > 0) {
-            diskon_poin = selectedCustomer.poin;
+            diskon_poin = useDiskonPoint;
             grand_total -= diskon_poin;
         }
 
@@ -472,13 +478,17 @@
             $('#tableBody').append(row);
             total += object.subtotal;
         });
-        if (selectedCustomer.poin > 0) {
+        if (useDiskonPoint > 0) {
+            if (useDiskonPoint > total) {
+                useDiskonPoint = total;
+                $("#poin").val(useDiskonPoint);
+            }
             const row = `<tr>
                         <td colspan="6" style="font-weight:bold; text-align:right;">Diskon Poin</td>
-                        <td colspan="2" style="font-weight:bold; text-align:left;">${numberWithCommas(selectedCustomer.poin)}</td>
+                        <td colspan="2" style="font-weight:bold; text-align:left;">${numberWithCommas(useDiskonPoint)}</td>
                     </tr>`;
             $("#tableBody").append(row);
-            total -= selectedCustomer.poin;
+            total -= useDiskonPoint;
         }
         const row = `<tr>
                         <td colspan="6" style="font-weight:bold; text-align:right;">Grand Total</td>
@@ -521,6 +531,16 @@
 
     function clickDelete(index) {
         listProduk.splice(index, 1);
+        updateTable();
+    }
+
+    function poinChange() {
+        const point = $("#poin").val();
+        useDiskonPoint = point;
+        if (point > selectedCustomer.poin) {
+            useDiskonPoint = selectedCustomer.poin;
+            $("#poin").val(selectedCustomer.poin);
+        }
         updateTable();
     }
     $(function() {

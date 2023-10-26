@@ -87,42 +87,44 @@
                                 </select> -->
                             </div>
                             <hr>
-                            <label>DETAIL TRANSAKSI YANG AKAN DIMUAT</label>
-                            <div class="row mt-3">
-                                <div class="col-6">
-                                    <label>Created Date</label>
-                                    <p id="label_created_date"></p>
+                            <div id="detail_transaksi" class="d-none">
+                                <label>DETAIL TRANSAKSI YANG AKAN DIMUAT</label>
+                                <div class="row mt-3">
+                                    <div class="col-6">
+                                        <label>Created Date</label>
+                                        <p id="label_created_date"></p>
+                                    </div>
+                                    <div class="col-6">
+                                        <label>Customer</label>
+                                        <p id="label_customer"></p>
+                                    </div>
+                                    <div class="col-6">
+                                        <label>Alamat</label>
+                                        <p id="label_alamat"></p>
+                                    </div>
                                 </div>
-                                <div class="col-6">
-                                    <label>Customer</label>
-                                    <p id="label_customer"></p>
+                                <div class="form-group mt-3">
+                                    <label>List barang yg dibeli</label>
+                                    <table class="table table-bordered table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Kode</th>
+                                                <th>Nama</th>
+                                                <th>Unit</th>
+                                                <th>Qty</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tableBody">
+                                        </tbody>
+                                    </table>
                                 </div>
-                                <div class="col-6">
-                                    <label>Alamat</label>
-                                    <p id="label_alamat"></p>
+                                <div class="card-footer">
+                                    <div class="btn btn-primary" onclick="muat()">Tambah ke muat</div>
                                 </div>
-                            </div>
-                            <div class="form-group mt-3">
-                                <label>List barang yg dibeli</label>
-                                <table class="table table-bordered table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th>Kode</th>
-                                            <th>Nama</th>
-                                            <th>Unit</th>
-                                            <th>Qty</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="tableBody">
-                                    </tbody>
-                                </table>
                             </div>
                         </div>
 
                         <!-- /.card-body -->
-                        <div class="card-footer">
-                            <div class="btn btn-primary" onclick="muat()">Tambah ke muat</div>
-                        </div>
                     </div>
 
                     <div id="container3" class="card card-info">
@@ -135,7 +137,7 @@
                                 <table class="table table-bordered table-striped">
                                     <thead>
                                         <tr>
-                                            <th>Kode</th>
+                                            <th>Kode Transaksi</th>
                                             <th>Created Date</th>
                                             <th>Customer</th>
                                             <th>Alamat</th>
@@ -151,7 +153,8 @@
                                 <table class="table table-bordered table-striped">
                                     <thead>
                                         <tr>
-                                            <th>Kode</th>
+                                            <th>Kode Transaksi</th>
+                                            <th>Kode Barang</th>
                                             <th>Nama</th>
                                             <th>Unit</th>
                                             <th>Qty</th>
@@ -191,6 +194,7 @@
     let barang_muat = [];
 
     function getDetail(id) {
+        $("#detail_transaksi").removeClass('d-none');
         console.log('daf', id);
 
         $.get(`/api/get_detail_transaction/${id}`, function(data) {
@@ -238,7 +242,7 @@
 
         header.detail = detail;
         transaksi.push(header);
-        tambah_muatan(detail);
+        tambah_muatan(header, detail);
         updateTable();
     }
 
@@ -262,21 +266,29 @@
         updateTable();
     }
 
-    function tambah_muatan(detail) {
+    function tambah_muatan(header, detail) {
         detail.forEach((val) => {
-            let ada = false;
-            barang_muat.forEach((brg) => {
-                if (val.id_inventory === brg.id_inventory) {
-                    brg.qty += val.qty;
-                    ada = true;
-                }
+            barang_muat.push({
+                ...val,
+                order_number: header.order_number
             });
-            if (!ada) {
-                barang_muat.push({
-                    ...val
-                });
-            }
         });
+        // detail.forEach((val) => {
+        //     console.log('adfa', val);
+
+        //     let ada = false;
+        //     barang_muat.forEach((brg) => {
+        //         if (val.id_inventory === brg.id_inventory) {
+        //             brg.qty += val.qty;
+        //             ada = true;
+        //         }
+        //     });
+        //     if (!ada) {
+        //         barang_muat.push({
+        //             ...val
+        //         });
+        //     }
+        // });
     }
 
     function updateTable() {
@@ -302,6 +314,7 @@
         $("#tableBody3").empty();
         barang_muat.forEach((val) => {
             const row = `<tr>
+                            <td>${val.order_number}</td>
                             <td>${val.product_code}</td>
                             <td>${val.product_name}</td>
                             <td>${val.unit}</td>

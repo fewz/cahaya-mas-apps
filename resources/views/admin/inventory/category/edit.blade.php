@@ -14,7 +14,7 @@
                         <div class="col-sm-12">
                             <h1 class="m-0">
                                 <a href="{{URL('admin/master_category')}}">Master Category Inventory</a>
-                                / Add
+                                / Edit
                             </h1>
                         </div><!-- /.col -->
                     </div><!-- /.row -->

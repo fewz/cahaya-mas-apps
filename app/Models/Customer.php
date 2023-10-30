@@ -23,6 +23,13 @@ class Customer extends Model
         }
     }
 
+    public static function min_poin($id_customer, $poin_terpakai)
+    {
+        $customer = Customer::where('id', $id_customer)->first();
+        $customer->poin -= $poin_terpakai;
+        $customer->save();
+    }
+
     public static function check_user($email, $password)
     {
         $customer = Customer::where('email', $email)->first();

@@ -117,7 +117,7 @@
                                                 </tr>
                                                 <tr>
                                                     <th>Poin yang digunakan</th>
-                                                    <td>Rp. {{number_format($header_transaction->total_poin,0,'.','.')}}</td>
+                                                    <td>Rp. {{number_format($header_transaction->diskon_poin,0,'.','.')}}</td>
                                                 </tr>
                                                 <tr>
                                                     <th style="width:50%">Grand Total:</th>

@@ -100,20 +100,22 @@ class PengirimanController extends Controller
             $detail = DTransaction::where('d_transaction.id_h_transaction', $transaksi->id)
                 ->join('unit', 'unit.id', 'd_transaction.id_unit')
                 ->join('inventory', 'inventory.id', 'd_transaction.id_inventory')
-                ->select('d_transaction.*', 'unit.name as unit', 'inventory.name as inventory', 'inventory.code as code_inventory')
+                ->join('h_transaction', 'h_transaction.id', 'd_transaction.id_h_transaction')
+                ->select('d_transaction.*', 'unit.name as unit', 'inventory.name as inventory', 'inventory.code as code_inventory', 'h_transaction.order_number')
                 ->get();
 
             foreach ($detail as $d) {
-                $exist = false;
-                foreach ($barang_muat as $b) {
-                    if ($b->id_unit === $d->id_unit) {
-                        $b->qty += $d->qty;
-                        $exist = true;
-                    }
-                }
-                if (!$exist) {
-                    array_push($barang_muat, $d);
-                }
+                array_push($barang_muat, $d);
+                // $exist = false;
+                // foreach ($barang_muat as $b) {
+                //     if ($b->id_unit === $d->id_unit) {
+                //         $b->qty += $d->qty;
+                //         $exist = true;
+                //     }
+                // }
+                // if (!$exist) {
+                //     array_push($barang_muat, $d);
+                // }
             }
         }
         $data = [

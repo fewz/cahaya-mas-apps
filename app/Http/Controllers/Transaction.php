@@ -63,6 +63,7 @@ class Transaction extends Controller
             $data->grand_total = $request->grand_total;
             $data->payment_method = $request->payment_method;
             $data->diskon_poin = $request->diskon_poin;
+            Customer::min_poin($request->id_customer, $request->diskon_poin);
             $data->transaction_type = $request->type;
             if ($request->payment_method === 'CASH') {
                 $data->status = 1;

@@ -81,5 +81,15 @@
         input[type='file'].is-invalid {
             color: red;
         }
+
+        .hidden-but-printable {
+            display: none;
+        }
+
+        @media print {
+            .hidden-but-printable {
+                display: block;
+            }
+        }
     </style>
 </head>

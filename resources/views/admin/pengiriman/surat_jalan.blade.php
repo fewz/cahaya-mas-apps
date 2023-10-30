@@ -88,22 +88,44 @@
                                             </thead>
                                             <tbody>
                                                 @foreach ($detail_transaction as $d )
-                                                    <tr>
-                                                        <td>{{$d->code_inventory}}</td>
-                                                        <td>{{$d->inventory}}</td>
-                                                        <td>{{$d->unit}}</td>
-                                                        <td>{{$d->qty}}</td>
-                                                    </tr>
+                                                <tr>
+                                                    <td>{{$d->code_inventory}}</td>
+                                                    <td>{{$d->inventory}}</td>
+                                                    <td>{{$d->unit}}</td>
+                                                    <td>{{$d->qty}}</td>
+                                                </tr>
                                                 @endforeach
                                             </tbody>
                                         </table>
                                     </div>
                                     <!-- /.col -->
                                 </div>
+                                <div class="hidden-but-printable">
+                                    <div class="row" style="margin-top:100px;">
+                                        <div class="col-4 text-center font-weight-bold">
+                                            Kepala Gudang
+                                        </div>
+                                        <div class="col-4">
+                                        </div>
+                                        <div class="col-4 text-center font-weight-bold">
+                                            Sopir
+                                        </div>
+                                    </div>
+                                    <div class="row" style="margin-top:70px;">
+                                        <div class="col-4 text-center">
+                                            _______________________
+                                        </div>
+                                        <div class="col-4">
+                                        </div>
+                                        <div class="col-4 text-center">
+                                            _______________________
+                                        </div>
+                                    </div>
+                                </div>
                                 <!-- /.row -->
 
                                 <!-- this row will not appear when printing -->
-                                <div class="row no-print">
+                                <div class="row no-print" style="margin-top:100px;">
                                     <div class="col-12">
                                         <div class="btn btn-default" onclick="window.print();"><i class="fas fa-print"></i> Print</div>
                                     </div>

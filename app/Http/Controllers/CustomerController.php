@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Session;
 
 class CustomerController extends Controller
 {
@@ -175,5 +176,45 @@ class CustomerController extends Controller
         $data->finish_date = today();
         $data->save();
         CommonHelper::showAlert("Success", "Upload Bukti Transfer Berhasil", "success", "/customer/pesanan_saya");
+    }
+
+    public function profile()
+    {
+
+        $customer = Customer::get_login_customer();
+        $data = [
+            'user' => $customer
+        ];
+        return view("customer.profile", $data);
+    }
+
+    public function edit_profile(Request $request)
+    {
+        $customer = Customer::get_login_customer();
+
+        $data = Customer::find($customer->id);
+        $data->address = $request->address;
+        $data->phone = $request->phone;
+        $data->save();
+
+        Session::put('customer_data', $data);
+        CommonHelper::showAlert("Success", "Update Alamat & Telp Berhasil", "success", "/customer/profile");
+    }
+
+    public function change_pass(Request $request)
+    {
+        $customer = Customer::get_login_customer();
+
+        $ada = Customer::check_user($customer->email, $request->old_pass);
+        if ($ada === null) {
+            CommonHelper::showAlert("Fail", "Password lama salah", "error", "/customer/profile");
+        } else {
+            $data = Customer::find($customer->id);
+            $data->password = Hash::make($request->password);
+            $data->save();
+
+            Session::put('customer_data', $data);
+            CommonHelper::showAlert("Success", "Password berhasil diganti", "success", "/customer/profile");
+        }
     }
 }

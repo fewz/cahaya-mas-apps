@@ -104,7 +104,8 @@
                                 <table class="table table-bordered table-striped">
                                     <thead>
                                         <tr>
-                                            <th>Kode</th>
+                                            <th>Order Number</th>
+                                            <th>Kode Barang</th>
                                             <th>Nama</th>
                                             <th>Unit</th>
                                             <th>Qty</th>
@@ -113,6 +114,7 @@
                                     <tbody id="tableBody3">
                                         @foreach ($barang_muat as $b)
                                         <tr>
+                                            <td>{{$b->order_number}}</td>
                                             <td>{{$b->code_inventory}}</td>
                                             <td>{{$b->inventory}}</td>
                                             <td>{{$b->unit}}</td>
@@ -146,6 +148,28 @@
                                     @endif
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="hidden-but-printable">
+                    <div class="row" style="margin-top:100px;">
+                        <div class="col-4 text-center font-weight-bold">
+                            Kepala Gudang
+                        </div>
+                        <div class="col-4">
+                        </div>
+                        <div class="col-4 text-center font-weight-bold">
+                            Sopir
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:70px;">
+                        <div class="col-4 text-center">
+                            _______________________
+                        </div>
+                        <div class="col-4">
+                        </div>
+                        <div class="col-4 text-center">
+                            _______________________
                         </div>
                     </div>
                 </div>
@@ -242,19 +266,25 @@
 
     function tambah_muatan(detail) {
         detail.forEach((val) => {
-            let ada = false;
-            barang_muat.forEach((brg) => {
-                if (val.id_inventory === brg.id_inventory) {
-                    brg.qty += val.qty;
-                    ada = true;
-                }
+            barang_muat.push({
+                ...val,
+                order_number: header.order_number
             });
-            if (!ada) {
-                barang_muat.push({
-                    ...val
-                });
-            }
         });
+        // detail.forEach((val) => {
+        //     let ada = false;
+        //     barang_muat.forEach((brg) => {
+        //         if (val.id_inventory === brg.id_inventory) {
+        //             brg.qty += val.qty;
+        //             ada = true;
+        //         }
+        //     });
+        //     if (!ada) {
+        //         barang_muat.push({
+        //             ...val
+        //         });
+        //     }
+        // });
     }
 
     function updateTable() {

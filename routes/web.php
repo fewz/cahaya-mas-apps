@@ -32,6 +32,9 @@ Route::get('/', function () {
 Route::prefix('customer')->middleware('customerCheck:user')->group(function () {
     Route::get('/pesanan_saya', [CustomerController::class, 'pesanan_saya'])->name('customer/pesanan_saya');
     Route::get('/detail_pesanan/{id}', [CustomerController::class, 'detail_pesanan'])->name('customer/detail_pesanan');
+    Route::get('/profile', [CustomerController::class, 'profile'])->name('customer/profile');
+    Route::post('/edit_profile', [CustomerController::class, 'edit_profile'])->name('customer/edit_profile');
+    Route::post('/change_pass', [CustomerController::class, 'change_pass'])->name('customer/change_pass');
     Route::post('/detail_pesanan/do_finish', [CustomerController::class, 'finish_pesanan'])->name('customer/detail_pesanan/do_finish');
     Route::post('/detail_pesanan/upload_bukti_transfer', [CustomerController::class, 'upload_bukti_transfer'])->name('customer/detail_pesanan/upload_bukti_transfer');
 });

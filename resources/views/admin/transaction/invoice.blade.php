@@ -35,6 +35,7 @@
                                     <div class="col-12">
                                         <h4>
                                             <i class="fas fa-globe"></i> Cahaya Mas. (INVOICE {{$header_transaction->order_number}})
+                                            <small class="float-right">Tanggal Cetak: {{now()}}</small>
                                         </h4>
                                     </div>
                                     <!-- /.col -->
@@ -44,10 +45,9 @@
                                     <div class="col-sm-4 invoice-col">
                                         <address>
                                             <strong>Cahaya Mas.</strong><br>
-                                            795 Folsom Ave, Suite 600<br>
-                                            San Francisco, CA 94107<br>
-                                            Phone: (804) 123-5432<br>
-                                            Email: info@almasaeedstudio.com
+                                            Jl. Bandang No.205<br>
+                                            Makasar, Indonesia<br>
+                                            Phone: 085212353958<br>
                                         </address>
                                     </div>
                                     <!-- /.col -->
@@ -61,10 +61,13 @@
                                     </div>
                                     <!-- /.col -->
                                     <div class="col-sm-4 invoice-col">
-                                        <b>Invoice Number:</b> {{$header_transaction->order_number}}<br>
-                                        <b>Transaction Date: </b> {{$header_transaction->created_date}}<br>
-                                        <b>Cashier:</b> {{$header_transaction->cashier}}<br>
-                                        <b>Payment Method: </b> {{$header_transaction->payment_method}}
+                                        <b>Nomor Invoice:</b> {{$header_transaction->order_number}}<br>
+                                        <b>Tanggal Transaksi: </b> {{$header_transaction->created_date}}<br>
+                                        <b>Kasir:</b> {{$header_transaction->cashier}}<br>
+                                        <b>Metode Pembayaran: </b> {{$header_transaction->payment_method}}<br>
+                                        @if($header_transaction->payment_method === 'CREDIT')
+                                        <b>Jatuh Tempo: </b> {{$header_transaction->due_date}}
+                                        @endif
                                     </div>
                                     <!-- /.col -->
                                 </div>
@@ -127,6 +130,28 @@
                                         </div>
                                     </div>
                                     <!-- /.col -->
+                                </div>
+                                <div class="hidden-but-printable">
+                                    <div class="row" style="margin-top:100px;">
+                                        <div class="col-4 text-center font-weight-bold">
+                                            Yang Menerima
+                                        </div>
+                                        <div class="col-4">
+                                        </div>
+                                        <div class="col-4 text-center font-weight-bold">
+                                            Yang Menyetujui
+                                        </div>
+                                    </div>
+                                    <div class="row" style="margin-top:70px;">
+                                        <div class="col-4 text-center">
+                                            _______________________
+                                        </div>
+                                        <div class="col-4">
+                                        </div>
+                                        <div class="col-4 text-center">
+                                            _______________________
+                                        </div>
+                                    </div>
                                 </div>
                                 <!-- this row will not appear when printing -->
                                 <div class="row no-print">

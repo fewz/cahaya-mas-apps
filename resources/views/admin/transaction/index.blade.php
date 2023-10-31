@@ -42,6 +42,7 @@
                                                 <th>Customer</th>
                                                 <th>Cashier</th>
                                                 <th>Created Date</th>
+                                                <th>Payment Method</th>
                                                 <th>Status</th>
                                                 <th>Grand Total</th>
                                                 <th>Action</th>
@@ -55,6 +56,7 @@
                                                 <td>{{$dt->customer_name}}</td>
                                                 <td>{{$dt->cashier_name}}</td>
                                                 <td>{{$dt->created_date}}</td>
+                                                <td>{{$dt->payment_method}}</td>
                                                 <td>{{$status[$dt->status]}}</td>
                                                 <td>
                                                     {{$dt->grand_total > 0 ? number_format($dt->grand_total,0,',','.') : "-"}}

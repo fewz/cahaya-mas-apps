@@ -35,7 +35,7 @@
                                     <div class="col-12">
                                         <h4>
                                             <i class="fas fa-globe"></i> Cahaya Mas. ({{$header_transaction->order_number}})
-                                            <small class="float-right">Tanggal Transaksi: {{$header_transaction->created_date}}</small>
+                                            <small class="float-right">Tanggal Cetak: {{now()}}</small>
                                         </h4>
                                     </div>
                                     <!-- /.col -->
@@ -46,10 +46,9 @@
                                         Dari
                                         <address>
                                             <strong>Cahaya Mas.</strong><br>
-                                            795 Folsom Ave, Suite 600<br>
-                                            San Francisco, CA 94107<br>
-                                            Phone: (804) 123-5432<br>
-                                            Email: info@almasaeedstudio.com
+                                            Jl. Bandang No.205<br>
+                                            Makasar, Indonesia<br>
+                                            Phone: 085212353958<br>
                                         </address>
                                     </div>
                                     <!-- /.col -->
@@ -58,17 +57,18 @@
                                         <address>
                                             <strong>{{$header_transaction->customer_name}}</strong><br>
                                             {{$header_transaction->alamat}}<br>
-                                            Phone: {{$header_transaction->telp}}<br>
+                                            Telp: {{$header_transaction->telp}}<br>
                                         </address>
                                     </div>
                                     <!-- /.col -->
                                     <div class="col-sm-4 invoice-col">
                                         <b>Surat Jalan</b><br>
+                                        <b>Tanggal Transaksi :</b> {{$header_transaction->created_date}}<br>
                                         <br>
                                         <b>Kode Pengiriman:</b> {{$header_transaction->code}}<br>
-                                        <b>Transaction Date</b> {{$header_transaction->delivery_date}}<br>
-                                        <b>Cashier:</b> {{$header_transaction->cashier}}<br>
-                                        <b>Driver: </b> {{$header_transaction->driver}}
+                                        <b>Tanggal Kirim:</b> {{$header_transaction->delivery_date}}<br>
+                                        <b>Kasir:</b> {{$header_transaction->cashier}}<br>
+                                        <b>Sopir: </b> {{$header_transaction->driver}}
                                     </div>
                                     <!-- /.col -->
                                 </div>
@@ -103,7 +103,7 @@
                                 <div class="hidden-but-printable">
                                     <div class="row" style="margin-top:100px;">
                                         <div class="col-4 text-center font-weight-bold">
-                                            Kepala Gudang
+                                            Yang menerima
                                         </div>
                                         <div class="col-4">
                                         </div>

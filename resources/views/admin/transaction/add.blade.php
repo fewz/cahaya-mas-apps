@@ -46,7 +46,7 @@ use App\Helpers\CommonHelper;
                                     <input type="date" class="form-control required" name="created_date" placeholder="Tanggal Order">
                                 </div>
                                 <div class="form-group">
-                                    <label>Payment Method</label>
+                                    <label>Metode Pembayaran</label>
                                     <select id="payment_method" class="form-control select2bs4" name="payment_method" style="width: 100%;" onchange="paymentMethodChange(this)">
                                         <option value="CASH">Cash</option>
                                         <option value="CREDIT">Credit</option>

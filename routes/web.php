@@ -9,6 +9,7 @@ use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\PengirimanController;
 use App\Http\Controllers\PurchaseOrder;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\StockController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\Transaction;
 use App\Http\Controllers\UserController;
@@ -123,6 +124,12 @@ Route::prefix('admin')->middleware('auth', 'roleCheck:user')->group(function () 
 
     Route::get('/master_setting', [UserController::class, 'master_setting'])->name('master_setting');
     Route::post('/master_setting/edit', [UserController::class, 'edit_setting'])->name('master_setting/edit');
+    
+    Route::get('/stok_opname', [StockController::class, 'index'])->name('stok_opname');
+    Route::get('/stok_opname/add', [StockController::class, 'add'])->name('stok_opname/add');
+    Route::post('/stok_opname/do_add', [StockController::class, 'do_add'])->name('stok_opname/do_add');
+    Route::post('/stok_opname/revisi', [StockController::class, 'revisi'])->name('stok_opname/revisi');
+    Route::post('/stok_opname/delete', [StockController::class, 'delete'])->name('stok_opname/delete');
 
 
     Route::get('/test', [UserController::class, 'tests'])->name('test');

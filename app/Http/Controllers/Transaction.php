@@ -65,7 +65,7 @@ class Transaction extends Controller
             $data->diskon_poin = $request->diskon_poin;
             Customer::min_poin($request->id_customer, $request->diskon_poin);
             $data->transaction_type = $request->type;
-            if ($request->payment_method === 'CASH') {
+            if ($request->payment_method === 'CASH' && $request->transaction_type !== 'DELIVERY') {
                 $data->status = 1;
                 Customer::add_poin($request->id_customer, $request->grand_total);
             } else {

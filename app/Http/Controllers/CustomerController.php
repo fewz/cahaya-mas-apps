@@ -157,6 +157,7 @@ class CustomerController extends Controller
         $transaksi = HTransaction::find($id);
         if ($transaksi->payment_method === 'CASH') {
             $transaksi->status = 1;
+            Customer::add_poin($transaksi->id_customer, $transaksi->grand_total);
         } else {
             $transaksi->status = 2;
         }
@@ -173,6 +174,7 @@ class CustomerController extends Controller
         $file->move('bukti_transfer_transaction', $request->id);
         $data = HTransaction::where("id", $request->id)->first();
         $data->status = 1;
+        Customer::add_poin($data->id_customer, $data->grand_total);
         $data->finish_date = today();
         $data->save();
         CommonHelper::showAlert("Success", "Upload Bukti Transfer Berhasil", "success", "/customer/pesanan_saya");

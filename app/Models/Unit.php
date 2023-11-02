@@ -44,15 +44,15 @@ class Unit extends Model
         return $result;
     }
 
-    public static function hitung_stok($id_unit)
-    {
-        $data = Unit::where('id', $id_unit)->first();
-        $stok_terkecil = Unit::hitung_stok_terkecil($data->id_inventory);
-        if ($data->qty_reference !== NULL) {
-            return $stok_terkecil / $data->qty_reference;
-        }
-        return $stok_terkecil;
-    }
+    // public static function hitung_stok($id_unit)
+    // {
+    //     $data = Unit::where('id', $id_unit)->first();
+    //     $stok_terkecil = Unit::hitung_stok_terkecil($data->id_inventory);
+    //     if ($data->qty_reference !== NULL) {
+    //         return $stok_terkecil / $data->qty_reference;
+    //     }
+    //     return $stok_terkecil;
+    // }
 
     public static function get_unit_terkecil($id_inventory)
     {

@@ -41,6 +41,7 @@
                                                 <th>Tanggal</th>
                                                 <th>Inventory</th>
                                                 <th>Checker</th>
+                                                <th>Unit</th>
                                                 <th>Stok App</th>
                                                 <th>Stok Gudang</th>
                                                 <th>Selisih</th>
@@ -54,13 +55,14 @@
                                                 <td>{{$dt->created_date}}</td>
                                                 <td>{{$dt->produk}}</td>
                                                 <td>{{$dt->checker}}</td>
+                                                <td>{{$dt->unit}}</td>
                                                 <td>{{$dt->stok}}</td>
                                                 <td>{{$dt->stok_gudang}}</td>
                                                 <td>{{$dt->selisih}}</td>
                                                 <td>{{$dt->notes}}</td>
                                                 <td>
                                                     @if($dt->status === 0)
-                                                    <button class="btn btn-sm btn-primary" onclick="openModal('{{$dt->id}}','{{$dt->created_date}}','{{$dt->produk}}','{{$dt->checker}}','{{$dt->stok}}','{{$dt->stok_gudang}}','{{$dt->selisih}}','{{$dt->stok_unit}}')">
+                                                    <button class="btn btn-sm btn-primary" onclick="openModal('{{$dt->id}}','{{$dt->created_date}}','{{$dt->produk}}','{{$dt->checker}}','{{$dt->stok}}','{{$dt->stok_gudang}}','{{$dt->selisih}}','{{$dt->stok_unit}}','{{$dt->unit}}')">
                                                         <i class="fa fa-edit"></i>
                                                     </button>
                                                     <button class="btn btn-sm btn-danger" onclick="clickDelete('{{$dt->id}}')"><i class="fa fa-trash"></i></button>
@@ -98,7 +100,7 @@
             </div>
             <form id="formedit" action="{{URL('admin/stok_opname/revisi')}}" method="POST">
                 @csrf
-                <div class="modal-body">
+                <div class="modal-body" style="max-height:650px; overflow:auto;">
                     <div class="form-group">
                         <label>Tanggal</label>
                         <input disabled type="text" class="form-control required" id="tanggal">
@@ -110,6 +112,10 @@
                     <div class="form-group">
                         <label>Checker</label>
                         <input disabled type="text" class="form-control required" id="checker">
+                    </div>
+                    <div class="form-group">
+                        <label>Unit</label>
+                        <input disabled type="text" class="form-control required" id="unit">
                     </div>
                     <div class="form-group">
                         <label>Stok Saat Input</label><br>
@@ -144,12 +150,13 @@
     <!-- /.modal-dialog -->
 </div>
 <script>
-    function openModal(id_stok_opname, tanggal, produk, checker, stok_saat_input, stok_gudang, selisih, stok_saat_ini) {
+    function openModal(id_stok_opname, tanggal, produk, checker, stok_saat_input, stok_gudang, selisih, stok_saat_ini, unit) {
         console.log('t', tanggal);
-        
+
         $("#tanggal").val(tanggal);
         $("#produk").val(produk);
         $("#checker").val(checker);
+        $("#unit").val(unit);
         $("#stok_saat_input").val(stok_saat_input);
         $("#stok_gudang").val(stok_gudang);
         $("#selisih").val(selisih);

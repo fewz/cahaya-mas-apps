@@ -3,6 +3,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Cahaya Mas</title>
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <!-- Select2 -->
     <link rel="stylesheet" href="{{URL::asset('assets/plugins/select2/css/select2.min.css')}}">
     <link rel="stylesheet" href="{{URL::asset('assets/plugins/select2/js/select2.full.min.js')}}">

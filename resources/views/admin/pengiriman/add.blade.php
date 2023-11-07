@@ -249,17 +249,15 @@
     function delete_transaksi(id) {
         const deletedTransaksi = transaksi.filter((val) => val.id === id);
         console.log('t', deletedTransaksi);
+        console.log('t', id);
 
 
-        deletedTransaksi[0].detail.forEach((val) => {
-            barang_muat.forEach((brg, index, object) => {
-                if (brg.id_inventory === val.id_inventory) {
-                    brg.qty -= val.qty;
-                    if (brg.qty <= 0) {
-                        object.splice(index, 1);
-                    }
-                }
-            });
+        barang_muat.forEach((brg, index, object) => {
+            console.log('as', brg);
+
+            if (brg.id_h_transaction === id) {
+                object.splice(index, 1);
+            }
         });
         transaksi = transaksi.filter((val) => val.id !== id);
 
@@ -273,22 +271,6 @@
                 order_number: header.order_number
             });
         });
-        // detail.forEach((val) => {
-        //     console.log('adfa', val);
-
-        //     let ada = false;
-        //     barang_muat.forEach((brg) => {
-        //         if (val.id_inventory === brg.id_inventory) {
-        //             brg.qty += val.qty;
-        //             ada = true;
-        //         }
-        //     });
-        //     if (!ada) {
-        //         barang_muat.push({
-        //             ...val
-        //         });
-        //     }
-        // });
     }
 
     function updateTable() {

@@ -151,8 +151,12 @@ use App\Helpers\CommonHelper;
                                     <p id="label_minimal_diskon"></p>
                                 </div>
                                 <div class="col-6">
-                                    <label>Diskon</label>
+                                    <label>Diskon per unit</label>
                                     <p id="label_diskon_produk">-</p>
+                                </div>
+                                <div class="col-6">
+                                    <label>Total Diskon</label>
+                                    <p id="label_total_diskon">-</p>
                                 </div>
                                 <div class="col-6">
                                     <label>Subtotal</label>
@@ -215,11 +219,14 @@ use App\Helpers\CommonHelper;
 
     function hitungDiskon() {
         $("#label_diskon_produk").html('-');
+        $("#label_total_diskon").html('0');
         $("#label_minimal_diskon").html(selectedMinimalDiskon);
         if (selectedMinimalDiskon && selectedMinimalDiskon <= $("#qtyproduk").val()) {
-            subTotalProduct -= selectedDiskon;
+            selectedProductPrice -= selectedDiskon;
             $("#label_diskon_produk").html(numberWithCommas(selectedDiskon));
             $("#label_subtotal_produk").html(numberWithCommas(subTotalProduct));
+            const qty = $("#qtyproduk").val();
+            $("#label_total_diskon").html(qty * selectedDiskon);
         }
     }
 
@@ -253,9 +260,9 @@ use App\Helpers\CommonHelper;
             $("#qtyproduk").val(selectedProductStock);
         }
         const qty = $("#qtyproduk").val();
+        hitungDiskon();
         subTotalProduct = qty * selectedProductPrice;
         $("#label_subtotal_produk").html(numberWithCommas(subTotalProduct));
-        hitungDiskon();
     }
 
     function customerChange() {
@@ -424,7 +431,7 @@ use App\Helpers\CommonHelper;
         object.stok = selectedProductStock;
         object.diskon = 0;
         if (selectedMinimalDiskon && selectedMinimalDiskon <= $("#qtyproduk").val()) {
-            object.diskon = selectedDiskon;
+            object.diskon = selectedDiskon * object.qty;
         }
 
         listProduk.push(JSON.stringify(object));

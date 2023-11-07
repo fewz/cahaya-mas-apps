@@ -113,6 +113,7 @@ Route::prefix('admin')->middleware('auth', 'roleCheck:user')->group(function () 
     Route::post('/transaction/do_edit/{id}', [Transaction::class, 'do_edit'])->name('transaction/do_edit');
     Route::post('/transaction/delete', [Transaction::class, 'delete'])->name('transaction/delete');
     Route::get('/transaction/invoice/{id}', [Transaction::class, 'invoice'])->name('transaction/invoice');
+    Route::post('/transaction/update_status/', [Transaction::class, 'change_status'])->name('transaction/update_status');
 
     Route::get('/pengiriman', [PengirimanController::class, 'index'])->name('pengiriman');
     Route::get('/pengiriman/add', [PengirimanController::class, 'add'])->name('pengiriman/add');

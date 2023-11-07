@@ -49,7 +49,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <?php $status = ["Draft", "Selesai", "Belum Lunas", "Belum Dikirim", "Siap Dikirim", "Sedang Dikirim", "Terkirim"]; ?>
+                                            <?php $status = ["Draft", "Selesai", "Belum Lunas", "Belum Dikirim", "Siap Dikirim", "Sedang Dikirim", "Terkirim", "Sudah Upload Bukti"]; ?>
                                             @foreach ($list_transaction as $dt )
                                             <tr>
                                                 <td>{{$dt->order_number}}</td>
@@ -73,7 +73,13 @@
                                                         <i class="fa fa-image"></i>
                                                     </a>
                                                     @endif
-                                                    <!-- <button class="btn btn-sm btn-danger" onclick="clickDelete('{{$dt->id}}')"><i class="fa fa-trash"></i></button> -->
+                                                    @if($dt->status === 7 && $dt->payment_method === 'CREDIT')
+                                                    <a href="{{ URL('/bukti_transfer_transaction/'.$dt->id) }}" class="btn btn-sm btn-primary" target="_blank">
+                                                        <i class="fa fa-image"></i>
+                                                    </a>
+                                                    <button class="btn btn-sm btn-primary" onclick="clickOK('{{$dt->id}}')"><i class="fa fa-check"></i></button>
+                                                    <button class="btn btn-sm btn-danger" onclick="clickNO('{{$dt->id}}')"><i class="fa fa-close"></i></button>
+                                                    @endif
                                                 </td>
                                             </tr>
                                             @endforeach
@@ -88,14 +94,48 @@
         </div>
     </div>
 </body>
-<form id="formDelete" action="{{URL('admin/transaction/delete')}}" method="POST">
+<form id="formDelete" action="{{URL('admin/transaction/update_status')}}" method="POST">
     @csrf
-    <input type="hidden" name="id" id="id_delete">
+    <input type="hidden" name="id" id="id">
+    <input type="hidden" name="status" id="status">
 </form>
 
 @include('script_footer')
 
 <script>
+    function clickOK(id) {
+        swal({
+                title: "Apakah anda yakin ingin menyelesaikan transaksi ini?",
+                text: "pastikan upload bukti sudah benar",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+                    $('#id').val(id);
+                    $('#status').val(1);
+                    $('#formDelete').submit();
+                }
+            });
+    }
+    function clickNO(id) {
+        swal({
+                title: "Apakah anda yakin ingin membatalkan bukti transfer?",
+                text: "customer akan diminta upload bukti ulang untuk menyelesaikan transaksi",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+                    $('#id').val(id);
+                    $('#status').val(6);
+                    $('#formDelete').submit();
+                }
+            });
+    }
+
     function clickDelete(id) {
         // confirmation delete
         swal({

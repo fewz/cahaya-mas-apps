@@ -29,5 +29,6 @@ Route::get('/available_unit', [SupplierController::class, 'get_available_unit'])
 Route::get('/get_price_and_stock', [PricingController::class, 'get_price_and_stock']);
 
 Route::get('/get_detail_transaction/{id}', [Transaction::class, 'get_detail']);
+Route::get('/get_tagihan_jatuh_tempo/{selectedDate}', [Transaction::class, 'get_tagihan_jatuh_tempo']);
 
 Route::get('/test', [UserController::class, 'test']);

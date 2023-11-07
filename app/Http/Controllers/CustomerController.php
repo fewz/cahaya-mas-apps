@@ -173,8 +173,7 @@ class CustomerController extends Controller
         // print_r($file);
         $file->move('bukti_transfer_transaction', $request->id);
         $data = HTransaction::where("id", $request->id)->first();
-        $data->status = 1;
-        Customer::add_poin($data->id_customer, $data->grand_total);
+        $data->status = 7;
         $data->finish_date = today();
         $data->save();
         CommonHelper::showAlert("Success", "Upload Bukti Transfer Berhasil", "success", "/customer/pesanan_saya");

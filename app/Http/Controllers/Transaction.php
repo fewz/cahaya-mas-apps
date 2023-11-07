@@ -149,4 +149,26 @@ class Transaction extends Controller
         ];
         return view("admin.transaction.invoice", $data);
     }
+
+    public function change_status(Request $request)
+    {
+        $data = HTransaction::find($request->id);
+        $data->status = $request->status;
+        if ($request->status === 1) {
+            Customer::add_poin($data->id_customer, $data->grand_total);
+        }
+        $data->save();
+        CommonHelper::showAlert("Success", "update data success", "success", "/admin/transaction");
+    }
+
+    public function get_tagihan_jatuh_tempo($selectedDate)
+    {
+        $inputDateInDatabaseFormat = date('Y-d-m', strtotime($selectedDate));
+        $data = HTransaction::where('h_transaction.due_date', $inputDateInDatabaseFormat)
+            ->join('customer', 'customer.id', 'h_transaction.id_customer')
+            ->select('customer.full_name', 'customer.phone', 'customer.address', 'h_transaction.*')
+            ->get();
+
+        return $this->createSuccessMessage($data);
+    }
 }

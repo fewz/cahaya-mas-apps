@@ -6,6 +6,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DiskonController;
 use App\Http\Controllers\InventoryController;
+use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\PengirimanController;
 use App\Http\Controllers\PurchaseOrder;
 use App\Http\Controllers\RoleController;
@@ -131,6 +132,8 @@ Route::prefix('admin')->middleware('auth', 'roleCheck:user')->group(function () 
     Route::post('/stok_opname/do_add', [StockController::class, 'do_add'])->name('stok_opname/do_add');
     Route::post('/stok_opname/revisi', [StockController::class, 'revisi'])->name('stok_opname/revisi');
     Route::post('/stok_opname/delete', [StockController::class, 'delete'])->name('stok_opname/delete');
+
+    Route::get('/laporan_barang', [LaporanController::class, 'laporan_barang'])->name('laporan_barang');
 
 
     Route::get('/test', [UserController::class, 'tests'])->name('test');

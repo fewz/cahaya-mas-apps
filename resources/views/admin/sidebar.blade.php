@@ -136,6 +136,45 @@
                             @endif
                         </ul>
                     </li>
+
+                    <?php
+                    $laporan_menu = ['laporan_barang', 'laporan_penjualan', 'laporan_pembelian'];
+                    ?>
+                    <li class="nav-item expandable {{in_array($activePage, $laporan_menu)  ? 'menu-is-opening menu-open' : ''}}">
+                        <a href="#" class="nav-link {{in_array($activePage, $laporan_menu) ? 'active' : ''}}">
+                            <i class="nav-icon fa fa-book"></i>
+                            <p>
+                                Laporan
+                                <i class="right fas fa-angle-left"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            @if(Session::get('LAPORAN_BARANG'))
+                            <li class="nav-item">
+                                <a href="{{ URL('admin/laporan_barang') }}" class="nav-link {{$activePage === 'laporan_barang' ? 'active' : ''}}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Laporan Barang</p>
+                                </a>
+                            </li>
+                            @endif
+                            @if(Session::get('LAPORAN_PENJUALAN'))
+                            <li class="nav-item">
+                                <a href="{{ URL('admin/laporan_penjualan') }}" class="nav-link {{$activePage === 'laporan_penjualan' ? 'active' : ''}}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Laporan Penjualan</p>
+                                </a>
+                            </li>
+                            @endif
+                            @if(Session::get('LAPORAN_PEMBELIAN'))
+                            <li class="nav-item">
+                                <a href="{{ URL('admin/laporan_pembelian') }}" class="nav-link {{$activePage === 'laporan_pembelian' ? 'active' : ''}}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Laporan Pembelian</p>
+                                </a>
+                            </li>
+                            @endif
+                        </ul>
+                    </li>
                     @if(Session::get('MASTER_SETTING'))
                     <li class="nav-item">
                         <a href="{{ URL('admin/master_setting') }}" class="nav-link {{$activePage === 'master_setting' ? 'active' : ''}}">

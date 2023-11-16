@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\CategoryInventory;
 use App\Models\DetailPurchaseOrder;
 use App\Models\HeaderPurchaseOrder;
+use App\Models\Inventory;
 use App\Models\LogTerimaBarang;
 use App\Models\Supplier;
 use App\Models\Unit;
@@ -132,7 +133,7 @@ class PurchaseOrder extends Controller
         $data_product = DetailPurchaseOrder::where("d_purchase_order.id_h_purchase_order", $id)
             ->join("inventory", "inventory.id", "=", "d_purchase_order.id_inventory")
             ->join("unit", "unit.id", "=", "d_purchase_order.id_unit")
-            ->select("d_purchase_order.*", "inventory.name as product_name", "unit.name as unit_name", "inventory.code as product_code")
+            ->select("d_purchase_order.*", "inventory.name as product_name", "unit.name as unit_name", "inventory.code as product_code", "unit.hpp as hpp")
             ->get();
         $list_supplier = Supplier::get();
         $data = [
@@ -169,6 +170,7 @@ class PurchaseOrder extends Controller
             $file->move('surat_jalan', 'P' . $data->id . ($total_pengiriman + 1));
             foreach ($list_produk as $lp) {
                 if ($lp->qty > 0) {
+                    Unit::update_hpp($lp->qty, $lp->id_unit, $lp->price);
                     DetailPurchaseOrder::terima_barang($data->id, $lp->id_product, $lp->id_unit, $lp->expdate, $lp->qty, $total_pengiriman, $lp->keterangan);
                     Unit::add_stok($lp->id_unit, $lp->qty);
                 }

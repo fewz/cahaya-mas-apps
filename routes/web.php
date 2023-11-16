@@ -134,6 +134,8 @@ Route::prefix('admin')->middleware('auth', 'roleCheck:user')->group(function () 
     Route::post('/stok_opname/delete', [StockController::class, 'delete'])->name('stok_opname/delete');
 
     Route::get('/laporan_barang', [LaporanController::class, 'laporan_barang'])->name('laporan_barang');
+    Route::get('/laporan_penjualan', [LaporanController::class, 'laporan_penjualan'])->name('laporan_penjualan');
+    Route::get('/laporan_pembelian', [LaporanController::class, 'laporan_pembelian'])->name('laporan_pembelian');
 
 
     Route::get('/test', [UserController::class, 'tests'])->name('test');

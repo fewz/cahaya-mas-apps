@@ -1,6 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 @include('header')
+<style>
+    table {
+        overflow-x: scroll;
+    }
+
+    th,
+    td {
+        min-width: 200px;
+    }
+</style>
 
 <body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper">
@@ -93,9 +103,9 @@
                         <div class="card-header">
                             <h3 class="card-title">Konfirmasi Produk yang dikirim</h3>
                         </div>
-                        <div class="card-body">
+                        <div class="card-body" style="overflow:auto;">
                             <label>Produk yang terkirim</label>
-                            <table class="table table-bordered table-striped">
+                            <table class="table table-bordered table-striped" style="height:100%;">
                                 <thead>
                                     <tr>
                                         <th>Kode</th>
@@ -104,6 +114,7 @@
                                         <th>Qty Order</th>
                                         <th>Qty Sisa</th>
                                         <th>Harga per unit</th>
+                                        <th>HPP</th>
                                         <th>Qty Terima</th>
                                         <th>Exp Date</th>
                                         <th>Keterangan</th>
@@ -112,12 +123,11 @@
                                 <tbody id="tableBody">
                                 </tbody>
                             </table>
-
-                            <div class="mt-3 float-right text-right">
-                                <label>Grand Total</label>
-                                <p id="totalHarga"></p>
-                                <div class="btn btn-info" onclick="terima()">Terima Barang</div>
-                            </div>
+                        </div>
+                        <div class="mt-3 float-right text-right pr-3">
+                            <label>Grand Total</label>
+                            <p id="totalHarga"></p>
+                            <div class="btn btn-info" onclick="terima()">Terima Barang</div>
                         </div>
                         <!-- /.card-body -->
                         <div class="card-footer">
@@ -133,8 +143,6 @@
 @include('script_footer')
 <script>
     let listProduk = <?php echo $data_product; ?>;
-    console.log('li', listProduk);
-
 
     function terima() {
         $("#is_finish").val('0');
@@ -181,14 +189,26 @@
                     product_name: val.product_name,
                     product_code: val.product_code,
                     price: val.price_buy,
+                    hpp: val.hpp,
                     unit: JSON.stringify(unit)
                 };
+
                 const key = val.product_code + '-' + val.unit_name;
                 inputValues[`qty_order[${key}]`] = val.order_qty;
                 inputValues[`qty_sisa[${key}]`] = val.sisa_qty;
-                inputValues[`price[${key}]`] = val.price_buy;
-                inputValues[`expdate[${key}]`] = new Date().toDateInputValue();
+                inputValues[`price[${key}]`] = val.price_buy; // Get current date
+                var currentDate = new Date();
+
+                // Calculate one year from now
+                var oneYearFromNow = new Date(currentDate.getFullYear() + 1, currentDate.getMonth(), currentDate.getDate());
+
+                // Format the date to YYYY-MM-DD (required format for input type=date)
+                var formattedDate = oneYearFromNow.toISOString().split('T')[0];
+
+                inputValues[`expdate[${key}]`] = formattedDate;
                 listProduk.push(JSON.stringify(res));
+
+
             }
         });
         saveInputValues();
@@ -299,13 +319,16 @@
             const object = JSON.parse(item);
             const unit = JSON.parse(object.unit);
             const key = object.product_code + '-' + unit.name;
+            console.log('a', object);
+
             const row = `<tr>
                             <td>${object.product_code}</td>
                             <td>${object.product_name}</td>
                             <td>${unit.name}</td>
                             <td><input class="form-control" type="number" name="qty_order[${key}]" disabled value="${getInputValue(key, 'qty_order')}"/></td>
                             <td><input class="form-control" type="number" name="qty_sisa[${key}]" disabled value="${getInputValue(key, 'qty_sisa')}"/></td>
-                            <td><input class="form-control" type="number" name="price[${key}]" value="${getInputValue(key, 'price')}" disabled onchange="hitungTotal()"/></td>
+                            <td><input class="form-control" type="number" name="price[${key}]" value="${getInputValue(key, 'price')}" disabled/></td>
+                            <td><input class="form-control" type="number" name="hpp[${key}]" value="${object.hpp}" disabled/></td>
                             <td><input class="form-control required" type="number" name="qty[${key}]" value="${getInputValue(key, 'qty')}" onchange="qtyChange(this, ${getInputValue(key, 'qty_sisa')})"/></td>
                             <td><input class="form-control" type="date" name="expdate[${key}]" value="${getInputValue(key, 'expdate')}"/></td>
                             <td><input class="form-control" type="text" name="keterangan[${key}]" value="${getInputValue(key, 'keterangan')}"/></td>

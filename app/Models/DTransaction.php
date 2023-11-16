@@ -11,6 +11,8 @@ class DTransaction extends Model
 
     public static function add_detail($id_header, $id_inventory, $id_unit, $sell_price, $qty, $sub_total, $diskon)
     {
+        $unit = Unit::find($id_unit);
+
         $data = new DTransaction();
         $data->id_h_transaction = $id_header;
         $data->id_inventory = $id_inventory;
@@ -19,6 +21,10 @@ class DTransaction extends Model
         $data->qty = $qty;
         $data->sub_total = $sub_total;
         $data->diskon = $diskon;
+        $data->hpp = $unit->hpp;
+        $data->netto = (($sell_price - ($diskon / $qty)) - $unit->hpp) * $qty;
         $data->save();
+
+        return $data->netto;
     }
 }

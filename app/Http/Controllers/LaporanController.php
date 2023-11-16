@@ -6,6 +6,8 @@ use App\Helpers\CommonHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Customer;
 use App\Models\DTransaction;
+use App\Models\HeaderPurchaseOrder;
+use App\Models\HTransaction;
 use App\Models\LogTerimaBarang;
 use App\Models\Role;
 use App\Models\Setting;
@@ -21,7 +23,6 @@ class LaporanController extends Controller
 {
     public function laporan_barang()
     {
-        // list view user
         $user = Auth::user();
         $log_terima_barang = LogTerimaBarang::join('inventory', 'inventory.id', 'log_terima_barang.id_inventory')
             ->join('unit', 'unit.id', 'log_terima_barang.id_unit')
@@ -61,5 +62,72 @@ class LaporanController extends Controller
             'laporan_kadaluarsa' => $laporan_kadaluarsa
         ];
         return view("admin.laporan.laporan_barang", $data);
+    }
+
+    public function laporan_penjualan()
+    {
+        $user = Auth::user();
+
+        $laporan_penjualan = HTransaction::join('customer', 'customer.id', 'h_transaction.id_customer')
+            ->where('h_transaction.status', '=', 1)
+            ->select('h_transaction.*', 'customer.full_name as customer')
+            ->get();
+        $laporan_tunai = HTransaction::join('customer', 'customer.id', 'h_transaction.id_customer')
+            ->where('h_transaction.status', '=', 1)
+            ->where('h_transaction.payment_method', 'CASH')
+            ->select('h_transaction.*', 'customer.full_name as customer')
+            ->get();
+        $laporan_kredit = HTransaction::join('customer', 'customer.id', 'h_transaction.id_customer')
+            ->where('h_transaction.status', '=', 1)
+            ->where('h_transaction.payment_method', 'CREDIT')
+            ->select('h_transaction.*', 'customer.full_name as customer')
+            ->get();
+        $laporan_piutang = HTransaction::join('customer', 'customer.id', 'h_transaction.id_customer')
+            ->where('h_transaction.status', '<>', 1)
+            ->where('h_transaction.payment_method', 'CREDIT')
+            ->select('h_transaction.*', 'customer.full_name as customer')
+            ->get();
+        $data = [
+            'user' => $user,
+            'laporan_penjualan' => $laporan_penjualan,
+            'laporan_tunai' => $laporan_tunai,
+            'laporan_kredit' => $laporan_kredit,
+            'laporan_piutang' => $laporan_piutang
+        ];
+        return view("admin.laporan.laporan_penjualan", $data);
+    }
+
+
+    public function laporan_pembelian()
+    {
+        $user = Auth::user();
+
+        $laporan_pembelian = HeaderPurchaseOrder::join('supplier', 'supplier.id', 'h_purchase_order.id_supplier')
+            ->where('h_purchase_order.status', '=', 2)
+            ->select('h_purchase_order.*', 'supplier.name as supplier')
+            ->get();
+        $laporan_tunai = HeaderPurchaseOrder::join('supplier', 'supplier.id', 'h_purchase_order.id_supplier')
+            ->where('h_purchase_order.status', '=', 2)
+            ->where('h_purchase_order.payment_method', '=', 'CASH')
+            ->select('h_purchase_order.*', 'supplier.name as supplier')
+            ->get();
+        $laporan_kredit = HeaderPurchaseOrder::join('supplier', 'supplier.id', 'h_purchase_order.id_supplier')
+            ->where('h_purchase_order.status', '=', 2)
+            ->where('h_purchase_order.payment_method', '=', 'CREDIT')
+            ->select('h_purchase_order.*', 'supplier.name as supplier')
+            ->get();
+        $laporan_hutang = HeaderPurchaseOrder::join('supplier', 'supplier.id', 'h_purchase_order.id_supplier')
+            ->where('h_purchase_order.lunas', '<>', 1)
+            ->where('h_purchase_order.payment_method', '=', 'CREDIT')
+            ->select('h_purchase_order.*', 'supplier.name as supplier')
+            ->get();
+        $data = [
+            'user' => $user,
+            'laporan_pembelian' => $laporan_pembelian,
+            'laporan_tunai' => $laporan_tunai,
+            'laporan_kredit' => $laporan_kredit,
+            'laporan_hutang' => $laporan_hutang,
+        ];
+        return view("admin.laporan.laporan_pembelian", $data);
     }
 }

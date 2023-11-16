@@ -63,6 +63,7 @@ class Transaction extends Controller
             $data->grand_total = $request->grand_total;
             $data->payment_method = $request->payment_method;
             $data->diskon_poin = $request->diskon_poin;
+
             Customer::min_poin($request->id_customer, $request->diskon_poin);
             $data->transaction_type = $request->type;
             if ($request->payment_method === 'CASH' && $request->transaction_type !== 'DELIVERY') {
@@ -77,10 +78,15 @@ class Transaction extends Controller
             }
             $data->save();
 
+            $total_net = 0;
             foreach ($list_produk as $lp) {
-                DTransaction::add_detail($data->id, $lp->id_product, $lp->id_unit, $lp->price, $lp->qty, $lp->subtotal, $lp->diskon);
+                $net = DTransaction::add_detail($data->id, $lp->id_product, $lp->id_unit, $lp->price, $lp->qty, $lp->subtotal, $lp->diskon);
+                $total_net += $net;
                 Unit::minus_stok($lp->id_unit, $lp->qty);
             }
+
+            $data->netto = $total_net;
+            $data->save();
             DB::commit();
             CommonHelper::showAlert("Success", "Insert data success", "success", "/admin/transaction");
         } catch (\Illuminate\Database\QueryException $ex) {
@@ -163,8 +169,8 @@ class Transaction extends Controller
 
     public function get_tagihan_jatuh_tempo($selectedDate)
     {
-        $inputDateInDatabaseFormat = date('Y-d-m', strtotime($selectedDate));
-        $data = HTransaction::where('h_transaction.due_date', $inputDateInDatabaseFormat)
+        // echo $selectedDate;
+        $data = HTransaction::where('h_transaction.due_date', $selectedDate)
             ->join('customer', 'customer.id', 'h_transaction.id_customer')
             ->select('customer.full_name', 'customer.phone', 'customer.address', 'h_transaction.*')
             ->get();

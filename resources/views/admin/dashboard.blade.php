@@ -35,7 +35,6 @@
                                 <div class="icon">
                                     <i class="ion ion-bag"></i>
                                 </div>
-                                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                             </div>
                         </div>
                         <!-- ./col -->
@@ -50,7 +49,6 @@
                                 <div class="icon">
                                     <i class="ion ion-stats-bars"></i>
                                 </div>
-                                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                             </div>
                         </div>
                         <!-- ./col -->
@@ -65,7 +63,6 @@
                                 <div class="icon">
                                     <i class="ion ion-person-add"></i>
                                 </div>
-                                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                             </div>
                         </div>
                         <!-- ./col -->
@@ -80,7 +77,6 @@
                                 <div class="icon">
                                     <i class="ion ion-pie-graph"></i>
                                 </div>
-                                <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                             </div>
                         </div>
                         <!-- ./col -->
@@ -133,7 +129,7 @@
                                 <div class="card-header border-0">
                                     <div class="d-flex justify-content-between">
                                         <h3 class="card-title">Tagihan yang jatuh tempo</h3>
-                                        <a href="javascript:void(0);" id="tgl"></a>
+                                        <input type="date" id="tgl">
                                     </div>
                                 </div>
                                 <div class="card-body">
@@ -178,37 +174,105 @@
                                 <!-- /.card-body -->
                                 <!-- /.card-footer -->
                             </div>
-                            <!-- /.card -->
-
-                            <!-- /.card -->
-
-                            <!-- Calendar -->
-                            <div class="card bg-gradient-success">
+                            <div class="card">
                                 <div class="card-header border-0">
-
-                                    <h3 class="card-title">
-                                        <i class="far fa-calendar-alt"></i>
-                                        Calendar
-                                    </h3>
-                                    <!-- tools card -->
-                                    <div class="card-tools">
-                                        <!-- button with a dropdown -->
-                                        <button type="button" class="btn btn-success btn-sm" data-card-widget="collapse">
-                                            <i class="fas fa-minus"></i>
-                                        </button>
+                                    <div class="d-flex justify-content-between">
+                                        <h3 class="card-title">Produk yang hampir kadaluarsa</h3>
                                     </div>
-                                    <!-- /. tools -->
                                 </div>
-                                <!-- /.card-header -->
-                                <div class="card-body pt-0">
-                                    <!--The calendar -->
-                                    <div id="calendar" style="width: 100%"></div>
+                                <div class="card-body">
+                                    <table id="example1" class="table table-bordered table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Kode</th>
+                                                <th>Nama</th>
+                                                <th>Satuan</th>
+                                                <th>Qty</th>
+                                                <th>Tanggal Kadaluarsa</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tableBody">
+                                            @foreach ($kadaluarsa as $dt )
+                                            <tr>
+                                                <td>{{$dt->code}}</td>
+                                                <td>{{$dt->inventory}}</td>
+                                                <td>{{$dt->unit}}</td>
+                                                <td>{{$dt->qty}}</td>
+                                                <td>{{$dt->exp_date}}</td>
+                                            </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
                                 </div>
-                                <!-- /.card-body -->
                             </div>
                             <!-- /.card -->
+
+                            <!-- /.card -->
+
                         </section>
                         <!-- right col -->
+                    </div>
+                    <div class="card bg-white">
+                        <div class="card-header border-0">
+                            <h3 class="card-title">
+                                <i class="fas fa-bell mr-1"></i>
+                                Reminder Hutang & Piutang
+                            </h3>
+                        </div>
+                        <div class="card-body">
+                            <p class="font-weight-bold">Piutang</p>
+                            <table id="example2" class="table table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Tanggal</th>
+                                        <th>Order Number</th>
+                                        <th>Customer</th>
+                                        <th>Phone</th>
+                                        <th>Address</th>
+                                        <th>Grand Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tableBody">
+                                    @foreach ($notif_piutang as $dt )
+                                    <tr>
+                                        <td>{{$dt->created_date}}</td>
+                                        <td>{{$dt->order_number}}</td>
+                                        <td>{{$dt->name}}</td>
+                                        <td>{{$dt->phone}}</td>
+                                        <td>{{$dt->address}}</td>
+                                        <td>{{$dt->grand_total}}</td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                            <p class="font-weight-bold mt-3">Hutang</p>
+                            <table id="example3" class="table table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Tanggal</th>
+                                        <th>Order Number</th>
+                                        <th>Supplier</th>
+                                        <th>Phone</th>
+                                        <th>Address</th>
+                                        <th>Grand Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tableBody">
+                                    @foreach ($notif_hutang as $dt )
+                                    <tr>
+                                        <td>{{$dt->created_date}}</td>
+                                        <td>{{$dt->order_number}}</td>
+                                        <td>{{$dt->name}}</td>
+                                        <td>{{$dt->phone}}</td>
+                                        <td>{{$dt->address}}</td>
+                                        <td>{{$dt->grand_total}}</td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- /.card-body -->
+                        <!-- /.card-footer -->
                     </div>
                     <!-- /.row (main row) -->
                 </div><!-- /.container-fluid -->
@@ -397,26 +461,22 @@
     }
 
     function initialize() {
-        $('#calendar .datepicker-days tbody td[data-action="selectDay"]').on('click', function() {
-            // Get the selected date from the data-day attribute
-            var selectedDate = $(this).data('day');
-            console.log('da', selectedDate);
-            $("#tgl").html(selectedDate);
-            selectedDate = selectedDate.replace(/\//g, '-');
+        $("#tgl").on('change', function() {
+            var selectedDate = $("#tgl").val();
+            let convert = selectedDate.split('-');
+            // selectedDate = convert[2] + '-' + convert[1] + '-' + convert[0];
+            console.log('fa', selectedDate);
+
 
             get_tagihan(selectedDate);
-            setTimeout(() => {
-                initialize();
-            }, 100);
         });
     }
 
 
     $(document).ready(function() {
-        let date = new Date().toLocaleDateString();
-        $("#tgl").html(date);
-        date = date.replace(/\//g, '-');
-        get_tagihan(date);
+        var currentDate = new Date();
+        document.getElementById('tgl').valueAsDate = new Date();
+        get_tagihan(currentDate);
         initialize();
     })
 </script>

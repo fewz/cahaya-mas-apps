@@ -44,6 +44,14 @@ class Unit extends Model
         return $result;
     }
 
+    public static function update_hpp($qty, $id_unit, $price)
+    {
+        $unit = Unit::find($id_unit);
+
+        $hpp_baru = (($unit->hpp * $unit->stok) + ($price * $qty)) / ($unit->stok + $qty);
+        $unit->hpp = $hpp_baru;
+        $unit->save();
+    }
     // public static function hitung_stok($id_unit)
     // {
     //     $data = Unit::where('id', $id_unit)->first();

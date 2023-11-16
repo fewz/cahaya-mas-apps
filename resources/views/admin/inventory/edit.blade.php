@@ -85,6 +85,7 @@
                                 <thead>
                                     <tr>
                                         <th>Unit</th>
+                                        <th>HPP</th>
                                         <th>Per satuan terkecil</th>
                                         <th>General</th>
                                         <th>Bronze</th>
@@ -127,6 +128,7 @@
             }
             listUnit[val.name][val.tier_customer]['sell_price'] = val.sell_price;
             listUnit[val.name]['id'] = val.id_unit;
+            listUnit[val.name]['hpp'] = val.hpp;
             listUnit[val.name][val.tier_customer]['id'] = val.id;
             if (val.qty_reference !== null) {
                 listUnit[val.name]['qty_reference'] = val.qty_reference;
@@ -146,12 +148,17 @@
             if (!listUnit.hasOwnProperty(key)) continue;
 
             var obj = listUnit[key];
+            console.log('asdas', obj);
+
 
 
             const row = `<tr>
                             <td>
                                 ${key}
                                 <input type="number" class="form-control d-none" name="id[${key}]" value="${obj?.id}">
+                            </td>
+                            <td>
+                                <input type="number" class="form-control" disabled name="hpp[${key}]" min="0" value="${obj?.hpp ? obj.hpp : 0}">
                             </td>
                             <td>
                                 <input type="number" class="form-control ${!obj?.qty_reference ? 'd-none' : ''}" name="refunit[${key}]" min="0" value="${obj?.qty_reference ? obj.qty_reference : null}">
@@ -271,7 +278,7 @@
     // Get saved input value for a specific unit and field
     function getInputValue(unitId, field) {
         const key = `${field}[${unitId}]`;
-        return inputValues[key] || '';
+        return inputValues[key] || 0;
     }
 
     function satuanTerkecilChange() {
@@ -294,6 +301,9 @@
                             <td>
                                 ${item}
                                 <input type="number" class="form-control d-none" name="id[${item}]" value="${getInputValue(item, 'id')}">
+                            </td>
+                            <td>
+                                <input type="number" class="form-control" disabled name="hpp[${item}]" min="0" value="${getInputValue(item, 'hpp')}">
                             </td>
                             <td>
                                 <input type="number" class="form-control ${i === 0 ? 'd-none' : ''}" name="refunit[${item}]" min="0" value="${getInputValue(item, 'refunit')}">

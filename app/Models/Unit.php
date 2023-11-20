@@ -70,13 +70,15 @@ class Unit extends Model
 
     public static function add_stok($id_unit, $stok)
     {
-        Unit::find($id_unit)
-            ->increment('stok', $stok);
+        $unit = Unit::find($id_unit);
+        $unit->increment('stok', $stok);
+        return $unit->stok;
     }
 
     public static function minus_stok($id_unit, $stok)
     {
-        Unit::find($id_unit)
-            ->decrement('stok', $stok);
+        $unit = Unit::find($id_unit);
+        $unit->decrement('stok', $stok);
+        return $unit->stok;
     }
 }

@@ -80,9 +80,9 @@ class Transaction extends Controller
 
             $total_net = 0;
             foreach ($list_produk as $lp) {
-                $net = DTransaction::add_detail($data->id, $lp->id_product, $lp->id_unit, $lp->price, $lp->qty, $lp->subtotal, $lp->diskon);
+                $stok_akhir = Unit::minus_stok($lp->id_unit, $lp->qty);
+                $net = DTransaction::add_detail($data->id, $lp->id_product, $lp->id_unit, $lp->price, $lp->qty, $lp->subtotal, $lp->diskon, $stok_akhir);
                 $total_net += $net;
-                Unit::minus_stok($lp->id_unit, $lp->qty);
             }
 
             $data->netto = $total_net;

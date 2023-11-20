@@ -99,7 +99,7 @@
                     </li>
                     @endif
                     <?php
-                    $inventory_menu = ['master_inventory', 'master_category', 'stok_opname'];
+                    $inventory_menu = ['master_inventory', 'master_category', 'penyesuaian_stok', 'stok_opname'];
                     ?>
                     <li class="nav-item expandable {{in_array($activePage, $inventory_menu)  ? 'menu-is-opening menu-open' : ''}}">
                         <a href="#" class="nav-link {{in_array($activePage, $inventory_menu) ? 'active' : ''}}">
@@ -131,6 +131,14 @@
                                 <a href="{{ URL('admin/stok_opname') }}" class="nav-link {{$activePage === 'stok_opname' ? 'active' : ''}}">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>Stok Opname</p>
+                                </a>
+                            </li>
+                            @endif
+                            @if(Session::get('PENYESUAIAN_STOK'))
+                            <li class="nav-item">
+                                <a href="{{ URL('admin/penyesuaian_stok') }}" class="nav-link {{$activePage === 'penyesuaian_stok' ? 'active' : ''}}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Penyesuaian Stok</p>
                                 </a>
                             </li>
                             @endif

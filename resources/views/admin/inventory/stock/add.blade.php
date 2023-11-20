@@ -4,7 +4,7 @@
 
 <body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper">
-        @include('admin.sidebar', ['activePage' => 'stok_opname'])
+        @include('admin.sidebar', ['activePage' => 'penyesuaian_stok'])
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
             <!-- Content Header (Page header) -->
@@ -13,7 +13,7 @@
                     <div class="row mb-2">
                         <div class="col-sm-12">
                             <h1 class="m-0">
-                                <a href="{{URL('admin/stok_opname')}}">Stok Opname</a>
+                                <a href="{{URL('admin/penyesuaian_stok')}}">Penyesuaian Stok</a>
                                 / Add
                             </h1>
                         </div><!-- /.col -->
@@ -29,11 +29,11 @@
                 <div class="container-fluid">
                     <div class="card card-info">
                         <div class="card-header">
-                            <h3 class="card-title">Tambah Stok Opname</h3>
+                            <h3 class="card-title">Tambah Penyesuaian Stok</h3>
                         </div>
                         <!-- /.card-header -->
                         <!-- form start -->
-                        <form id="formadd" action="{{URL('admin/stok_opname/do_add')}}" method="POST">
+                        <form id="formadd" action="{{URL('admin/penyesuaian_stok/do_add')}}" method="POST">
                             @csrf
                             <div class="card-body">
                                 <div class="form-group">

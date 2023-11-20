@@ -9,7 +9,7 @@ class DTransaction extends Model
     protected $table = 'd_transaction';
     public $timestamps = false;
 
-    public static function add_detail($id_header, $id_inventory, $id_unit, $sell_price, $qty, $sub_total, $diskon)
+    public static function add_detail($id_header, $id_inventory, $id_unit, $sell_price, $qty, $sub_total, $diskon, $stok_akhir)
     {
         $unit = Unit::find($id_unit);
 
@@ -23,6 +23,7 @@ class DTransaction extends Model
         $data->diskon = $diskon;
         $data->hpp = $unit->hpp;
         $data->netto = (($sell_price - ($diskon / $qty)) - $unit->hpp) * $qty;
+        $data->stok_akhir = $stok_akhir;
         $data->save();
 
         return $data->netto;

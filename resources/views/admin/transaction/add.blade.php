@@ -43,7 +43,7 @@ use App\Helpers\CommonHelper;
                             <div class="card-body">
                                 <div class="form-group">
                                     <label>Tanggal Order</label>
-                                    <input type="date" class="form-control required" name="created_date" placeholder="Tanggal Order">
+                                    <input type="datetime-local" id="timestamp"  name="created_date" class="form-control required">
                                 </div>
                                 <div class="form-group">
                                     <label>Metode Pembayaran</label>

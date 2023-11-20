@@ -23,7 +23,7 @@ class DetailPurchaseOrder extends Model
         $data->save();
     }
 
-    public static function terima_barang($id_header, $id_inventory, $id_unit, $date_expired, $qty, $total_pengiriman, $keterangan)
+    public static function terima_barang($id_header, $id_inventory, $id_unit, $date_expired, $qty, $total_pengiriman, $keterangan, $stok_akhir)
     {
         $data = DetailPurchaseOrder::where('id_h_purchase_order', $id_header)
             ->where('id_inventory', $id_inventory)
@@ -34,6 +34,6 @@ class DetailPurchaseOrder extends Model
         $data->sisa_qty = (int)$data->sisa_qty - (int)$qty;
         $data->save();
 
-        LogTerimaBarang::add_log($id_inventory, $id_header, $id_unit, $qty, $date_expired, $total_pengiriman, $keterangan);
+        LogTerimaBarang::add_log($id_inventory, $id_header, $id_unit, $qty, $date_expired, $total_pengiriman, $keterangan, $stok_akhir);
     }
 }

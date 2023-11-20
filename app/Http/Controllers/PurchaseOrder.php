@@ -171,8 +171,8 @@ class PurchaseOrder extends Controller
             foreach ($list_produk as $lp) {
                 if ($lp->qty > 0) {
                     Unit::update_hpp($lp->qty, $lp->id_unit, $lp->price);
-                    DetailPurchaseOrder::terima_barang($data->id, $lp->id_product, $lp->id_unit, $lp->expdate, $lp->qty, $total_pengiriman, $lp->keterangan);
-                    Unit::add_stok($lp->id_unit, $lp->qty);
+                    $stok_akhir = Unit::add_stok($lp->id_unit, $lp->qty);
+                    DetailPurchaseOrder::terima_barang($data->id, $lp->id_product, $lp->id_unit, $lp->expdate, $lp->qty, $total_pengiriman, $lp->keterangan, $stok_akhir);
                 }
             }
 

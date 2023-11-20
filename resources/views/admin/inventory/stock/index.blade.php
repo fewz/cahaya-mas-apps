@@ -4,7 +4,7 @@
 
 <body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper">
-        @include('admin.sidebar', ['activePage' => 'stok_opname'])
+        @include('admin.sidebar', ['activePage' => 'penyesuaian_stok'])
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
             <!-- Content Header (Page header) -->
@@ -12,7 +12,7 @@
                 <div class="container-fluid">
                     <div class="row mb-2">
                         <div class="col-sm-12">
-                            <h1 class="m-0">Stok Opname</h1>
+                            <h1 class="m-0">Penyesuaian Stok</h1>
                         </div><!-- /.col -->
                     </div><!-- /.row -->
                 </div><!-- /.container-fluid -->
@@ -28,9 +28,9 @@
                         <div class="col-12">
                             <div class="card">
                                 <div class="card-header d-flex">
-                                    <h3 class="card-title">List Stok Opname</h3>
+                                    <h3 class="card-title">List Penyesuaian Stok</h3>
                                     <div class="ml-auto">
-                                        <a href="{{ URL('admin/stok_opname/add') }}" class="btn btn-sm btn-primary">ADD <i class="fa fa-plus"></i></a>
+                                        <a href="{{ URL('admin/penyesuaian_stok/add') }}" class="btn btn-sm btn-primary">ADD <i class="fa fa-plus"></i></a>
                                     </div>
                                 </div>
                                 <!-- /.card-header -->
@@ -83,7 +83,7 @@
         </div>
     </div>
 </body>
-<form id="formDelete" action="{{URL('admin/stok_opname/delete')}}" method="POST">
+<form id="formDelete" action="{{URL('admin/penyesuaian_stok/delete')}}" method="POST">
     @csrf
     <input type="hidden" name="id" id="id_delete">
 </form>
@@ -98,7 +98,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form id="formedit" action="{{URL('admin/stok_opname/revisi')}}" method="POST">
+            <form id="formedit" action="{{URL('admin/penyesuaian_stok/revisi')}}" method="POST">
                 @csrf
                 <div class="modal-body" style="max-height:650px; overflow:auto;">
                     <div class="form-group">

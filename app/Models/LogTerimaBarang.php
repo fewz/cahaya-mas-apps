@@ -9,7 +9,7 @@ class LogTerimaBarang extends Model
     protected $table = 'log_terima_barang';
     public $timestamps = false;
 
-    public static function add_log($id_inventory, $id_h_purchase_order, $id_unit, $qty, $exp_date, $total_pengiriman, $keterangan)
+    public static function add_log($id_inventory, $id_h_purchase_order, $id_unit, $qty, $exp_date, $total_pengiriman, $keterangan, $stok_akhir)
     {
 
         $data = new LogTerimaBarang();
@@ -20,6 +20,7 @@ class LogTerimaBarang extends Model
         $data->exp_date = $exp_date;
         $data->pengiriman_ke = $total_pengiriman + 1;
         $data->keterangan = $keterangan;
+        $data->stok_akhir = $stok_akhir;
         $data->save();
     }
 

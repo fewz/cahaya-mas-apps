@@ -126,12 +126,15 @@ Route::prefix('admin')->middleware('auth', 'roleCheck:user')->group(function () 
 
     Route::get('/master_setting', [UserController::class, 'master_setting'])->name('master_setting');
     Route::post('/master_setting/edit', [UserController::class, 'edit_setting'])->name('master_setting/edit');
-    
-    Route::get('/stok_opname', [StockController::class, 'index'])->name('stok_opname');
-    Route::get('/stok_opname/add', [StockController::class, 'add'])->name('stok_opname/add');
-    Route::post('/stok_opname/do_add', [StockController::class, 'do_add'])->name('stok_opname/do_add');
-    Route::post('/stok_opname/revisi', [StockController::class, 'revisi'])->name('stok_opname/revisi');
-    Route::post('/stok_opname/delete', [StockController::class, 'delete'])->name('stok_opname/delete');
+
+    Route::get('/penyesuaian_stok', [StockController::class, 'index'])->name('penyesuaian_stok');
+    Route::get('/penyesuaian_stok/add', [StockController::class, 'add'])->name('penyesuaian_stok/add');
+    Route::post('/penyesuaian_stok/do_add', [StockController::class, 'do_add'])->name('penyesuaian_stok/do_add');
+    Route::post('/penyesuaian_stok/revisi', [StockController::class, 'revisi'])->name('penyesuaian_stok/revisi');
+    Route::post('/penyesuaian_stok/delete', [StockController::class, 'delete'])->name('penyesuaian_stok/delete');
+
+    Route::get('/stok_opname', [StockController::class, 'stok_opname'])->name('stok_opname');
+
 
     Route::get('/laporan_barang', [LaporanController::class, 'laporan_barang'])->name('laporan_barang');
     Route::get('/laporan_penjualan', [LaporanController::class, 'laporan_penjualan'])->name('laporan_penjualan');

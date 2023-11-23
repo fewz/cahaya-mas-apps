@@ -130,7 +130,7 @@
             .then((willDelete) => {
                 if (willDelete) {
                     $('#id').val(id);
-                    $('#status').val(6);
+                    $('#status').val(2);
                     $('#formDelete').submit();
                 }
             });

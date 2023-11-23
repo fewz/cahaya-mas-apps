@@ -226,7 +226,7 @@ use App\Helpers\CommonHelper;
             $("#label_diskon_produk").html(numberWithCommas(selectedDiskon));
             $("#label_subtotal_produk").html(numberWithCommas(subTotalProduct));
             const qty = $("#qtyproduk").val();
-            $("#label_total_diskon").html(qty * selectedDiskon);
+            $("#label_total_diskon").html(numberWithCommas(qty * selectedDiskon));
         }
     }
 

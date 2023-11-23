@@ -64,8 +64,8 @@
                                                 <td>{{$dt->customer}}</td>
                                                 <td>{{$dt->transaction_type}}</td>
                                                 <td>{{$dt->payment_method}}</td>
-                                                <td>{{$dt->grand_total}}</td>
-                                                <td>{{$dt->netto}}</td>
+                                                <td>{{number_format($dt->grand_total, 0, '','.')}}</td>
+                                                <td>{{number_format($dt->netto, 0, '','.')}}</td>
                                             </tr>
                                             @endforeach
                                         </tbody>
@@ -92,8 +92,8 @@
                                                 <td>{{$dt->customer}}</td>
                                                 <td>{{$dt->transaction_type}}</td>
                                                 <td>{{$dt->payment_method}}</td>
-                                                <td>{{$dt->grand_total}}</td>
-                                                <td>{{$dt->netto}}</td>
+                                                <td>{{number_format($dt->grand_total, 0, '','.')}}</td>
+                                                <td>{{number_format($dt->netto, 0, '','.')}}</td>
                                             </tr>
                                             @endforeach
                                         </tbody>
@@ -120,8 +120,8 @@
                                                 <td>{{$dt->customer}}</td>
                                                 <td>{{$dt->transaction_type}}</td>
                                                 <td>{{$dt->payment_method}}</td>
-                                                <td>{{$dt->grand_total}}</td>
-                                                <td>{{$dt->netto}}</td>
+                                                <td>{{number_format($dt->grand_total, 0, '','.')}}</td>
+                                                <td>{{number_format($dt->netto, 0, '','.')}}</td>
                                             </tr>
                                             @endforeach
                                         </tbody>
@@ -148,8 +148,8 @@
                                                 <td>{{$dt->customer}}</td>
                                                 <td>{{$dt->transaction_type}}</td>
                                                 <td>{{$dt->payment_method}}</td>
-                                                <td>{{$dt->grand_total}}</td>
-                                                <td>{{$dt->netto}}</td>
+                                                <td>{{number_format($dt->grand_total, 0, '','.')}}</td>
+                                                <td>{{number_format($dt->netto, 0, '','.')}}</td>
                                             </tr>
                                             @endforeach
                                         </tbody>

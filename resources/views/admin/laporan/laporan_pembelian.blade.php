@@ -61,7 +61,7 @@
                                                 <td>{{$dt->order_number}}</td>
                                                 <td>{{$dt->supplier}}</td>
                                                 <td>{{$dt->payment_method}}</td>
-                                                <td>{{$dt->grand_total}}</td>
+                                                <td>{{number_format($dt->grand_total, 0, '','.')}}</td>
                                             </tr>
                                             @endforeach
                                         </tbody>
@@ -85,7 +85,7 @@
                                                 <td>{{$dt->order_number}}</td>
                                                 <td>{{$dt->supplier}}</td>
                                                 <td>{{$dt->payment_method}}</td>
-                                                <td>{{$dt->grand_total}}</td>
+                                                <td>{{number_format($dt->grand_total, 0, '','.')}}</td>
                                             </tr>
                                             @endforeach
                                         </tbody>
@@ -109,7 +109,7 @@
                                                 <td>{{$dt->order_number}}</td>
                                                 <td>{{$dt->supplier}}</td>
                                                 <td>{{$dt->payment_method}}</td>
-                                                <td>{{$dt->grand_total}}</td>
+                                                <td>{{number_format($dt->grand_total, 0, '','.')}}</td>
                                             </tr>
                                             @endforeach
                                         </tbody>
@@ -133,7 +133,7 @@
                                                 <td>{{$dt->order_number}}</td>
                                                 <td>{{$dt->supplier}}</td>
                                                 <td>{{$dt->payment_method}}</td>
-                                                <td>{{$dt->grand_total}}</td>
+                                                <td>{{number_format($dt->grand_total, 0, '','.')}}</td>
                                             </tr>
                                             @endforeach
                                         </tbody>

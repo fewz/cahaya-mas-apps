@@ -55,7 +55,7 @@
                                                 <td>{{$dt->phone}}</td>
                                                 <td>{{$dt->address}}</td>
                                                 <td>{{$dt->tier_customer}}</td>
-                                                <td>{{$dt->poin}}</td>
+                                                <td>{{number_format($dt->poin, 0, '','.')}}</td>
                                                 <td>
                                                     <a href="{{ URL('admin/master_customer/edit/'.$dt->id) }}" class="btn btn-sm btn-primary">
                                                         <i class="fa fa-edit"></i>

@@ -94,10 +94,10 @@
                                                     <td>{{$d->code_inventory}}</td>
                                                     <td>{{$d->inventory}}</td>
                                                     <td>{{$d->unit}}</td>
-                                                    <td>{{$d->sell_price}}</td>
+                                                    <td>{{number_format(($d->sell_price + ($d->diskon / $d->qty)), 0, '','.')}}</td>
                                                     <td>{{$d->qty}}</td>
-                                                    <td>{{$d->diskon}}</td>
-                                                    <td>{{$d->sub_total}}</td>
+                                                    <td>{{number_format($d->diskon, 0, '','.')}}</td>
+                                                    <td>{{number_format($d->sub_total, 0, '','.')}}</td>
                                                 </tr>
                                                 @endforeach
                                             </tbody>
@@ -114,6 +114,10 @@
                                     <div class="col-6">
                                         <div class="table-responsive">
                                             <table class="table">
+                                                <tr>
+                                                    <th>Total Sebelum Diskon:</th>
+                                                    <td>Rp. {{number_format(($header_transaction->grand_total + $header_transaction->total_diskon + $header_transaction->diskon_poin),0,'.','.')}}</td>
+                                                </tr>
                                                 <tr>
                                                     <th>Total Diskon</th>
                                                     <td>Rp. {{number_format($header_transaction->total_diskon,0,'.','.')}}</td>

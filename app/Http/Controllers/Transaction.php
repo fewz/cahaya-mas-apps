@@ -160,7 +160,7 @@ class Transaction extends Controller
     {
         $data = HTransaction::find($request->id);
         $data->status = $request->status;
-        if ($request->status === 1) {
+        if ($request->status == 1) {
             Customer::add_poin($data->id_customer, $data->grand_total);
         }
         $data->save();

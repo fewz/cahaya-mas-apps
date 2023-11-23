@@ -53,7 +53,7 @@
                                                 <td>{{$dt->product_name}}</td>
                                                 <td>{{$dt->minimal}}</td>
                                                 <td>{{$dt->unit}}</td>
-                                                <td>{{$dt->potongan}}</td>
+                                                <td>{{number_format($dt->potongan, 0, '','.')}}</td>
                                                 <td>{{$dt->start_date}}</td>
                                                 <td>{{$dt->end_date}}</td>
                                                 <td>

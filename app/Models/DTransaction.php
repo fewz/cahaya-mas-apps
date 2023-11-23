@@ -22,7 +22,7 @@ class DTransaction extends Model
         $data->sub_total = $sub_total;
         $data->diskon = $diskon;
         $data->hpp = $unit->hpp;
-        $data->netto = (($sell_price - ($diskon / $qty)) - $unit->hpp) * $qty;
+        $data->netto = ($sell_price - $unit->hpp) * $qty;
         $data->stok_akhir = $stok_akhir;
         $data->save();
 

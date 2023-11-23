@@ -314,6 +314,10 @@
             // validate form required
             return;
         }
+        if (barang_muat.length <= 0 || transaksi.length <= 0) {
+            swal('Silahkan masukan barang muatan');
+            return;
+        }
         $("#input_barang_muat").val(JSON.stringify(barang_muat));
         $("#input_transaksi").val(JSON.stringify(transaksi));
         $('#formadd').submit();

@@ -460,7 +460,11 @@
         });
     }
 
-    function initialize() {
+
+    $(document).ready(function() {
+        var currentDate = new Date();
+        document.getElementById('tgl').valueAsDate = new Date();
+        get_tagihan(currentDate);
         $("#tgl").on('change', function() {
             var selectedDate = $("#tgl").val();
             let convert = selectedDate.split('-');
@@ -470,14 +474,7 @@
 
             get_tagihan(selectedDate);
         });
-    }
-
-
-    $(document).ready(function() {
-        var currentDate = new Date();
-        document.getElementById('tgl').valueAsDate = new Date();
-        get_tagihan(currentDate);
-        initialize();
+        $("#tgl").change();
     })
 </script>
 

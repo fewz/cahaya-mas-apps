@@ -140,6 +140,12 @@ Route::prefix('admin')->middleware('auth', 'roleCheck:user')->group(function () 
     Route::get('/laporan_penjualan', [LaporanController::class, 'laporan_penjualan'])->name('laporan_penjualan');
     Route::get('/laporan_pembelian', [LaporanController::class, 'laporan_pembelian'])->name('laporan_pembelian');
 
+    Route::post('/transaction/add_retur', [Transaction::class, 'add_retur'])->name('transaction/add_retur');
+    Route::post('/transaction/update_retur', [Transaction::class, 'update_retur'])->name('transaction/update_retur');
+
+    Route::post('/purchase_order/add_retur', [PurchaseOrder::class, 'add_retur'])->name('purchase_order/add_retur');
+    Route::post('/purchase_order/update_retur', [PurchaseOrder::class, 'update_retur'])->name('purchase_order/update_retur');
+
 
     Route::get('/test', [UserController::class, 'tests'])->name('test');
 });

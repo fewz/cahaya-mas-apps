@@ -9,6 +9,7 @@ use App\Models\DetailPurchaseOrder;
 use App\Models\HeaderPurchaseOrder;
 use App\Models\Inventory;
 use App\Models\LogTerimaBarang;
+use App\Models\ReturPurchaseOrder;
 use App\Models\Supplier;
 use App\Models\Unit;
 use Illuminate\Http\Request;
@@ -202,11 +203,18 @@ class PurchaseOrder extends Controller
             ->orderBy("pengiriman_ke")
             ->get();
         $list_supplier = Supplier::get();
+        $data_retur = ReturPurchaseOrder::where('retur_po.id_h_purchase_order', $data_purchase_order->id)
+            ->join('d_purchase_order', "retur_po.id_d_purchase_order", 'd_purchase_order.id')
+            ->join("inventory", "inventory.id", "=", "d_purchase_order.id_inventory")
+            ->join("unit", "unit.id", "=", "d_purchase_order.id_unit")
+            ->select("retur_po.*", "inventory.name as product_name", "unit.name as unit_name", "inventory.code as product_code")
+            ->get();
         $data = [
             'user' => $user,
             'data_purchase_order' => $data_purchase_order,
             'list_supplier' => $list_supplier,
             'data_product' => $data_product,
+            'data_retur' => $data_retur,
             'data_log' => $data_log
         ];
         return view("admin.purchase_order.view", $data);
@@ -214,13 +222,41 @@ class PurchaseOrder extends Controller
 
     public function upload_bukti_transfer(Request $request)
     {
-        $file = $request->file('file');
+        try {
+            $file = $request->file('file');
+            if (!isset($file)) {
+                CommonHelper::showAlert("Failed", "Upload bukti kosong", "error", "back");
+                return;
+            }
 
-        $file->move('bukti_transfer_purchase_order', $request->id);
-        $data = HeaderPurchaseOrder::where("id", $request->id)->first();
-        $data->lunas = 1;
-        $data->tanggal_bayar = $request->tanggal_bayar;
+            $file->move('bukti_transfer_purchase_order', $request->id);
+            $data = HeaderPurchaseOrder::where("id", $request->id)->first();
+            $data->lunas = 1;
+            $data->tanggal_bayar = $request->tanggal_bayar;
+            $data->save();
+            CommonHelper::showAlert("Success", "Upload Bukti Transfer Berhasil", "success", "/admin/purchase_order");
+        } catch (\Illuminate\Database\QueryException $ex) {
+            // catch error
+            DB::rollBack();
+            CommonHelper::showAlert("Failed", $ex->getMessage(), "error", "back");
+        }
+    }
+
+    public function add_retur(Request $request)
+    {
+        $data = new ReturPurchaseOrder();
+        $data->id_d_purchase_order = $request->id_d_purchase_order;
+        $data->qty = $request->qty;
+        $data->id_h_purchase_order = $request->id_h;
         $data->save();
-        CommonHelper::showAlert("Success", "Upload Bukti Transfer Berhasil", "success", "/admin/purchase_order");
+        CommonHelper::showAlert("Success", "Insert data success", "success", "/admin/purchase_order/view/" . $request->id_h);
+    }
+
+    public function update_retur(Request $request)
+    {
+        $data = ReturPurchaseOrder::find($request->id);
+        $data->status = $request->status;
+        $data->save();
+        CommonHelper::showAlert("Success", "Update data success", "success", "/admin/purchase_order/view/" . $request->id_h);
     }
 }

@@ -42,11 +42,15 @@
                                 </div>
                                 <div class="form-group">
                                     <label>Tanggal Order</label>
-                                    <input type="date" class="form-control" name="created_date" placeholder="Tanggal Order" value="{{$data_order->created_date}}" disabled>
+                                    <input type="text" class="form-control" name="created_date" placeholder="Tanggal Order" value="{{$data_order->created_date}}" disabled>
                                 </div>
                                 <div class="form-group">
                                     <label>Payment Method</label>
                                     <input type="text" class="form-control" name="created_date" placeholder="Tanggal Order" value="{{$data_order->payment_method}}" disabled>
+                                </div>
+                                <div class="form-group">
+                                    <label>Tipe Transaksi</label>
+                                    <input type="text" class="form-control" name="created_date" placeholder="Tanggal Order" value="{{$data_order->transaction_type}}" disabled>
                                 </div>
                                 <input type="hidden" id="list_produk" name="list_produk">
                                 <input type="hidden" id="grand_total" name="grand_total">
@@ -129,238 +133,156 @@
 
                         <!-- /.card-body -->
                     </div>
+
+                    <div id="container3" class="card card-info">
+                        <div class="card-header">
+                            <h3 class="card-title">Detail Retur</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group mt-3">
+                                <label>Retur Barang</label>
+                                <table class="table table-bordered table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Kode</th>
+                                            <th>Nama</th>
+                                            <th>Unit</th>
+                                            <th>Qty</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tableBody">
+                                        <?php $status = ["Pending", "Selesai", "Ditolak"]; ?>
+                                        @foreach ($data_retur as $data )
+                                        <tr>
+                                            <td>{{$data->product_code}}</td>
+                                            <td>{{$data->product_name}}</td>
+                                            <td>{{$data->unit_name}}</td>
+                                            <td>{{$data->qty}}</td>
+                                            <td>{{$status[$data->status]}}</td>
+                                            <td>
+                                                @if($data->status == 0)
+                                                <button class="btn btn-sm btn-primary" onclick="clickOK('{{$data->id}}')"><i class="fa fa-check"></i></button>
+                                                <button class="btn btn-sm btn-danger" onclick="clickNO('{{$data->id}}')"><i class="fa fa-close"></i></button>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                                <div class="btn btn-primary" onclick="openModal()">Tambah Retur</div>
+                            </div>
+                        </div>
+
+                        <!-- /.card-body -->
+                    </div>
                 </div>
             </section>
         </div>
     </div>
 </body>
-
+<div id="modal1" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Tambah Retur</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="form" action="{{URL('admin/transaction/add_retur')}}" method="POST">
+                @csrf
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Barang</label>
+                        <select class="form-control select2bs4" name="id_d_transaction" style="width: 100%;" onchange="d_transaction_change(this)">
+                            @foreach ($data_product as $dt )
+                            <option value="{{$dt->id}}">{{$dt->product_name}} - {{$dt->unit_name}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Qty</label>
+                        <input type="number" class="form-control required" id="qty" name="qty" onkeyup="qtyChange()">
+                    </div>
+                    <input type="hidden" class="form-control required" value="{{$data_order->id}}" name="id_h">
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <input type="submit" class="btn btn-primary" value="Tambah Retur" />
+                </div>
+            </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<form id="form2" action="{{URL('admin/transaction/update_retur')}}" method="POST">
+    @csrf
+    <input type="hidden" name="id" id="idr">
+    <input type="hidden" name="status" id="statusr">
+    <input type="hidden" class="form-control required" value="{{$data_order->id}}" name="id_h">
+</form>
 @include('script_footer')
 <script>
-    let listProduk = [];
+    data = <?php echo $data_product; ?>;
 
-    let customer = $("#customer").val();
-    let selectedCustomer = listCustomer.filter((val) => val.id == customer)[0];
-
-    let selectedProductPrice = 0;
-    let selectedProductStock = 0;
-    let subTotalProduct = 0;
-
-    function initialize() {
-        getProductSupplier();
-        customerChange();
+    function openModal() {
+        $("#modal1").modal();
     }
 
-    function getPriceAndStock() {
-        const id_unit = JSON.parse($("#unitproduk").val()).id;
-        const produkBaru = $("#listproduk").val();
-        const object = JSON.parse(produkBaru);
-        $.get(`/api/get_price_and_stock?id_unit=${id_unit}&id_inventory=${object.id_product}&tier=${selectedCustomer.tier_customer}`, function(data) {
-            console.log('dat', data);
-
-            const payload = data.payload;
-            $("#label_stok_produk").html(payload.stock);
-            $("#label_harga_produk").html(payload.pricing.sell_price);
-            selectedProductPrice = payload.pricing.sell_price;
-            selectedProductStock = payload.stock;
-            countSubTotal();
-        }).fail(function(error) {
-            console.error('Error fetching API data', error);
-        });
+    function d_transaction_change(comp) {
+        const max = data.filter((v) => v.id == $(comp).val())[0];
+        $("#qty").attr('max', max.qty);
+        qtyChange();
     }
 
-    function countSubTotal() {
+    function qtyChange() {
 
-        if ($("#qtyproduk").val() > selectedProductStock) {
-            $("#qtyproduk").val(selectedProductStock);
-        }
-        const qty = $("#qtyproduk").val();
-        $("#label_subtotal_produk").html(qty * selectedProductPrice);
-        subTotalProduct = qty * selectedProductPrice;
-    }
-
-    function customerChange() {
-        customer = $("#customer").val();
-        selectedCustomer = listCustomer.filter((val) => val.id == customer)[0];
-
-        $("#label_kode_customer").html(selectedCustomer.code);
-        $("#label_phone_customer").html(selectedCustomer.phone);
-        $("#label_alamat_customer").html(selectedCustomer.address);
-        $("#label_tier_customer").html(selectedCustomer.tier_customer);
-        $("#label_poin_customer").html(selectedCustomer.poin);
-
-        if (parseInt(selectedCustomer.poin) <= 0) {
-            $("#bisa_cashback").addClass('d-none');
+        const val = $("#qty").val();
+        const max = $("#qty").attr('max');
+        if (parseInt(val) > parseInt(max)) {
+            $("#qty").val(max);
         }
     }
 
-    function getProductSupplier() {
-        $("#listproduk option").remove();
-        availableProduct.forEach((val) => {
-            optionText = val.name;
-            optionValue = {
-                id_product: val.id,
-                product_name: val.name,
-                product_code: val.code
-            };
-
-            $('#listproduk').append(new Option(optionText, JSON.stringify(optionValue)));
-        });
-        getUnit();
-    }
-
-    function getUnit() {
-        $("#unitproduk option").remove();
-        const produkBaru = $("#listproduk").val();
-        const object = JSON.parse(produkBaru);
-        console.log('object', object);
-
-        $.get(`/api/available_unit?id=${object.id_product}`, function(data) {
-            console.log('dat', data);
-
-            const unit = data.payload;
-            unit.forEach((val) => {
-                optionText = val.name;
-                optionValue = {
-                    id: val.id,
-                    name: val.name
-                };
-
-                $('#unitproduk').append(new Option(optionText, JSON.stringify(optionValue)));
+    function clickNO(id) {
+        swal({
+                title: "Apakah anda yakin ingin membatalkan refund?",
+                text: "refund akan ditolak",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+                    $('#idr').val(id);
+                    $('#statusr').val(2);
+                    $('#form2').submit();
+                }
             });
-            getPriceAndStock();
-        }).fail(function(error) {
-            console.error('Error fetching API data', error);
-        });
     }
 
-    function submit() {
-        // submit form
-        saveInputValues();
-        if (!validateForm()) {
-            // validate form required
-            return;
-        }
-        const jsonObject = getJSONProduk();
-        console.log('js', jsonObject);
-
-        $("#id_customer").val($("#customer").val());
-        $("#grand_total").val(grand_total);
-        $("#list_produk").val(JSON.stringify(jsonObject));
-
-        $('#formadd').submit();
+    function clickOK(id) {
+        swal({
+                title: "Apakah anda yakin ingin menyelesaikan refund ini?",
+                text: "pastikan barang sudah dikembalikan ke customer",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+                    $('#idr').val(id);
+                    $('#statusr').val(1);
+                    $('#form2').submit();
+                }
+            });
     }
 
-    let grand_total = 0;
-
-    function getJSONProduk() {
-        grand_total = 0;
-        const result = [];
-        listProduk.forEach((val, i) => {
-            const obj = JSON.parse(val);
-
-            const unit = JSON.parse(obj.unit);
-            const key = obj.product_code + '-' + unit.name;
-
-            const qty = getInputValue(key, 'qty');
-
-            const res = {
-                id_product: obj.id_product,
-                id_unit: unit.id,
-                qty: parseInt(obj.qty),
-                subtotal: obj.subtotal,
-                price: obj.subtotal / parseInt(obj.qty)
-            }
-            grand_total += obj.subtotal;
-            result.push(res);
-        });
-
-        return result;
-
-    }
-
-    function tambahProduk() {
-        const produkBaru = $("#listproduk").val();
-        const unit = $("#unitproduk").val();
-        const object = JSON.parse(produkBaru);
-        const objectUnit = JSON.parse(unit);
-
-        let duplicate = false;
-        listProduk.forEach((val) => {
-            console.log('tes', val);
-
-            const obj = JSON.parse(val);
-            const un = JSON.parse(obj.unit);
-            if (obj.product_name === object.product_name && un.id === objectUnit.id) {
-                duplicate = true;
-            }
-        });
-
-        if (duplicate) {
-            swal("Produk sudah ditambahkan", "", "warning");
-            return;
-        };
-
-
-        object.unit = unit;
-        object.qty = $("#qtyproduk").val();
-        object.harga = selectedProductPrice;
-        object.subtotal = subTotalProduct;
-
-        listProduk.push(JSON.stringify(object));
-        updateTable();
-    }
-
-    const inputValues = {};
-
-    // Save input values into the inputValues object
-    function saveInputValues() {
-        $('input[type="number"]').each(function() {
-            const key = $(this).attr('name');
-            const value = $(this).val();
-            inputValues[key] = value;
-        });
-    }
-
-    // Get saved input value for a specific unit and field
-    function getInputValue(unitId, field) {
-        const key = `${field}[${unitId}]`;
-        return inputValues[key] || '';
-    }
-
-    function updateTable() {
-        // Store the current input values before updating
-        saveInputValues();
-
-        // Clear the table body
-        $('#tableBody').empty();
-        // Populate the table with selected items and their stored values
-        listProduk.forEach((item, i) => {
-            const object = JSON.parse(item);
-            const unit = JSON.parse(object.unit);
-            console.log('tee', object);
-            const key = object.product_code + '-' + unit.name;
-            const row = `<tr>
-                            <td>${object.product_code}</td>
-                            <td>${object.product_name}</td>
-                            <td>${unit.name}</td>
-                            <td>${object.qty}</td>
-                            <td>${object.harga}</td>
-                            <td>${object.subtotal}</td>
-                            <td><button class="btn btn-sm btn-danger" onclick="clickDelete(${i})"><i class="fa fa-trash"></i></button></td>
-                        </tr>`;
-            $('#tableBody').append(row);
-        });
-    }
-
-    function clickDelete(index) {
-        listProduk.splice(index, 1);
-        updateTable();
-    }
     $(function() {
-        console.log('avai', availableProduct);
-        initialize();
-
+        $("#qty").attr('max', data[0].qty);
     });
 </script>
 

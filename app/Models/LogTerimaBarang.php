@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class LogTerimaBarang extends Model
@@ -27,5 +28,25 @@ class LogTerimaBarang extends Model
     public static function get_total_pengiriman($id_h_purchase_order)
     {
         return LogTerimaBarang::where('id_h_purchase_order', $id_h_purchase_order)->distinct('pengiriman_ke')->count();
+    }
+
+    public static function get_stok_fifo($id_inventory, $id_unit)
+    {
+        $now = Carbon::now();
+        $data = LogTerimaBarang::whereDate('exp_date', '>=', $now)
+            ->where('id_inventory', $id_inventory)
+            ->where('id_unit', $id_unit)
+            ->orderBy('exp_date')
+            ->first();
+        return $data;
+    }
+
+    public static function get_barang_kadaluarsa()
+    {
+        $now = Carbon::now();
+        $data = LogTerimaBarang::whereDate('exp_date', '<', $now)
+            ->orderBy('exp_date')
+            ->first();
+        return $data;
     }
 }

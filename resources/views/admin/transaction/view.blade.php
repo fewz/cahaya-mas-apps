@@ -134,6 +134,7 @@
                         <!-- /.card-body -->
                     </div>
 
+                    @if($data_order->status === 1)
                     <div id="container3" class="card card-info">
                         <div class="card-header">
                             <h3 class="card-title">Detail Retur</h3>
@@ -177,6 +178,7 @@
 
                         <!-- /.card-body -->
                     </div>
+                    @endif
                 </div>
             </section>
         </div>

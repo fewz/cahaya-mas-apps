@@ -249,6 +249,9 @@ class PurchaseOrder extends Controller
         $data->qty = $request->qty;
         $data->id_h_purchase_order = $request->id_h;
         $data->save();
+
+        $d_trans = DetailPurchaseOrder::where('id', $request->id_d_purchase_order)->first();
+        Unit::minus_stok($d_trans->id_unit, $request->qty);
         CommonHelper::showAlert("Success", "Insert data success", "success", "/admin/purchase_order/view/" . $request->id_h);
     }
 
@@ -257,6 +260,11 @@ class PurchaseOrder extends Controller
         $data = ReturPurchaseOrder::find($request->id);
         $data->status = $request->status;
         $data->save();
+
+        if ($request->status === 1) {
+            $d_trans = DetailPurchaseOrder::where('id', $data->id_d_purchase_order)->first();
+            Unit::add_stok($d_trans->id_unit, $request->qty);
+        }
         CommonHelper::showAlert("Success", "Update data success", "success", "/admin/purchase_order/view/" . $request->id_h);
     }
 }

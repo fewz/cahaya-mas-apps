@@ -189,20 +189,26 @@ class Transaction extends Controller
 
     public function add_retur(Request $request)
     {
+        $d_trans = DTransaction::where('id', $request->id_d_transaction)->first();
         $data = new ReturTransaction();
         $data->id_d_transaction = $request->id_d_transaction;
         $data->qty = $request->qty;
         $data->id_h_transaction = $request->id_h;
         $data->save();
+        Unit::add_stok($d_trans->id_unit, $request->qty);
+
         CommonHelper::showAlert("Success", "Insert data success", "success", "/admin/transaction/view/" . $request->id_h);
     }
 
     public function update_retur(Request $request)
     {
         $data = ReturTransaction::find($request->id);
+        $d_trans = DTransaction::where('id', $data->id_d_transaction)->first();
+        if ($request->status === 1) {
+            Unit::minus_stok($d_trans->id_unit, $request->qty);
+        }
         $data->status = $request->status;
         $data->save();
         CommonHelper::showAlert("Success", "Update data success", "success", "/admin/transaction/view/" . $request->id_h);
-
     }
 }

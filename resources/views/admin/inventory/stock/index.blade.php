@@ -12,7 +12,7 @@
                 <div class="container-fluid">
                     <div class="row mb-2">
                         <div class="col-sm-12">
-                            <h1 class="m-0">Penyesuaian Stok</h1>
+                            <h1 class="m-0">Stok Opname</h1>
                         </div><!-- /.col -->
                     </div><!-- /.row -->
                 </div><!-- /.container-fluid -->
@@ -28,7 +28,7 @@
                         <div class="col-12">
                             <div class="card">
                                 <div class="card-header d-flex">
-                                    <h3 class="card-title">List Penyesuaian Stok</h3>
+                                    <h3 class="card-title">List Stok Opname</h3>
                                     <div class="ml-auto">
                                         <a href="{{ URL('admin/penyesuaian_stok/add') }}" class="btn btn-sm btn-primary">ADD <i class="fa fa-plus"></i></a>
                                     </div>

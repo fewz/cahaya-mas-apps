@@ -108,13 +108,15 @@
                                     </thead>
                                     <tbody id="tableBody">
                                         @foreach ($data_product as $data )
+                                        <?php $disc = $data->diskon / $data->qty;
+                                        $price = $data->sell_price + $disc; ?>
                                         <tr>
                                             <td>{{$data->product_code}}</td>
                                             <td>{{$data->product_name}}</td>
                                             <td>{{$data->unit_name}}</td>
                                             <td>{{$data->qty}}</td>
-                                            <td>{{number_format($data->sell_price,0,"",".")}}</td>
-                                            <td>{{number_format($data->diskon,0,"",".")}}</td>
+                                            <td>{{number_format($price,0,"",".")}}</td>
+                                            <td>{{number_format($disc,0,"",".")}}</td>
                                             <td>{{number_format($data->sub_total,0,"",".")}}</td>
                                         </tr>
                                         @endforeach

@@ -29,9 +29,10 @@ class DashboardController extends Controller
         $startDate = Carbon::now()->subDays(6); // Start date is 6 days ago
         $futureDate = Carbon::now()->addDays(7); // Start date is 6 days ago
         $graph_sales = HTransaction::whereBetween('created_date', [$startDate, $endDate])
-            ->selectRaw('DATE(created_date) as date, DAYNAME(created_date) as day_name, SUM(grand_total) as total_sales')
+            ->selectRaw('created_date as date, DAYNAME(created_date) as day_name, SUM(grand_total) as total_sales')
             ->groupBy('date', 'day_name')
             ->get();
+
 
         $total_transaksi = HTransaction::whereBetween('created_date', [$startDate, $endDate])
             ->selectRaw('DATE(created_date) as date, DAYNAME(created_date) as day_name, COUNT(*) as total_transaksi')

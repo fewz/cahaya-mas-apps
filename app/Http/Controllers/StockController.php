@@ -145,7 +145,7 @@ class StockController extends Controller
         // delete stock from database
         try {
             StokOpname::where("id", $request->id)->delete();
-            CommonHelper::showAlert("Success", "Delete data success", "success", "/admin/stok_opname");
+            CommonHelper::showAlert("Success", "Delete data success", "success", "/admin/penyesuaian_stok");
         } catch (\Illuminate\Database\QueryException $ex) {
             CommonHelper::showAlert("Failed", $ex->getMessage(), "error", "back");
         }

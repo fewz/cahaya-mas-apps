@@ -13,7 +13,7 @@
                     <div class="row mb-2">
                         <div class="col-sm-12">
                             <h1 class="m-0">
-                                <a href="{{URL('admin/penyesuaian_stok')}}">Penyesuaian Stok</a>
+                                <a href="{{URL('admin/penyesuaian_stok')}}">Stok Opname</a>
                                 / Add
                             </h1>
                         </div><!-- /.col -->
@@ -29,7 +29,7 @@
                 <div class="container-fluid">
                     <div class="card card-info">
                         <div class="card-header">
-                            <h3 class="card-title">Tambah Penyesuaian Stok</h3>
+                            <h3 class="card-title">Tambah Stok Opname</h3>
                         </div>
                         <!-- /.card-header -->
                         <!-- form start -->

@@ -468,13 +468,15 @@ use App\Helpers\CommonHelper;
             const unit = JSON.parse(object.unit);
             console.log('tee', object);
             const key = object.product_code + '-' + unit.name;
+            const disc = object.diskon / object.qty;
+            const price = object.harga + disc;
             const row = `<tr>
                             <td>${object.product_code}</td>
                             <td>${object.product_name}</td>
                             <td>${unit.name}</td>
                             <td>${object.qty}</td>
-                            <td>${numberWithCommas(object.harga)}</td>
-                            <td>${numberWithCommas(object.diskon)}</td>
+                            <td>${numberWithCommas(price)}</td>
+                            <td>${numberWithCommas(disc)}</td>
                             <td>${numberWithCommas(object.subtotal)}</td>
                             <td>
                                 <button class="btn btn-sm btn-primary" onclick="minus(${i})"><i class="fa fa-minus"></i></button>

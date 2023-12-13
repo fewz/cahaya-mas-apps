@@ -193,7 +193,7 @@ class InventoryController extends Controller
         // delete customer from database
         try {
             // delete inventory_unit first
-            InventoryUnit::where("id_inventory", $request->id)->delete();
+            Unit::where("id_inventory", $request->id)->delete();
             Inventory::where("id", $request->id)->delete();
             CommonHelper::showAlert("Success", "Delete data success", "success", "/admin/master_inventory");
         } catch (\Illuminate\Database\QueryException $ex) {

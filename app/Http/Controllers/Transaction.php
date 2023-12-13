@@ -149,7 +149,7 @@ class Transaction extends Controller
         $header_transaction = HTransaction::where('h_transaction.id', $id)
             ->join('customer', 'customer.id', 'h_transaction.id_customer')
             ->join('users', 'users.id', 'h_transaction.id_cashier')
-            ->select('h_transaction.*', 'customer.full_name as customer_name', 'customer.address as alamat', 'customer.phone as telp', 'users.username as cashier')
+            ->select('h_transaction.*', 'customer.full_name as customer_name', 'customer.poin as poin', 'customer.address as alamat', 'customer.phone as telp', 'users.username as cashier')
             ->first();
         // print_r($header_transaction);
         $detail_transaction = DTransaction::where('d_transaction.id_h_transaction', $id)

@@ -127,18 +127,18 @@
                             </li>
                             @endif
                             @if(Session::get('STOK_OPNAME'))
-                            <li class="nav-item">
+                            <!-- <li class="nav-item">
                                 <a href="{{ URL('admin/stok_opname') }}" class="nav-link {{$activePage === 'stok_opname' ? 'active' : ''}}">
                                     <i class="far fa-circle nav-icon"></i>
                                     <p>Stok Opname</p>
                                 </a>
-                            </li>
+                            </li> -->
                             @endif
                             @if(Session::get('PENYESUAIAN_STOK'))
                             <li class="nav-item">
                                 <a href="{{ URL('admin/penyesuaian_stok') }}" class="nav-link {{$activePage === 'penyesuaian_stok' ? 'active' : ''}}">
                                     <i class="far fa-circle nav-icon"></i>
-                                    <p>Penyesuaian Stok</p>
+                                    <p>Stok Opname</p>
                                 </a>
                             </li>
                             @endif

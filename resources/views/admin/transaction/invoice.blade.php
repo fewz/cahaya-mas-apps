@@ -130,6 +130,10 @@
                                                     <th style="width:50%">Grand Total:</th>
                                                     <td>Rp. {{number_format($header_transaction->grand_total,0,'.','.')}}</td>
                                                 </tr>
+                                                <tr>
+                                                    <th style="width:50%">Sisa Poin:</th>
+                                                    <td>{{number_format($header_transaction->poin,0,'.','.')}}</td>
+                                                </tr>
                                             </table>
                                         </div>
                                     </div>

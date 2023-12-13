@@ -14,6 +14,7 @@ class Unit extends Model
         $data->id_inventory = $id_inventory;
         $data->name = $name;
         $data->qty_reference = $qty_reference;
+        $data->hpp = 0;
         $data->save();
 
         return $data->id;

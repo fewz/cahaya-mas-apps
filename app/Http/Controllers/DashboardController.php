@@ -60,6 +60,15 @@ class DashboardController extends Controller
             ->select('log_terima_barang.*', 'inventory.name as inventory', 'unit.name as unit', 'inventory.code as code')
             ->get();
 
+        $laris = DTransaction::selectRaw('d_transaction.id_unit, SUM(d_transaction.qty) as total_qty,
+        inventory.name as inventory, inventory.code as code, unit.name as unit')
+            ->join('inventory', 'inventory.id', '=', 'd_transaction.id_inventory')
+            ->join('unit', 'unit.id', '=', 'd_transaction.id_unit')
+            ->groupBy('d_transaction.id_unit', 'inventory.name', 'inventory.code', 'unit.name')
+            ->orderByDesc('total_qty')
+            ->limit(5)
+            ->get();
+
         $data_kadaluarsa = [];
         foreach ($kadaluarsa as $dt) {
             $total_terjual = DTransaction::get_total_terjual($dt->id_unit);
@@ -79,7 +88,8 @@ class DashboardController extends Controller
             'notif_piutang' => $notif_piutang,
             'notif_hutang' => $notif_hutang,
             'total_transaksi' => $total_transaksi,
-            'kadaluarsa' => $data_kadaluarsa
+            'kadaluarsa' => $data_kadaluarsa,
+            'laris' => $laris
         ];
         return view("admin.dashboard", $data);
     }

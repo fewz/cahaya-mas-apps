@@ -212,6 +212,35 @@
                         </section>
                         <!-- right col -->
                     </div>
+                    <div class="card">
+                        <div class="card-header border-0">
+                            <div class="d-flex justify-content-between">
+                                <h3 class="card-title">Produk paling laris</h3>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <table id="exampl" class="table table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Kode</th>
+                                        <th>Nama</th>
+                                        <th>Satuan</th>
+                                        <th>Qty</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tableBody">
+                                    @foreach ($laris as $dt )
+                                    <tr>
+                                        <td>{{$dt->code}}</td>
+                                        <td>{{$dt->inventory}}</td>
+                                        <td>{{$dt->unit}}</td>
+                                        <td>{{$dt->total_qty}}</td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                     <div class="card bg-white">
                         <div class="card-header border-0">
                             <h3 class="card-title">

@@ -35,7 +35,7 @@
                         <!-- form start -->
                         <form id="formadd" action="{{URL('admin/transaction/do_add')}}" method="POST">
                             @csrf
-                            <?php $status = ["Draft", "Selesai", "Belum Lunas", "Belum Dikirim", "Siap Dikirim", "Sedang Dikirim", "Terkirim"]; ?>
+                            <?php $status = ["Draft", "Selesai", "Belum Lunas", "Belum Dikirim", "Siap Dikirim", "Sedang Dikirim", "Terkirim", "Menunggu Konfirmasi Pelunasan"]; ?>
                             <div class="card-body">
                                 <div class="form-group">
                                     <label>Order Number</label>
@@ -57,6 +57,12 @@
                                     <label>Transaction Type</label>
                                     <input type="text" class="form-control" name="created_date" placeholder="Tanggal Order" value="{{$data_order->transaction_type}}" disabled>
                                 </div>
+                                @if($data_order->payment_method === 'CREDIT')
+                                <div class="form-group">
+                                    <label>Due Date</label>
+                                    <input type="text" class="form-control" name="created_date" placeholder="Tanggal Order" value="{{$data_order->due_date}}" disabled>
+                                </div>
+                                @endif
                             </div>
                         </form>
                     </div>

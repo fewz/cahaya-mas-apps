@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Customer;
+use App\Models\DTransaction;
 use App\Models\HeaderPurchaseOrder;
 use App\Models\HTransaction;
 use App\Models\LogTerimaBarang;
@@ -39,12 +40,15 @@ class DashboardController extends Controller
             ->groupBy('date', 'day_name')
             ->get();
 
-        $notif_piutang = HTransaction::whereBetween('due_date', [$endDate, $futureDate])
-            ->join('customer', 'customer.id', 'h_transaction.id_customer')
+        $notif_piutang = HTransaction::where('payment_method', 'CREDIT')
+            ->whereBetween(DB::raw('UNIX_TIMESTAMP(due_date)'), [$endDate->timestamp, $futureDate->timestamp])
             ->where('h_transaction.status', '<>', '1')
+            ->join('customer', 'customer.id', 'h_transaction.id_customer')
             ->select('h_transaction.*', 'customer.full_name as name', 'customer.phone as phone', 'customer.address as address')
             ->get();
-        $notif_hutang = HeaderPurchaseOrder::whereBetween('due_date', [$endDate, $futureDate])
+
+        $notif_hutang = HeaderPurchaseOrder::where('payment_method', 'CREDIT')
+            ->whereBetween(DB::raw('UNIX_TIMESTAMP(due_date)'), [$endDate->timestamp, $futureDate->timestamp])
             ->join('supplier', 'supplier.id', 'h_purchase_order.id_supplier')
             ->where('h_purchase_order.lunas', '<>', '1')
             ->select('h_purchase_order.*', 'supplier.name as name', 'supplier.phone as phone', 'supplier.address as address')
@@ -55,6 +59,16 @@ class DashboardController extends Controller
             ->join('unit', 'unit.id', 'log_terima_barang.id_unit')
             ->select('log_terima_barang.*', 'inventory.name as inventory', 'unit.name as unit', 'inventory.code as code')
             ->get();
+
+        $data_kadaluarsa = [];
+        foreach ($kadaluarsa as $dt) {
+            $total_terjual = DTransaction::get_total_terjual($dt->id_unit);
+            $qty = $dt->qty - $total_terjual;
+            if ($qty > 0) {
+                $dt->qty = $qty;
+                array_push($data_kadaluarsa, $dt);
+            }
+        }
         $data = [
             'user' => $user,
             'transaksi_bulan_ini' => $transaksi_bulan_ini,
@@ -65,7 +79,7 @@ class DashboardController extends Controller
             'notif_piutang' => $notif_piutang,
             'notif_hutang' => $notif_hutang,
             'total_transaksi' => $total_transaksi,
-            'kadaluarsa' => $kadaluarsa
+            'kadaluarsa' => $data_kadaluarsa
         ];
         return view("admin.dashboard", $data);
     }

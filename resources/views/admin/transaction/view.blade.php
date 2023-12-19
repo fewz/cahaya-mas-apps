@@ -52,6 +52,12 @@
                                     <label>Tipe Transaksi</label>
                                     <input type="text" class="form-control" name="created_date" placeholder="Tanggal Order" value="{{$data_order->transaction_type}}" disabled>
                                 </div>
+                                @if($data_order->payment_method === 'CREDIT')
+                                <div class="form-group">
+                                    <label>Due Date</label>
+                                    <input type="text" class="form-control" name="created_date" placeholder="Tanggal Order" value="{{$data_order->due_date}}" disabled>
+                                </div>
+                                @endif
                                 <input type="hidden" id="list_produk" name="list_produk">
                                 <input type="hidden" id="grand_total" name="grand_total">
                                 <input type="hidden" id="id_customer" name="id_customer">

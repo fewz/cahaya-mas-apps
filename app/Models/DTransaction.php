@@ -28,4 +28,12 @@ class DTransaction extends Model
 
         return $data->netto;
     }
+
+    public static function get_total_terjual($id_unit)
+    {
+        $sum = DTransaction::where('id_unit', $id_unit)
+            ->sum('qty');
+
+        return $sum;
+    }
 }

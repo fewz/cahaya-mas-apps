@@ -133,7 +133,7 @@
                                     </div>
                                 </div>
                                 <div class="card-body">
-                                    <table id="example1" class="table table-bordered table-striped">
+                                    <table id="ex" class="table table-bordered table-striped">
                                         <thead>
                                             <tr>
                                                 <th>Kode</th>
@@ -224,7 +224,8 @@
                             <table id="example2" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
-                                        <th>Tanggal</th>
+                                        <th>Tanggal Order</th>
+                                        <th>Due Date</th>
                                         <th>Order Number</th>
                                         <th>Customer</th>
                                         <th>Phone</th>
@@ -236,6 +237,7 @@
                                     @foreach ($notif_piutang as $dt )
                                     <tr>
                                         <td>{{$dt->created_date}}</td>
+                                        <td>{{$dt->due_date}}</td>
                                         <td>{{$dt->order_number}}</td>
                                         <td>{{$dt->name}}</td>
                                         <td>{{$dt->phone}}</td>
@@ -249,7 +251,8 @@
                             <table id="example3" class="table table-bordered table-striped">
                                 <thead>
                                     <tr>
-                                        <th>Tanggal</th>
+                                        <th>Tanggal Order</th>
+                                        <th>Due Date</th>
                                         <th>Order Number</th>
                                         <th>Supplier</th>
                                         <th>Phone</th>
@@ -261,6 +264,7 @@
                                     @foreach ($notif_hutang as $dt )
                                     <tr>
                                         <td>{{$dt->created_date}}</td>
+                                        <td>{{$dt->due_date}}</td>
                                         <td>{{$dt->order_number}}</td>
                                         <td>{{$dt->name}}</td>
                                         <td>{{$dt->phone}}</td>
@@ -284,6 +288,7 @@
     <!-- ./wrapper -->
 
 </body>
+@include('script_footer')
 <script>
     // Sales graph chart
     var salesGraphChartCanvas = $('#line-chart').get(0).getContext('2d')

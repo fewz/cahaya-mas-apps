@@ -180,6 +180,7 @@ class Transaction extends Controller
     {
         // echo $selectedDate;
         $data = HTransaction::where('h_transaction.due_date', $selectedDate)
+            ->where('h_transaction.status', '<>', 1)
             ->join('customer', 'customer.id', 'h_transaction.id_customer')
             ->select('customer.full_name', 'customer.phone', 'customer.address', 'h_transaction.*')
             ->get();

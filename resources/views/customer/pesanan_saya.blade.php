@@ -45,7 +45,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <?php $status = ["Draft", "Selesai", "Belum Lunas", "Belum Dikirim", "Siap Dikirim", "Sedang Dikirim", "Terkirim", "Sudah Upload Bukti"]; ?>
+                                            <?php $status = ["Draft", "Selesai", "Belum Lunas", "Belum Dikirim", "Siap Dikirim", "Sedang Dikirim", "Terkirim", "Menunggu Konfirmasi Pelunasan"]; ?>
                                             @foreach ($transaksi as $dt )
                                             <tr>
                                                 <td>{{$dt->order_number}}</td>

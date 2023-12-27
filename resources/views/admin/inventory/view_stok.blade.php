@@ -77,6 +77,9 @@
                                             <button type="button" class="btn btn-primary" onclick="openModalEdit('{{$unit->id}}', '{{$unit->name}}', '{{$unit->stok}}')">
                                                 <i class="fa fa-edit"></i>
                                             </button>
+                                            <button type="button" class="btn btn-primary" onclick="openmodal2('{{$unit->id_inventory}}', '{{$unit->name}}', '{{$unit->stok}}', '{{$unit->id}}', '{{$unit->qty_reference}}')">
+                                                <i class="fa fa-box" aria-hidden="true"></i>
+                                            </button>
                                         </td>
                                     </tr>
                                     @endforeach
@@ -122,34 +125,67 @@
     <!-- /.modal-dialog -->
 </div>
 
+<div id="modal2" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Konversi Stok</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="form2" action="{{URL('admin/master_inventory/konversi_stok')}}" method="POST">
+                @csrf
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Dari unit</label>
+                        <input disabled type="text" class="form-control required" id="konvert-dari">
+                    </div>
+                    <div class="form-group">
+                        <label>Stok</label>
+                        <input disabled type="text" class="form-control required" id="konvert-stok">
+                    </div>
+                    <div class="form-group">
+                        <label>Ke Unit</label>
+                        <select class="form-control required" id="konvert-ke" onchange="cbchange()">
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Satuan per konversi</label>
+                        <input disabled type="text" class="form-control required" id="konvert-satuan">
+                    </div>
+                    <div class="form-group">
+                        <label>Qty</label>
+                        <input type="number" class="form-control required" id="konvert-qty" onchange="qtyChange()">
+                    </div>
+                    <div class="form-group">
+                        <label>Total Konversi</label>
+                        <input disabled type="number" class="form-control required" id="konvert-total">
+                    </div>
+                    <input type="hidden" id="id_dari" name="id_dari">
+                    <input type="hidden" id="id_ke" name="id_ke">
+                    <input type="hidden" id="qty_dari" name="qty_dari">
+                    <input type="hidden" id="qty_ke" name="qty_ke">
+                    <input type="hidden" id="id_inventory" name="id_inventory" value="{{$data_inventory->id}}">
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <div class="btn btn-primary" onclick="konvert()">Konversi</div>
+                </div>
+            </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
 @include('script_footer')
 <script>
     const $satuanBaru = $("#satuanBaru");
 
     let listSatuan = <?php echo $list_unit; ?>;
     let listUnit = {};
-
-    function submit() {
-        // submit form
-        if (!validateForm()) {
-            // validate form required
-            return;
-        }
-        const jsonData = generateJSON();
-
-        const groupedData = groupJSON(jsonData);
-        const jsonUnit = getUnitJSON(groupedData);
-        console.log('grpdjson', groupedData);
-        console.log('jsonUnit', jsonUnit);
-
-
-
-        $("#pricing").val(JSON.stringify(groupedData));
-        $("#satuan_terkecil").val($("#satuanterkecil").val());
-        $("#list_units").val(JSON.stringify(jsonUnit));
-
-        $('#formadd').submit();
-    }
+    let ref = 0;
 
     function openModalEdit(id, name, stok) {
         $("#edit-name").val(name);
@@ -158,157 +194,59 @@
         $("#modalEdit").modal();
     }
 
-    function getUnitJSON(data) {
-        const result = [];
-        Object.keys(data).forEach((key) => {
-            const res = {
-                id: data[key]['id']['value'],
-                name: key,
-                refunit: data[key]['refunit']?.value || null
-            };
-            result.push(res);
-        });
-        return result;
-    }
+    function openmodal2(idinvent, name, max, idunit, refs) {
+        $("#id_dari").val(idunit);
+        $.get(`/api/available_unit?id=${idinvent}`, function(data) {
+            console.log('dat', refs);
+            ref = parseInt(refs) || 1;
+            $("#konvert-dari").val(name);
+            $("#konvert-stok").val(max);
+            const unit = data.payload;
+            $('#konvert-ke').empty();
+            unit.forEach((val) => {
+                if (val.id !== parseInt(idunit)) {
+                    optionText = val.name;
 
-    function groupJSON(data) {
-        console.log('data', data);
-
-
-        const groupedData = {};
-
-        for (const item of data) {
-            let {
-                unit,
-                name,
-                value
-            } = item;
-
-            if (!groupedData[unit]) {
-                groupedData[unit] = {};
-            }
-
-            let isId = false;
-            if (name.includes('id')) {
-                const temp = name.split('_');
-                if (temp.length > 1) {
-                    name = temp[1];
-                    isId = true;
+                    $('#konvert-ke').append(new Option(optionText, JSON.stringify(val)));
                 }
-            }
-
-            if (!groupedData[unit][name]) {
-                groupedData[unit][name] = {};
-            }
-            if (isId) {
-                groupedData[unit][name]['id'] = value;
-            } else {
-                groupedData[unit][name]['value'] = value;
-            }
-        }
-
-        return groupedData;
-    }
-
-    const inputValues = {};
-
-    // Save input values into the inputValues object
-    function saveInputValues() {
-        $('input[type="number"]').each(function() {
-            const key = $(this).attr('name');
-            const value = $(this).val();
-            inputValues[key] = value;
-        });
-    }
-
-    // Get saved input value for a specific unit and field
-    function getInputValue(unitId, field) {
-        const key = `${field}[${unitId}]`;
-        return inputValues[key] || '';
-    }
-
-    function satuanTerkecilChange() {
-        const satuanTerkecil = $("#satuanterkecil").val();
-        listSatuan[0] = satuanTerkecil;
-        updateTable();
-    }
-
-    function updateTable() {
-        // Store the current input values before updating
-        saveInputValues();
-
-        // Clear the table body
-        $('#tableBody').empty();
-
-        listSatuan.forEach((item, i) => {
-            console.log('ite', item);
-
-            const row = `<tr>
-                            <td>
-                                ${item}
-                                <input type="number" class="form-control d-none" name="id[${item}]" value="${getInputValue(item, 'id')}">
-                            </td>
-                            <td>
-                                <input type="number" class="form-control ${i === 0 ? 'd-none' : ''}" name="refunit[${item}]" min="0" value="${getInputValue(item, 'refunit')}">
-                            </td>
-                            <td>
-                                <input type="number" class="form-control" name="general[${item}]" min="0" value="${getInputValue(item, 'general')}">
-                                <input type="number" class="form-control d-none" name="id_general[${item}]" value="${getInputValue(item, 'idgeneral')}">
-                            </td>
-                            <td>
-                                <input type="number" class="form-control" name="bronze[${item}]" min="0" value="${getInputValue(item, 'bronze')}">
-                                <input type="number" class="form-control d-none" name="id_bronze[${item}]" value="${getInputValue(item, 'idbronze')}">
-                            </td>
-                            <td>
-                                <input type="number" class="form-control" name="silver[${item}]" min="0" value="${getInputValue(item, 'silver')}">
-                                <input type="number" class="form-control d-none" name="id_silver[${item}]" value="${getInputValue(item, 'idsilver')}">
-                            </td>
-                            <td>
-                                <input type="number" class="form-control" name="gold[${item}]" min="0" value="${getInputValue(item, 'gold')}">
-                                <input type="number" class="form-control d-none" name="id_gold[${item}]" value="${getInputValue(item, 'idgold')}">
-                            </td>
-                            <td>
-                                <button class="btn btn-sm btn-danger" onclick="clickDelete(${i})"><i class="fa fa-trash"></i></button>
-                            </td>
-                        </tr>`;
-            $('#tableBody').append(row);
-        });
-    }
-
-    function tambahSatuan() {
-        if ($satuanBaru.val() === '') {
-            return;
-        }
-        if (listSatuan.includes($satuanBaru.val())) {
-            swal("Satuan sudah ada", "", "warning");
-            return;
-        }
-        listSatuan.push($satuanBaru.val());
-        $satuanBaru.val('');
-        updateTable();
-    }
-
-
-    function clickDelete(index) {
-        listSatuan.splice(index, 1);
-        updateTable();
-    }
-
-    // Function to generate JSON object from the input values
-    function generateJSON() {
-        const json = [];
-        $('input[type="number"]').each(function() {
-
-            const key = $(this).attr('name');
-            const value = $(this).val();
-            const [field, id] = key.split(/\[|\]\[|\]/).filter(Boolean);
-            json.push({
-                unit: id,
-                name: field,
-                value: value
             });
+            cbchange();
+        }).fail(function(error) {
+            console.error('Error fetching API data', error);
         });
-        return json;
+        $("#modal2").modal();
+    }
+
+    function cbchange() {
+        const val = JSON.parse($("#konvert-ke").val());
+        const qty_ref = val.qty_reference || 1;
+        const satuan_per_konversi = ref / qty_ref;
+        $("#konvert-satuan").val(satuan_per_konversi);
+        $("#konvert-qty").val(0);
+        $("#konvert-total").val(0);
+    }
+
+    function qtyChange() {
+        let val = parseFloat($("#konvert-qty").val());
+        const max = parseFloat($("#konvert-stok").val());
+        if (val > max) {
+            val = max;
+        }
+        const satuan = parseFloat($("#konvert-satuan").val())
+        const total_konversi = Math.floor(val * satuan);
+        let revisi = Math.floor(total_konversi / satuan);
+        $("#konvert-qty").val(revisi);
+        $("#konvert-total").val(total_konversi);
+    }
+
+    function konvert() {
+        console.log('f');
+        const val = JSON.parse($("#konvert-ke").val());
+        $("#id_ke").val(val.id);
+        $("#qty_dari").val($("#konvert-qty").val());
+        $("#qty_ke").val($("#konvert-total").val());
+
+        $("#form2").submit();
     }
 </script>
 

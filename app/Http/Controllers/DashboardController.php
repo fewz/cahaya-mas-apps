@@ -9,6 +9,7 @@ use App\Models\HeaderPurchaseOrder;
 use App\Models\HTransaction;
 use App\Models\LogTerimaBarang;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -53,6 +54,11 @@ class DashboardController extends Controller
             ->where('h_purchase_order.lunas', '<>', '1')
             ->select('h_purchase_order.*', 'supplier.name as name', 'supplier.phone as phone', 'supplier.address as address')
             ->get();
+        $notif = [
+            'hutang' => $notif_hutang,
+            'piutang' => $notif_piutang
+        ];
+        Session::put('notif', $notif);
 
         $kadaluarsa = LogTerimaBarang::whereBetween('exp_date', [$endDate, $futureDate])
             ->join('inventory', 'inventory.id', 'log_terima_barang.id_inventory')
@@ -92,5 +98,47 @@ class DashboardController extends Controller
             'laris' => $laris
         ];
         return view("admin.dashboard", $data);
+    }
+
+    public function notif($filter = '')
+    {
+        $endDate = Carbon::now(); // End date is today
+        $futureDate = Carbon::now()->addDays(7); // Start date is 6 days ago
+        $notif_piutang = HTransaction::where('payment_method', 'CREDIT')
+            ->whereBetween(DB::raw('UNIX_TIMESTAMP(due_date)'), [$endDate->timestamp, $futureDate->timestamp])
+            ->where('h_transaction.status', '<>', '1')
+            ->join('customer', 'customer.id', 'h_transaction.id_customer')
+            ->select('h_transaction.*', 'customer.full_name as name', 'customer.phone as phone', 'customer.address as address')
+            ->get();
+
+        $notif_hutang = HeaderPurchaseOrder::where('payment_method', 'CREDIT')
+            ->whereBetween(DB::raw('UNIX_TIMESTAMP(due_date)'), [$endDate->timestamp, $futureDate->timestamp])
+            ->join('supplier', 'supplier.id', 'h_purchase_order.id_supplier')
+            ->where('h_purchase_order.lunas', '<>', '1')
+            ->select('h_purchase_order.*', 'supplier.name as name', 'supplier.phone as phone', 'supplier.address as address')
+            ->get();
+
+        $notif = [];
+        foreach ($notif_piutang as $dt) {
+            $dt->type = 'Piutang';
+            array_push($notif, $dt);
+        }
+        foreach ($notif_hutang as $dt) {
+            $dt->type = "Hutang";
+            array_push($notif, $dt);
+        }
+
+        $a = [
+            'hutang' => $notif_hutang,
+            'piutang' => $notif_piutang
+        ];
+        Session::put('notif', $a);
+        $user = Auth::user();
+        $data = [
+            'user' => $user,
+            'notif' => $notif,
+            'filter' => $filter
+        ];
+        return view("admin.notif", $data);
     }
 }

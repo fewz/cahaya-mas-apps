@@ -252,4 +252,30 @@ class InventoryController extends Controller
             }
         }
     }
+
+    public function konversi_stok(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+
+            Unit::minus_stok($request->id_dari, $request->qty_dari);
+            Unit::add_stok($request->id_ke, $request->qty_ke);
+            
+            DB::commit();
+            CommonHelper::showAlert("Success", "Edit data success", "success", "/admin/master_inventory/view_stok/" . $request->id_inventory);
+        } catch (\Illuminate\Database\QueryException $ex) {
+            // catch error
+            DB::rollBack();
+            if (str_contains($ex->getMessage(), 'Duplicate entry')) {
+                CommonHelper::showAlert(
+                    "Failed",
+                    'Code ' . $request->code . ' already used',
+                    "error",
+                    "back"
+                );
+            } else {
+                CommonHelper::showAlert("Failed", $ex->getMessage(), "error", "back");
+            }
+        }
+    }
 }

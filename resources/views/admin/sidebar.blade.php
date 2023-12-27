@@ -1,3 +1,37 @@
+<nav class="main-header navbar navbar-expand navbar-white navbar-light" style="position: sticky; top:0px;">
+
+    <!-- Right navbar links -->
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+        </li>
+        <li class="nav-item d-none d-sm-inline-block">
+            <a href="#" class="nav-link">Cahaya Mas</a>
+        </li>
+    </ul>
+    <ul class="navbar-nav ml-auto"> <!-- Left navbar links -->
+        <!-- Notifications Dropdown Menu -->
+        <li class="nav-item dropdown">
+            <a class="nav-link" data-toggle="dropdown" href="{{ URL('admin/notif/') }}">
+                <i class="far fa-bell"></i>
+                <span class="badge badge-warning navbar-badge">{{count(Session::get('notif')['hutang']) + count(Session::get('notif')['piutang'])}}</span>
+            </a>
+            <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                <span class="dropdown-item dropdown-header">{{count(Session::get('notif')['hutang']) + count(Session::get('notif')['piutang'])}} Notifications</span>
+                <div class="dropdown-divider"></div>
+                <a href="{{ URL('admin/notif/hutang') }}" class="dropdown-item">
+                    <i class="fas fa-envelope mr-2"></i> {{count(Session::get('notif')['hutang'])}} hutang mau jatuh tempo
+                </a>
+                <div class="dropdown-divider"></div>
+                <a href="{{ URL('admin/notif/piutang') }}" class="dropdown-item">
+                    <i class="fas fa-users mr-2"></i> {{count(Session::get('notif')['piutang'])}} piutang mau jatuh tempo
+                </a>
+                <div class="dropdown-divider"></div>
+                <a href="{{ URL('admin/notif/') }}" class="dropdown-item dropdown-footer">See All Notifications</a>
+            </div>
+        </li>
+    </ul>
+</nav>
 <!-- Main Sidebar Container -->
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->

@@ -80,6 +80,7 @@ Route::prefix('admin')->middleware('auth', 'roleCheck:user')->group(function () 
     Route::post('/master_inventory/delete', [InventoryController::class, 'delete'])->name('master_inventory/delete');
     Route::get('/master_inventory/view_stok/{id}', [InventoryController::class, 'view_stok'])->name('master_inventory/view_stok');
     Route::post('/master_inventory/edit_stok', [InventoryController::class, 'edit_stok'])->name('master_inventory/edit_stok');
+    Route::post('/master_inventory/konversi_stok', [InventoryController::class, 'konversi_stok'])->name('master_inventory/konversi_stok');
 
     Route::get('/master_category', [CategoryController::class, 'index'])->name('master_category');
     Route::get('/master_category/add', [CategoryController::class, 'add'])->name('master_category/add');
@@ -153,6 +154,9 @@ Route::prefix('admin')->middleware('auth', 'roleCheck:user')->group(function () 
     Route::get('/master_retur_transaksi', [Transaction::class, 'index_retur'])->name('master_retur_transaksi');
     Route::get('/master_retur_transaksi/view/{id}',[Transaction::class, 'view_retur'])->name('master_retur_transaksi/view');
     Route::get('/master_retur_transaksi/retur_add', [Transaction::class, 'retur_add'])->name('master_retur_transaksi/retur_add');
+
+    Route::get('/notif/{filter}', [DashboardController::class, 'notif'])->name('notif/');
+    Route::get('/notif', [DashboardController::class, 'notif'])->name('notif');
 
 
     Route::get('/test', [UserController::class, 'tests'])->name('test');

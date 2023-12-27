@@ -9,7 +9,8 @@
 <script>
     $(function() {
 
-        $("#example1").DataTable();
+        var table1 = $("#example1").DataTable();
+        table1.order([0, 'desc']).draw();
 
         //Initialize Select2 Elements
         $('.select2').select2({
@@ -93,7 +94,7 @@
     function numberWithCommas(x) {
         return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     }
-    
+
     Date.prototype.toDateInputValue = (function() {
         var local = new Date(this);
         local.setMinutes(this.getMinutes() - this.getTimezoneOffset());

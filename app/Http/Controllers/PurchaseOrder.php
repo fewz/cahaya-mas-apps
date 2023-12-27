@@ -15,6 +15,7 @@ use App\Models\Unit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use stdClass;
 
 class PurchaseOrder extends Controller
 {
@@ -242,17 +243,72 @@ class PurchaseOrder extends Controller
         }
     }
 
+    public function index_retur()
+    {
+        $user = Auth::user();
+        $list_purchase = ReturPurchaseOrder::join('h_purchase_order', 'h_purchase_order.id', '=', 'retur_po.id_h_purchase_order')
+            ->select('retur_po.*', 'h_purchase_order.order_number as order_number', 'h_purchase_order.created_date as transaction_date', DB::raw('count(retur_po.id_h_purchase_order) as total'))
+            ->groupBy('retur_po.id_h_purchase_order')
+            ->get();
+        $data = [
+            'user' => $user,
+            'list_retur' => $list_purchase
+        ];
+        // print_r($data);
+        return view("admin.purchase_order.retur", $data);
+    }
+
+    public function retur_add()
+    {
+        $user = Auth::user();
+        $list_po = HeaderPurchaseOrder::get();
+        $data = [
+            'user' => $user,
+            'list_po' => $list_po
+        ];
+        return view("admin.purchase_order.addretur", $data);
+    }
+
     public function add_retur(Request $request)
     {
-        $data = new ReturPurchaseOrder();
-        $data->id_d_purchase_order = $request->id_d_purchase_order;
-        $data->qty = $request->qty;
-        $data->id_h_purchase_order = $request->id_h;
-        $data->save();
+        try {
+            DB::beginTransaction();
+            $prd = json_decode($request->list_produk);
+            foreach ($prd as $dt) {
+                $data = new ReturPurchaseOrder();
+                $data->id_d_purchase_order = $dt->id;
+                $data->qty = $dt->qty;
+                $data->note = $dt->note;
+                $data->id_h_purchase_order = $request->id_h_po;
+                $data->save();
+                $d_trans = DetailPurchaseOrder::where('id', $dt->id)->first();
+                Unit::minus_stok($d_trans->id_unit, $dt->qty);
+            }
+            DB::commit();
+            CommonHelper::showAlert("Success", "Insert data success", "success", "/admin/master_retur_po");
+        } catch (\Illuminate\Database\QueryException $ex) {
+            // catch error
+            DB::rollBack();
+            CommonHelper::showAlert("Failed", $ex->getMessage(), "error", "back");
+        }
+    }
 
-        $d_trans = DetailPurchaseOrder::where('id', $request->id_d_purchase_order)->first();
-        Unit::minus_stok($d_trans->id_unit, $request->qty);
-        CommonHelper::showAlert("Success", "Insert data success", "success", "/admin/purchase_order/view/" . $request->id_h);
+    public function view_retur($id)
+    {
+        $user = Auth::user();
+        $list = ReturPurchaseOrder::where('retur_po.id_h_purchase_order', $id)
+            ->join('h_purchase_order', 'retur_po.id_h_purchase_order', 'h_purchase_order.id')
+            ->join('supplier', 'supplier.id', 'h_purchase_order.id_supplier')
+            ->join('d_purchase_order', 'd_purchase_order.id', 'retur_po.id_d_purchase_order')
+            ->join('inventory', 'inventory.id', 'd_purchase_order.id_inventory')
+            ->join('unit', 'unit.id', 'd_purchase_order.id_unit')
+            ->select('retur_po.*', 'h_purchase_order.order_number as order_number', 'h_purchase_order.created_date as transaction_date', 'supplier.name as supplier', 'inventory.name as inventory', 'unit.name as unit')
+            ->get();
+        $data = [
+            'user' => $user,
+            'data' => $list
+        ];
+        return view("admin.purchase_order.viewretur", $data);
     }
 
     public function update_retur(Request $request)
@@ -265,6 +321,22 @@ class PurchaseOrder extends Controller
             $d_trans = DetailPurchaseOrder::where('id', $data->id_d_purchase_order)->first();
             Unit::add_stok($d_trans->id_unit, $request->qty);
         }
-        CommonHelper::showAlert("Success", "Update data success", "success", "/admin/purchase_order/view/" . $request->id_h);
+        CommonHelper::showAlert("Success", "Update data success", "success", "/admin/master_retur_po/view/" . $request->id_h);
+    }
+
+    public function get_detail($id)
+    {
+        $data = new stdClass();
+        $data->header = HeaderPurchaseOrder::where('h_purchase_order.id', $id)
+            ->join('supplier', 'supplier.id', 'h_purchase_order.id_supplier')
+            ->select('h_purchase_order.*', 'supplier.name as supplier')
+            ->first();
+        $data->detail = DetailPurchaseOrder::where('d_purchase_order.id_h_purchase_order', $id)
+            ->join('inventory', 'inventory.id', 'd_purchase_order.id_inventory')
+            ->join('unit', 'unit.id', 'd_purchase_order.id_unit')
+            ->select('d_purchase_order.*', 'inventory.name as product_name', 'inventory.code as product_code', 'unit.name as unit')
+            ->get();
+
+        return $this->createSuccessMessage($data);
     }
 }

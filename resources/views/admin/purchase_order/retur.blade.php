@@ -4,7 +4,7 @@
 
 <body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper">
-        @include('admin.sidebar', ['activePage' => 'purchase_order'])
+        @include('admin.sidebar', ['activePage' => 'master_retur_po'])
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
             <!-- Content Header (Page header) -->
@@ -12,7 +12,7 @@
                 <div class="container-fluid">
                     <div class="row mb-2">
                         <div class="col-sm-12">
-                            <h1 class="m-0">Purchase Order</h1>
+                            <h1 class="m-0">Retur Purchase Order</h1>
                         </div><!-- /.col -->
                     </div><!-- /.row -->
                 </div><!-- /.container-fluid -->
@@ -28,82 +28,36 @@
                         <div class="col-12">
                             <div class="card">
                                 <div class="card-header d-flex">
-                                    <h3 class="card-title">List Purchase Order</h3>
+                                    <h3 class="card-title">List Retur Purchase Order</h3>
                                     <div class="ml-auto">
-                                        <a href="{{ URL('admin/purchase_order/add') }}" class="btn btn-sm btn-primary">ADD <i class="fa fa-plus"></i></a>
+                                        <a href="{{ URL('admin/master_retur_po/retur_add') }}" class="btn btn-sm btn-primary">ADD <i class="fa fa-plus"></i></a>
                                     </div>
                                 </div>
                                 <!-- /.card-header -->
                                 <div class="card-body">
-                                    <div class="d-flex mb-3">
-                                        <div class="btn btn-info mx-2 filter-btn active" onclick="filter('',this)">All</div>
-                                        <div class="btn btn-info mx-2 filter-btn" onclick="filter('Draft',this)">Draft</div>
-                                        <div class="btn btn-info mx-2 filter-btn" onclick="filter('Diproses Supplier',this)">Diproses Supplier</div>
-                                        <div class="btn btn-info mx-2 filter-btn" onclick="filter('Selesai',this)">Selesai</div>
-                                    </div>
                                     <table id="example1" class="table table-bordered table-striped">
                                         <thead>
                                             <tr>
                                                 <td class="d-none"></td>
                                                 <th>Order Number</th>
-                                                <th>Supplier</th>
-                                                <th>Created Date</th>
-                                                <th>Status</th>
-                                                <th>Lunas</th>
-                                                <th>Payment Method</th>
-                                                <th>Grand Total</th>
+                                                <th>Transaction Date</th>
+                                                <th>Retur Date</th>
+                                                <th>Total Retur</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <?php $status = ["Draft", "Diproses Supplier", "Selesai"]; ?>
-                                            <?php $lunas = ["Belum Lunas", "Lunas"]; ?>
-                                            @foreach ($list_purchase as $dt )
+                                            @foreach ($list_retur as $dt )
                                             <tr>
                                                 <td class="d-none">{{$dt->id}}</td>
                                                 <td>{{$dt->order_number}}</td>
-                                                <td>{{$dt->supplier_name}}</td>
+                                                <td>{{$dt->transaction_date}}</td>
                                                 <td>{{$dt->created_date}}</td>
-                                                <td>{{$status[$dt->status]}}</td>
-                                                <td>{{$lunas[$dt->lunas]}}</td>
+                                                <td>{{$dt->total}}</td>
                                                 <td>
-                                                    @if($dt->status === 2)
-                                                    {{$dt->payment_method}}
-                                                    @else
-                                                    -
-                                                    @endif
-                                                </td>
-                                                <td>
-                                                    {{$dt->grand_total > 0 ? number_format($dt->grand_total,0,',','.') : "-"}}
-                                                </td>
-                                                <td>
-                                                    @if($dt->status == 0)
-                                                    <a href="{{ URL('admin/purchase_order/edit/'.$dt->id) }}" class="btn btn-sm btn-primary" title="sent to supplier">
-                                                        <i class="fa fa-truck"></i>
-                                                    </a>
-                                                    <button class="btn btn-sm btn-danger" onclick="clickDelete('{{$dt->id}}')" title="delete order"><i class="fa fa-trash"></i></button>
-                                                    @elseif ($dt->status == 1)
-                                                    <a href="{{ URL('admin/purchase_order/finish/'.$dt->id) }}" class="btn btn-sm btn-primary">
-                                                        <i class="fa fa-check" title="terima pesanan"></i>
-                                                    </a>
-                                                    <a href="{{ URL('admin/purchase_order/view/'.$dt->id) }}" class="btn btn-sm btn-primary">
+                                                    <a href="{{ URL('admin/master_retur_po/view/'.$dt->id_h_purchase_order) }}" class="btn btn-sm btn-primary">
                                                         <i class="fa fa-eye"></i>
                                                     </a>
-                                                    @elseif ($dt->status == 2)
-                                                    <a href="{{ URL('admin/purchase_order/view/'.$dt->id) }}" class="btn btn-sm btn-primary">
-                                                        <i class="fa fa-eye"></i>
-                                                    </a>
-                                                    @if($dt->lunas === 0)
-                                                    <div class="btn btn-sm btn-primary" onclick="openModalUpload('{{$dt->id}}', '{{$dt->grand_total}}', '{{$dt->order_number}}')">
-                                                        <i class="fa fa-book"></i>
-                                                    </div>
-                                                    @endif
-                                                    @if($dt->lunas === 1 && $dt->payment_method === 'CREDIT')
-                                                    <a class="btn btn-sm btn-primary" href="{{URL('bukti_transfer_purchase_order/'.$dt->id)}}" target="_blank">
-                                                        <i class="fa fa-book"></i>
-                                                    </a>
-                                                    @endif
-                                                    @endif
                                                     <!-- <button class="btn btn-sm btn-danger" onclick="clickDelete('{{$dt->id}}')"><i class="fa fa-trash"></i></button> -->
                                                 </td>
                                             </tr>

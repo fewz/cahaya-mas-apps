@@ -45,7 +45,15 @@ class SupplierController extends Controller
             DB::beginTransaction();
             $list_produk = explode(',', $request->list_produk);
             $data = new Supplier();
-            $data->code = $request->code;
+            $total_sup =  count(Supplier::get()) + 1;
+            if ($total_sup < 10) {
+                $total_sup = '000' . $total_sup;
+            } else if ($total_sup < 100) {
+                $total_sup = '00' . $total_sup;
+            } else if ($total_sup < 1000) {
+                $total_sup = '0' . $total_sup;
+            }
+            $data->code = 'S' . $total_sup;
             $data->name = $request->name;
             $data->phone = $request->phone;
             $data->address = $request->address;
@@ -99,7 +107,6 @@ class SupplierController extends Controller
             DB::beginTransaction();
             $list_produk = explode(',', $request->list_produk);
             $data = Supplier::where("id", $id)->first();
-            $data->code = $request->code;
             $data->name = $request->name;
             $data->phone = $request->phone;
             $data->address = $request->address;

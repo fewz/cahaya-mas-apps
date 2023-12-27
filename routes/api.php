@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\PengirimanController;
 use App\Http\Controllers\PricingController;
+use App\Http\Controllers\PurchaseOrder;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\Transaction;
 use App\Http\Controllers\UserController;
@@ -30,5 +31,7 @@ Route::get('/get_price_and_stock', [PricingController::class, 'get_price_and_sto
 
 Route::get('/get_detail_transaction/{id}', [Transaction::class, 'get_detail']);
 Route::get('/get_tagihan_jatuh_tempo/{selectedDate}', [Transaction::class, 'get_tagihan_jatuh_tempo']);
+
+Route::get('/get_detail_po/{id}', [PurchaseOrder::class, 'get_detail']);
 
 Route::get('/test', [UserController::class, 'test']);

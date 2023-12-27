@@ -89,7 +89,7 @@ class Transaction extends Controller
             $data->netto = $total_net;
             $data->save();
             DB::commit();
-            CommonHelper::showAlert("Success", "Insert data success", "success", "/admin/transaction");
+            CommonHelper::showAlert("Success", "Insert data success", "success", "/admin/transaction/view/" . $data->id);
         } catch (\Illuminate\Database\QueryException $ex) {
             DB::rollBack();
             // catch error
@@ -190,15 +190,45 @@ class Transaction extends Controller
 
     public function add_retur(Request $request)
     {
-        $d_trans = DTransaction::where('id', $request->id_d_transaction)->first();
-        $data = new ReturTransaction();
-        $data->id_d_transaction = $request->id_d_transaction;
-        $data->qty = $request->qty;
-        $data->id_h_transaction = $request->id_h;
-        $data->save();
-        Unit::add_stok($d_trans->id_unit, $request->qty);
+        try {
+            DB::beginTransaction();
+            $prd = json_decode($request->list_produk);
+            foreach ($prd as $dt) {
+                $data = new ReturTransaction();
+                $data->id_d_transaction = $dt->id;
+                $data->qty = $dt->qty;
+                $data->note = $dt->note;
+                $data->id_h_transaction = $request->id_h_po;
+                $data->save();
+                $d_trans = DTransaction::where('id', $dt->id)->first();
+                Unit::add_stok($d_trans->id_unit, $dt->qty);
+            }
 
-        CommonHelper::showAlert("Success", "Insert data success", "success", "/admin/transaction/view/" . $request->id_h);
+            DB::commit();
+            CommonHelper::showAlert("Success", "Insert data success", "success", "/admin/master_retur_transaksi/view/" . $request->id_h_po);
+        } catch (\Illuminate\Database\QueryException $ex) {
+            // catch error
+            DB::rollBack();
+            CommonHelper::showAlert("Failed", $ex->getMessage(), "error", "back");
+        }
+    }
+
+    public function view_retur($id)
+    {
+        $user = Auth::user();
+        $list = ReturTransaction::where('retur_transaction.id_h_transaction', $id)
+            ->join('h_transaction', 'retur_transaction.id_h_transaction', 'h_transaction.id')
+            ->join('d_transaction', 'd_transaction.id', 'retur_transaction.id_d_transaction')
+            ->join('inventory', 'inventory.id', 'd_transaction.id_inventory')
+            ->join('customer', 'customer.id', 'h_transaction.id_customer')
+            ->join('unit', 'unit.id', 'd_transaction.id_unit')
+            ->select('retur_transaction.*', 'h_transaction.order_number as order_number', 'h_transaction.created_date as transaction_date', 'inventory.name as inventory', 'unit.name as unit', 'customer.full_name as customer')
+            ->get();
+        $data = [
+            'user' => $user,
+            'data' => $list
+        ];
+        return view("admin.transaction.viewretur", $data);
     }
 
     public function update_retur(Request $request)
@@ -210,6 +240,32 @@ class Transaction extends Controller
         }
         $data->status = $request->status;
         $data->save();
-        CommonHelper::showAlert("Success", "Update data success", "success", "/admin/transaction/view/" . $request->id_h);
+        CommonHelper::showAlert("Success", "Update data success", "success", "/admin/master_retur_transaksi/view/" . $request->id_h);
+    }
+
+    public function index_retur()
+    {
+        $user = Auth::user();
+        $list_purchase = ReturTransaction::join('h_transaction', 'h_transaction.id', '=', 'retur_transaction.id_h_transaction')
+            ->select('retur_transaction.*', 'h_transaction.order_number as order_number', 'h_transaction.created_date as transaction_date', DB::raw('count(retur_transaction.id_h_transaction) as total'))
+            ->groupBy('retur_transaction.id_h_transaction')
+            ->get();
+        $data = [
+            'user' => $user,
+            'list_retur' => $list_purchase
+        ];
+        // print_r($data);
+        return view("admin.transaction.retur", $data);
+    }
+
+    public function retur_add()
+    {
+        $user = Auth::user();
+        $list_po = HTransaction::get();
+        $data = [
+            'user' => $user,
+            'list_po' => $list_po
+        ];
+        return view("admin.transaction.addretur", $data);
     }
 }

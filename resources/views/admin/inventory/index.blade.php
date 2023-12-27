@@ -42,6 +42,7 @@
                                     <table id="example1" class="table table-bordered table-striped">
                                         <thead>
                                             <tr>
+                                                <td class="d-none"></td>
                                                 <th>Code</th>
                                                 <th>Name</th>
                                                 <th>Category</th>
@@ -53,6 +54,7 @@
                                         <tbody>
                                             @foreach ($list_inventory as $dt )
                                             <tr>
+                                                <td class="d-none">{{$dt->id}}</td>
                                                 <td>{{$dt->code}}</td>
                                                 <td>{{$dt->name}}</td>
                                                 <td>{{$dt->category}}</td>

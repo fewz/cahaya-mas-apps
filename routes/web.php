@@ -146,6 +146,14 @@ Route::prefix('admin')->middleware('auth', 'roleCheck:user')->group(function () 
     Route::post('/purchase_order/add_retur', [PurchaseOrder::class, 'add_retur'])->name('purchase_order/add_retur');
     Route::post('/purchase_order/update_retur', [PurchaseOrder::class, 'update_retur'])->name('purchase_order/update_retur');
 
+    Route::get('/master_retur_po', [PurchaseOrder::class, 'index_retur'])->name('master_retur_po');
+    Route::get('/master_retur_po/view/{id}',[PurchaseOrder::class, 'view_retur'])->name('master_retur_po/view');
+    Route::get('/master_retur_po/retur_add', [PurchaseOrder::class, 'retur_add'])->name('master_retur_po/retur_add');
+
+    Route::get('/master_retur_transaksi', [Transaction::class, 'index_retur'])->name('master_retur_transaksi');
+    Route::get('/master_retur_transaksi/view/{id}',[Transaction::class, 'view_retur'])->name('master_retur_transaksi/view');
+    Route::get('/master_retur_transaksi/retur_add', [Transaction::class, 'retur_add'])->name('master_retur_transaksi/retur_add');
+
 
     Route::get('/test', [UserController::class, 'tests'])->name('test');
 });

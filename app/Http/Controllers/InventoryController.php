@@ -56,7 +56,15 @@ class InventoryController extends Controller
         try {
             $pricing = json_decode($request->pricing);
             $data = new Inventory();
-            $data->code = $request->code;
+            $total_sup =  count(Inventory::get()) + 1;
+            if ($total_sup < 10) {
+                $total_sup = '000' . $total_sup;
+            } else if ($total_sup < 100) {
+                $total_sup = '00' . $total_sup;
+            } else if ($total_sup < 1000) {
+                $total_sup = '0' . $total_sup;
+            }
+            $data->code = 'B' . $total_sup;
             $data->name = $request->name;
             $data->id_category = $request->id_category;
             $data->save();
@@ -121,7 +129,6 @@ class InventoryController extends Controller
             $pricing = json_decode($request->pricing);
             $list_units = json_decode($request->list_units);
             $data = Inventory::where("id", $id)->first();
-            $data->code = $request->code;
             $data->name = $request->name;
             $data->id_category = $request->id_category;
             $data->save();

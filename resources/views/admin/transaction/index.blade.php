@@ -38,6 +38,7 @@
                                     <table id="example1" class="table table-bordered table-striped">
                                         <thead>
                                             <tr>
+                                                <td class="d-none"></td>
                                                 <th>Order Number</th>
                                                 <th>Customer</th>
                                                 <th>Cashier</th>
@@ -52,6 +53,7 @@
                                             <?php $status = ["Draft", "Selesai", "Belum Lunas", "Belum Dikirim", "Siap Dikirim", "Sedang Dikirim", "Terkirim", "Sudah Upload Bukti"]; ?>
                                             @foreach ($list_transaction as $dt )
                                             <tr>
+                                                <td class="d-none">{{$dt->id}}</td>
                                                 <td>{{$dt->order_number}}</td>
                                                 <td>{{$dt->customer_name}}</td>
                                                 <td>{{$dt->cashier_name}}</td>

@@ -43,7 +43,15 @@ class CustomerController extends Controller
         // add customer to database
         try {
             $data = new Customer();
-            $data->code = $request->code;
+            $total_customer =  count(Customer::get());
+            if ($total_customer < 10) {
+                $total_customer = '000' . $total_customer;
+            } else if ($total_customer < 100) {
+                $total_customer = '00' . $total_customer;
+            } else if ($total_customer < 1000) {
+                $total_customer = '0' . $total_customer;
+            }
+            $data->code = 'C' . $total_customer;
             $data->email = $request->email;
             $data->password = Hash::make($request->password);
             $data->full_name = $request->full_name;
@@ -84,7 +92,6 @@ class CustomerController extends Controller
         // edit customer to database
         try {
             $data = Customer::where("id", $id)->first();
-            $data->code = $request->code;
             $data->email = $request->email;
             if ($request->password) {
                 $data->password = Hash::make($request->password);

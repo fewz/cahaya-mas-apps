@@ -37,10 +37,6 @@
                             @csrf
                             <div class="card-body">
                                 <div class="form-group">
-                                    <label>Code Customer</label>
-                                    <input type="text" class="form-control required" name="code" placeholder="Code" value="{{$data_customer->code}}">
-                                </div>
-                                <div class="form-group">
                                     <label>Email</label>
                                     <input type="text" class="form-control required" name="email" placeholder="Email" value="{{$data_customer->email}}">
                                 </div>

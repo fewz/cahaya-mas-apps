@@ -38,6 +38,7 @@
                                     <table id="example1" class="table table-bordered table-striped">
                                         <thead>
                                             <tr>
+                                                <td class="d-none"></td>
                                                 <th>Product</th>
                                                 <th>Minimal Beli</th>
                                                 <th>Unit</th>
@@ -50,6 +51,7 @@
                                         <tbody>
                                             @foreach ($data_diskon as $dt )
                                             <tr>
+                                                <td class="d-none">{{$dt->id}}</td>
                                                 <td>{{$dt->product_name}}</td>
                                                 <td>{{$dt->minimal}}</td>
                                                 <td>{{$dt->unit}}</td>

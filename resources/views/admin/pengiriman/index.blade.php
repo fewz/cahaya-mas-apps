@@ -38,6 +38,7 @@
                                     <table id="example1" class="table table-bordered table-striped">
                                         <thead>
                                             <tr>
+                                                <td class="d-none"></td>
                                                 <th>Kode Pengiriman</th>
                                                 <th>Status</th>
                                                 <th>Delivery Date</th>
@@ -49,6 +50,7 @@
                                             <?php $status = ["Siap Jalan", "Dikirim", "Selesai"]; ?>
                                             @foreach ($list_pengiriman as $dt )
                                             <tr>
+                                                <td class="d-none">{{$dt->id}}</td>
                                                 <td>{{$dt->code}}</td>
                                                 <td>{{$status[$dt->status]}}</td>
                                                 <td>{{$dt->delivery_date}}</td>

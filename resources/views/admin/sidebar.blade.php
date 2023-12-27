@@ -144,6 +144,38 @@
                             @endif
                         </ul>
                     </li>
+                    <?php
+                    $retur_menu = ['master_retur_po', 'master_retur_transaksi'];
+                    ?>
+                    @if(Session::get('MASTER_RETUR_PO') || Session::get('MASTER_RETUR_TRANSAKSI'))
+                    <li class="nav-item expandable {{in_array($activePage, $retur_menu)  ? 'menu-is-opening menu-open' : ''}}">
+                        <a href="#" class="nav-link {{in_array($activePage, $retur_menu) ? 'active' : ''}}">
+                            <i class="nav-icon fa fa-truck"></i>
+                            <p>
+                                Retur
+                                <i class="right fas fa-angle-left"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            @if(Session::get('MASTER_RETUR_PO'))
+                            <li class="nav-item">
+                                <a href="{{ URL('admin/master_retur_po') }}" class="nav-link {{$activePage === 'master_retur_po' ? 'active' : ''}}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Retur Purchase Order</p>
+                                </a>
+                            </li>
+                            @endif
+                            @if(Session::get('MASTER_RETUR_TRANSAKSI'))
+                            <li class="nav-item">
+                                <a href="{{ URL('admin/master_retur_transaksi') }}" class="nav-link {{$activePage === 'master_retur_transaksi' ? 'active' : ''}}">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Retur Transaksi</p>
+                                </a>
+                            </li>
+                            @endif
+                        </ul>
+                    </li>
+                    @endif
 
                     <?php
                     $laporan_menu = ['laporan_barang', 'laporan_penjualan', 'laporan_pembelian'];

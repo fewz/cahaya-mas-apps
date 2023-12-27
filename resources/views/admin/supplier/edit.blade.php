@@ -37,10 +37,6 @@
                             @csrf
                             <div class="card-body">
                                 <div class="form-group">
-                                    <label>Code Supplier</label>
-                                    <input type="text" class="form-control required" name="code" placeholder="Code" value="{{$data_supplier->code}}">
-                                </div>
-                                <div class="form-group">
                                     <label>Name</label>
                                     <input type="text" class="form-control required" name="name" placeholder="Name" value="{{$data_supplier->name}}">
                                 </div>

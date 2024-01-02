@@ -8,6 +8,7 @@ use App\Models\CategoryInventory;
 use App\Models\Inventory;
 use App\Models\InventoryUnit;
 use App\Models\Pricing;
+use App\Models\Setting;
 use App\Models\Stock;
 use App\Models\Unit;
 use Illuminate\Http\Request;
@@ -43,9 +44,11 @@ class InventoryController extends Controller
         // add view inventory
         $user = Auth::user();
         $list_category = CategoryInventory::get();
+        $setting = Setting::get();
         $data = [
             'user' => $user,
-            'list_category' => $list_category
+            'list_category' => $list_category,
+            'setting' => $setting
         ];
         return view("admin.inventory.add", $data);
     }

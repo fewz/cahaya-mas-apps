@@ -102,6 +102,8 @@
 <script>
     const $satuanBaru = $("#satuanBaru");
 
+    var setting = JSON.parse('<?php echo $setting; ?>').reduce((obj, item) => (obj[item.name] = item.value, obj), {});
+
     let listSatuan = [];
 
     function submit() {
@@ -172,10 +174,10 @@
         const firstRow = `<tr>
                             <td>${satuanTerkecil}</td>
                             <td></td>
-                            <td><input type="number" class="form-control required" name="general[${satuanTerkecil}]" min="0" value="${getInputValue(satuanTerkecil, 'general')}"></td>
-                            <td><input type="number" class="form-control required" name="bronze[${satuanTerkecil}]" min="0" value="${getInputValue(satuanTerkecil, 'bronze')}"></td>
-                            <td><input type="number" class="form-control required" name="silver[${satuanTerkecil}]" min="0" value="${getInputValue(satuanTerkecil, 'silver')}"></td>
-                            <td><input type="number" class="form-control required" name="gold[${satuanTerkecil}]" min="0" value="${getInputValue(satuanTerkecil, 'gold')}"></td>
+                            <td><input type="number" class="form-control required" name="general[${satuanTerkecil}]" min="0" value="${getInputValue(satuanTerkecil, 'general')}" id="general-${satuanTerkecil}" onchange="generalChange('${satuanTerkecil}')"></td>
+                            <td><input type="number" class="form-control required" name="bronze[${satuanTerkecil}]" min="0" value="${getInputValue(satuanTerkecil, 'bronze')}" id="bronze-${satuanTerkecil}"></td>
+                            <td><input type="number" class="form-control required" name="silver[${satuanTerkecil}]" min="0" value="${getInputValue(satuanTerkecil, 'silver')}" id="silver-${satuanTerkecil}"></td>
+                            <td><input type="number" class="form-control required" name="gold[${satuanTerkecil}]" min="0" value="${getInputValue(satuanTerkecil, 'gold')}" id="gold-${satuanTerkecil}"></td>
                         </tr>`;
         $('#tableBody').append(firstRow);
 
@@ -184,14 +186,22 @@
             const row = `<tr>
                             <td>${item}</td>
                             <td><input type="number" class="form-control required" name="refunit[${item}]" min="0" value="${getInputValue(item, 'refunit')}"></td>
-                            <td><input type="number" class="form-control required" name="general[${item}]" min="0" value="${getInputValue(item, 'general')}"></td>
-                            <td><input type="number" class="form-control required" name="bronze[${item}]" min="0" value="${getInputValue(item, 'bronze')}"></td>
-                            <td><input type="number" class="form-control required" name="silver[${item}]" min="0" value="${getInputValue(item, 'silver')}"></td>
-                            <td><input type="number" class="form-control required" name="gold[${item}]" min="0" value="${getInputValue(item, 'gold')}"></td>
+                            <td><input type="number" class="form-control required" name="general[${item}]" min="0" value="${getInputValue(item, 'general')}" id="general-${item}" onchange="generalChange('${item}')"></td>
+                            <td><input type="number" class="form-control required" name="bronze[${item}]" min="0" value="${getInputValue(item, 'bronze')}" id="bronze-${item}"></td>
+                            <td><input type="number" class="form-control required" name="silver[${item}]" min="0" value="${getInputValue(item, 'silver')}" id="silver-${item}"></td>
+                            <td><input type="number" class="form-control required" name="gold[${item}]" min="0" value="${getInputValue(item, 'gold')}" id="gold-${item}"></td>
                             <td><button class="btn btn-sm btn-danger" onclick="clickDelete(${i})"><i class="fa fa-trash"></i></button></td>
                         </tr>`;
             $('#tableBody').append(row);
         });
+    }
+
+    function generalChange(key) {
+        const val = parseInt($("#general-" + key).val());
+        // console.log('set', setting);
+        $("#bronze-" + key).val(val + parseInt(setting['MARGIN_PRICE_GENERAL_BRONZE']));
+        $("#silver-" + key).val(val + parseInt(setting['MARGIN_PRICE_GENERAL_SILVER']));
+        $("#gold-" + key).val(val + parseInt(setting['MARGIN_PRICE_GENERAL_GOLD']));
     }
 
     function tambahSatuan() {
